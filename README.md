@@ -113,6 +113,11 @@ ungeschützter Build hätte die Pakete der anderen drei Projekte
 überschrieben; Sensormeter PoEs `platformio.ini` isoliert das inzwischen
 per eigenem `core_dir`).
 
+**Geplant, noch nicht umgesetzt:** Mac-Unterstützung, ausdrücklich nur für
+Apple-Silicon-Macs (ARM, kein Intel-Mac) — siehe Entscheidungsprotokoll im
+Sensormeter-Repo für offene Fragen zur Umsetzung (PowerShell-Core-
+Wiederverwendung vs. eigenes `flash.sh`, macOS-Portnamen, winget-Ersatz).
+
 → [scripts/flash.ps1 im Sensormeter-Repo](https://github.com/peterhagelhof7-cmd/sensormeter/blob/main/scripts/flash.ps1)
 
 ### `scripts/snmp-load.ps1` — SNMP-Lastgenerator
