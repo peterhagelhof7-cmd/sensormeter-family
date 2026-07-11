@@ -29,10 +29,10 @@ Vergleich, One-Pager, gemeinsame Werkzeuge.
 
 | Projekt | Version | Firmware-Umfang | Hardware-Status |
 |---|---|---|---|
-| Sensormeter | `0.9.0-rc3` (Beta) | P0–P7 + MQTT/Home Assistant + Anbieter-Branding | Code-vollständig, **Board-Bringup noch offen** — nicht vollständig auf echter Hardware verifiziert. MQTT und Branding gebaut (`pio run`), aber mangels Board weder geflasht noch live getestet |
-| Sensormeter WLAN | `0.9.0-rc3` (Beta) | P0–P7 + MQTT/Home Assistant + Anbieter-Branding | **Board-Bringup abgeschlossen** — DHT22, OLED, WLAN inkl. Fallback-AP, Taster, Webserver, SNMP, Syslog auf echtem Gerät verifiziert. MQTT geflasht, aber noch nicht gegen einen echten Broker getestet; Branding geflasht (sauberer Boot-Log verifiziert), Upload/Anzeige mangels Netzroute zum Board noch nicht per HTTP getestet |
-| Sensormeter Display | `0.9.0-rc3` (Beta) | P0–P8 + Live-Dashboard + Anbieter-Branding | **Auf echter Hardware verifiziert** — wiederholt geflasht und getestet. DHCP-Lease-Test und der neu ausgeweitete Mutex-Schutz (Sensor/Ping/Sensormeter/GraphManager) noch nicht auf echter Hardware ausgelöst. Branding gebaut (`pio run`), aber mangels Board weder geflasht noch live getestet — insbesondere der TFT-Farbkanal-Vorbehalt (siehe Feature-Vergleich) |
-| Sensormeter PoE | `0.1.0-p0` (erste Fassung) | Lastenheft/Pflichtenheft vollständig umgesetzt + Anbieter-Branding | **Noch nicht geflasht** — kein Board zum Erstellungszeitpunkt vorhanden, nur per `pio run` gebaut/verifiziert |
+| Sensormeter | `0.9.0-rc4` (Beta) | P0–P7 + MQTT/Home Assistant + Anbieter-Branding + Werksreset-Umfangsauswahl + Serial-Kommandozeile | Code-vollständig, **Board-Bringup noch offen** — nicht vollständig auf echter Hardware verifiziert. MQTT, Branding sowie die beiden neuen Features (Werksreset-Umfangsauswahl, Serial-CLI) gebaut (`pio run`), aber mangels Board weder geflasht noch live getestet |
+| Sensormeter WLAN | `0.9.0-rc4` (Beta) | P0–P7 + MQTT/Home Assistant + Anbieter-Branding + Werksreset-Umfangsauswahl + Serial-Kommandozeile | **Board-Bringup abgeschlossen** — DHT22, OLED, WLAN inkl. Fallback-AP, Taster, Webserver, SNMP, Syslog auf echtem Gerät verifiziert. MQTT geflasht, aber noch nicht gegen einen echten Broker getestet; Branding geflasht (sauberer Boot-Log verifiziert), Upload/Anzeige mangels Netzroute zum Board noch nicht per HTTP getestet. Werksreset-Umfangsauswahl und Serial-Kommandozeile sind hier zuerst entstanden und **auf echter Hardware geflasht/verifiziert** |
+| Sensormeter Display | `0.9.0-rc4` (Beta) | P0–P8 + Live-Dashboard + Anbieter-Branding + Werksreset-Umfangsauswahl + Serial-Kommandozeile | **Auf echter Hardware verifiziert** — wiederholt geflasht und getestet. DHCP-Lease-Test und der neu ausgeweitete Mutex-Schutz (Sensor/Ping/Sensormeter/GraphManager) noch nicht auf echter Hardware ausgelöst. Branding sowie die beiden neuen Features (hier komplett neu entworfen, da dieses Projekt zuvor gar keinen Werksreset und keine XML-Konfiguration hatte) nur gebaut (`pio run`), noch nicht geflasht/live getestet — insbesondere der TFT-Farbkanal-Vorbehalt (siehe Feature-Vergleich) |
+| Sensormeter PoE | `0.9.0-rc4` (Beta) | Lastenheft/Pflichtenheft vollständig umgesetzt + Anbieter-Branding + Werksreset-Umfangsauswahl + Serial-Kommandozeile | **Noch nicht geflasht** — kein Board zum Erstellungszeitpunkt vorhanden, nur per `pio run` gebaut/verifiziert. Versionsschema in dieser Runde von phasenbasiert (`0.1.0-p0`) auf SemVer umgestellt, analog zu den drei Geschwisterprojekten |
 
 *(Stand wird bei größeren Änderungen aktualisiert, verbindlich ist immer das
 `README.md`/`docs/entscheidungen.md` des jeweiligen Projekt-Repos.)*
@@ -57,6 +57,9 @@ Vergleich, One-Pager, gemeinsame Werkzeuge.
 | MQTT / Home Assistant | ✅ Sensor-Rolle | ✅ Sensor-Rolle | ❌ | ✅ Sensor- **und** Aktor-Rolle |
 | Anbieter-Branding (Weisslabel) | ✅ Name + Logo (128×64, 1bpp) | ✅ Name + Logo (128×64, 1bpp) | ✅ Name + Logo (128×64, RGB565) — TFT-Farbkanal-Vorbehalt nicht auf echter Hardware verifiziert | ✅ Name + Logo (128×128, 1bpp) |
 | Matter | – (nicht geprüft) | – (nicht geprüft) | – (nicht geprüft) | ❌ bewusst geprüft & abgelehnt (siehe dortige `entscheidungen.md`) |
+| Werksreset mit wählbarem Umfang (Alles/Konfiguration/Messwerte/Branding) | ✅ | ✅ | ✅ | ✅ |
+| Serial-Kommandozeile (USB): status/dhcp/ip/wifi/reset | ✅ (dhcp/ip mit Interface-Argument `lan\|wlan`) | ✅ | ✅ (kein LAN, daher ohne Interface-Argument) | ✅ (dhcp/ip mit Interface-Argument `lan\|wlan`) |
+| Serial-Kommandozeile: dump/upload (Config-Backup per USB) | ✅ | ✅ | ❌ (kein XML-Konfigurationsdokument, Settings liegen einzeln in NVS) | ✅ |
 | Lokales OTA-Update (.bin) | ✅ | ✅ | ✅ | ✅ |
 | Zabbix-Template | ✅ | ✅ | ✅ (ICMP-only, Client hat keinen Agenten) | ✅ |
 | PRTG-Template | ✅ | ✅ | – (kein Agent, Ping genügt) | ✅ |
@@ -275,6 +278,15 @@ ein Netzwerkproblem jenseits eines simplen Timeouts.
 - Gemeinsames Einrichtungs-Skript [`scripts/flash.ps1`](https://github.com/peterhagelhof7-cmd/sensormeter/blob/main/scripts/flash.ps1)
   (liegt identisch in allen vier Repos) — installiert Abhängigkeiten,
   klont, baut und flasht jedes der vier Projekte.
+- Werksreset mit wählbarem Umfang (Alles/Konfiguration/Messwerte/Branding)
+  über die Weboberfläche sowie eine Serial-Kommandozeile über USB
+  (`status`, `dhcp`, `ip`, `wifi`, `reset[ all]`, bei Sensormeter und
+  Sensormeter PoE zusätzlich `dump`/`upload` für ein XML-Config-Backup) bei
+  allen vier Projekten — zuerst bei Sensormeter WLAN gebaut und dort auf
+  echter Hardware verifiziert, dann auf die anderen drei übertragen (bei
+  Sensormeter Display musste dafür die Reset-Grundlage selbst erst neu
+  entworfen werden, da es zuvor gar keinen Werksreset gab, siehe Feature-
+  Vergleich oben).
 - Home-Assistant/MQTT-Anbindung erst bei Sensormeter WLAN eingeführt,
   dann unverändert im Konzept auf Sensormeter (WT32-ETH01) übertragen
   (Sensor-Rolle, Transport per einfachem `WiFiClient` funktioniert dort
