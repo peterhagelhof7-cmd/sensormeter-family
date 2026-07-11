@@ -23,7 +23,7 @@ Vergleich, One-Pager, gemeinsame Werkzeuge.
 
 | Projekt | Version | Firmware-Umfang | Hardware-Status |
 |---|---|---|---|
-| Sensormeter | `0.9.0-rc2` (Beta) | P0–P7 code-vollständig | Code-vollständig, **Board-Bringup noch offen** — nicht vollständig auf echter Hardware verifiziert |
+| Sensormeter | `0.9.0-rc3` (Beta) | P0–P7 + MQTT/Home Assistant | Code-vollständig, **Board-Bringup noch offen** — nicht vollständig auf echter Hardware verifiziert. MQTT gebaut (`pio run`), aber mangels Board weder geflasht noch gegen einen echten Broker getestet |
 | Sensormeter WLAN | `0.9.0-rc3` (Beta) | P0–P7 + MQTT/Home Assistant | **Board-Bringup abgeschlossen** — DHT22, OLED, WLAN inkl. Fallback-AP, Taster, Webserver, SNMP, Syslog auf echtem Gerät verifiziert. MQTT gebaut/geflasht, aber noch nicht gegen einen echten Broker getestet |
 | Sensormeter Display | `0.9.0-rc3` (Beta) | P0–P8 + Live-Dashboard | **Auf echter Hardware verifiziert** — wiederholt geflasht und getestet. DHCP-Lease-Test und der neu ausgeweitete Mutex-Schutz (Sensor/Ping/Sensormeter/GraphManager) noch nicht auf echter Hardware ausgelöst |
 | Sensormeter PoE | `0.1.0-p0` (erste Fassung) | Lastenheft/Pflichtenheft vollständig umgesetzt | **Noch nicht geflasht** — kein Board zum Erstellungszeitpunkt vorhanden, nur per `pio run` gebaut/verifiziert |
@@ -48,7 +48,7 @@ Vergleich, One-Pager, gemeinsame Werkzeuge.
 | SNMP-Agent (read-only, v1/v2c) | ✅ | ✅ | ❌ (ist SNMP-**Client**) | ✅ |
 | SNMP-Client (fragt andere Geräte ab) | ❌ | ❌ | ✅ bis zu 5 Sensormeter-Ziele | ❌ |
 | Syslog-Versand | ✅ | ✅ | ❌ | ✅ |
-| MQTT / Home Assistant | ❌ (geprüft, übertragbar – nicht umgesetzt) | ✅ Sensor-Rolle | ❌ | ✅ Sensor- **und** Aktor-Rolle |
+| MQTT / Home Assistant | ✅ Sensor-Rolle | ✅ Sensor-Rolle | ❌ | ✅ Sensor- **und** Aktor-Rolle |
 | Matter | – (nicht geprüft) | – (nicht geprüft) | – (nicht geprüft) | ❌ bewusst geprüft & abgelehnt (siehe dortige `entscheidungen.md`) |
 | Lokales OTA-Update (.bin) | ✅ | ✅ | ✅ | ✅ |
 | Zabbix-Template | ✅ | ✅ | ✅ (ICMP-only, Client hat keinen Agenten) | ✅ |
@@ -213,8 +213,11 @@ ein Netzwerkproblem jenseits eines simplen Timeouts.
   (liegt identisch in allen vier Repos) — installiert Abhängigkeiten,
   klont, baut und flasht jedes der vier Projekte.
 - Home-Assistant/MQTT-Anbindung erst bei Sensormeter WLAN eingeführt,
-  dann bei Sensormeter PoE um eine Aktor-Rolle (Relais) erweitert;
-  Matter wurde für Sensormeter PoE bewusst geprüft und verworfen
+  dann unverändert im Konzept auf Sensormeter (WT32-ETH01) übertragen
+  (Sensor-Rolle, Transport per einfachem `WiFiClient` funktioniert dort
+  interface-unabhängig für LAN **und** WLAN) und bei Sensormeter PoE um
+  eine Aktor-Rolle (Relais) erweitert; Matter wurde für Sensormeter PoE
+  bewusst geprüft und verworfen
   (W5500/CHIP-SDK-Treiberlücke, Arduino- vs. ESP-IDF-Konflikt,
   3-MB-No-OTA-Partitionsanforderung) — MQTT ist die funktionale
   Alternative, siehe dessen `entscheidungen.md`.
