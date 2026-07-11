@@ -25,7 +25,7 @@ Vergleich, One-Pager, gemeinsame Werkzeuge.
 |---|---|---|---|
 | Sensormeter | `0.9.0-rc3` (Beta) | P0–P7 + MQTT/Home Assistant + Anbieter-Branding | Code-vollständig, **Board-Bringup noch offen** — nicht vollständig auf echter Hardware verifiziert. MQTT und Branding gebaut (`pio run`), aber mangels Board weder geflasht noch live getestet |
 | Sensormeter WLAN | `0.9.0-rc3` (Beta) | P0–P7 + MQTT/Home Assistant + Anbieter-Branding | **Board-Bringup abgeschlossen** — DHT22, OLED, WLAN inkl. Fallback-AP, Taster, Webserver, SNMP, Syslog auf echtem Gerät verifiziert. MQTT geflasht, aber noch nicht gegen einen echten Broker getestet; Branding geflasht (sauberer Boot-Log verifiziert), Upload/Anzeige mangels Netzroute zum Board noch nicht per HTTP getestet |
-| Sensormeter Display | `0.9.0-rc3` (Beta) | P0–P8 + Live-Dashboard | **Auf echter Hardware verifiziert** — wiederholt geflasht und getestet. DHCP-Lease-Test und der neu ausgeweitete Mutex-Schutz (Sensor/Ping/Sensormeter/GraphManager) noch nicht auf echter Hardware ausgelöst. Kein Anbieter-Branding (Farb-TFT, Format experimentell vorbereitet) |
+| Sensormeter Display | `0.9.0-rc3` (Beta) | P0–P8 + Live-Dashboard + Anbieter-Branding | **Auf echter Hardware verifiziert** — wiederholt geflasht und getestet. DHCP-Lease-Test und der neu ausgeweitete Mutex-Schutz (Sensor/Ping/Sensormeter/GraphManager) noch nicht auf echter Hardware ausgelöst. Branding gebaut (`pio run`), aber mangels Board weder geflasht noch live getestet — insbesondere der TFT-Farbkanal-Vorbehalt (siehe Feature-Vergleich) |
 | Sensormeter PoE | `0.1.0-p0` (erste Fassung) | Lastenheft/Pflichtenheft vollständig umgesetzt + Anbieter-Branding | **Noch nicht geflasht** — kein Board zum Erstellungszeitpunkt vorhanden, nur per `pio run` gebaut/verifiziert |
 
 *(Stand wird bei größeren Änderungen aktualisiert, verbindlich ist immer das
@@ -49,7 +49,7 @@ Vergleich, One-Pager, gemeinsame Werkzeuge.
 | SNMP-Client (fragt andere Geräte ab) | ❌ | ❌ | ✅ bis zu 5 Sensormeter-Ziele | ❌ |
 | Syslog-Versand | ✅ | ✅ | ❌ | ✅ |
 | MQTT / Home Assistant | ✅ Sensor-Rolle | ✅ Sensor-Rolle | ❌ | ✅ Sensor- **und** Aktor-Rolle |
-| Anbieter-Branding (Weisslabel) | ✅ Name + Logo (128×64) | ✅ Name + Logo (128×64) | ❌ (Farb-TFT, Format experimentell vorbereitet) | ✅ Name + Logo (128×128) |
+| Anbieter-Branding (Weisslabel) | ✅ Name + Logo (128×64, 1bpp) | ✅ Name + Logo (128×64, 1bpp) | ✅ Name + Logo (128×64, RGB565) — TFT-Farbkanal-Vorbehalt nicht auf echter Hardware verifiziert | ✅ Name + Logo (128×128, 1bpp) |
 | Matter | – (nicht geprüft) | – (nicht geprüft) | – (nicht geprüft) | ❌ bewusst geprüft & abgelehnt (siehe dortige `entscheidungen.md`) |
 | Lokales OTA-Update (.bin) | ✅ | ✅ | ✅ | ✅ |
 | Zabbix-Template | ✅ | ✅ | ✅ (ICMP-only, Client hat keinen Agenten) | ✅ |
@@ -135,23 +135,34 @@ statt nur die Pixelmaße anzupassen:
 |---|---|
 | Sensormeter / Sensormeter WLAN (OLED SSD1306, 128×64) | 1-Bit-Monochrom, 1024 Byte |
 | Sensormeter PoE (OLED SH1107, 128×128) | 1-Bit-Monochrom, 2048 Byte |
-| Sensormeter Display (TFT ST7789P3, 240×320) | RGB565, 2 Byte/Pixel — **experimentell**, Branding dort noch nicht implementiert |
+| Sensormeter Display (TFT ST7789P3, Farbe) | RGB565, 128×64, 16.384 Byte — bewusst dieselbe Zielgröße wie die OLED-Projekte, nur Farbtiefe abweichend |
 
 Das Quellbild wird seitenverhältnistreu eingepasst (nicht verzerrt) und
 zentriert mit einer wählbaren Padding-Farbe (Default Schwarz) aufgefüllt.
-Aktuell konsumiert nur Sensormeter WLAN das monochrome Ausgabeformat direkt
-(`BrandingManager`, siehe dessen `docs/entscheidungen.md`) — für
-Sensormeter und Sensormeter PoE ist das Format bereits vorbereitet, falls
-das Feature dorthin portiert wird.
+Alle vier Projekte haben inzwischen ein implementiertes Branding-Feature
+(`BrandingManager`, siehe jeweiliges `docs/entscheidungen.md`) und
+konsumieren das hier erzeugte Format direkt.
 
-**Beim Bauen gefundener und behobener Bug**: PowerShells `-shl`/`-shr`
-behalten den Typ des *linken* Operanden bei — `System.Drawing.Color.R/.G/.B`
-sind `System.Byte`, ein `Byte -shl 11` überläuft dadurch beim RGB565-Packen
-stillschweigend statt auf `Int32` erweitert zu werden (aus reinem Weiß
-wurde ohne `[int]`-Cast z. B. `0x00FF` statt `0xFFFF`). Vor der Verteilung
-per generiertem Testlogo + unabhängigem Python/Pillow-Rückbau gefunden und
-mit expliziten `[int]`-Casts behoben, danach für alle vier Display-Profile
-pixelgenau gegenklickt.
+**Zwei beim Bauen gefundene und behobene Bugs**:
+- PowerShells `-shl`/`-shr` behalten den Typ des *linken* Operanden bei —
+  `System.Drawing.Color.R/.G/.B` sind `System.Byte`, ein `Byte -shl 11`
+  überläuft dadurch beim RGB565-Packen stillschweigend statt auf `Int32`
+  erweitert zu werden (aus reinem Weiß wurde ohne `[int]`-Cast z. B.
+  `0x00FF` statt `0xFFFF`). Gefunden per generiertem Testlogo +
+  unabhängigem Python/Pillow-Rückbau, mit expliziten `[int]`-Casts behoben.
+- Der `-Display display`-Preset nutzte zunächst fälschlich die native
+  Panel-Auflösung 240×320 (Portrait) statt der tatsächlichen
+  Bildschirm-Koordinaten im Landschaftsbetrieb (320×240) — beim
+  Implementieren des zugehörigen `BrandingManager` bei Sensormeter Display
+  bemerkt und auf 128×64 vereinheitlicht.
+
+Sensormeter Display hat außerdem einen dokumentierten, nicht auf echter
+Hardware verifizierten Vorbehalt: das Panel läuft mit
+`TFT_RGB_ORDER=0` (BGR), unter dem bereits andernorts in dessen Firmware
+einzelne benannte Farben empirisch getauscht werden mussten. Logos werden
+bewusst in Standard-RGB565 gepackt statt vorab zu kompensieren — der
+Schalter `-SwapRedBlue` ist der Escape-Hatch, falls sich auf echter
+Hardware zeigt, dass doch getauscht werden muss.
 
 → [scripts/convert-logo.ps1 im Sensormeter-Repo](https://github.com/peterhagelhof7-cmd/sensormeter/blob/main/scripts/convert-logo.ps1)
 
