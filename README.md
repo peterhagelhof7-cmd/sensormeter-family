@@ -23,10 +23,10 @@ Vergleich, One-Pager, gemeinsame Werkzeuge.
 
 | Projekt | Version | Firmware-Umfang | Hardware-Status |
 |---|---|---|---|
-| Sensormeter | `0.9.0-rc3` (Beta) | P0–P7 + MQTT/Home Assistant | Code-vollständig, **Board-Bringup noch offen** — nicht vollständig auf echter Hardware verifiziert. MQTT gebaut (`pio run`), aber mangels Board weder geflasht noch gegen einen echten Broker getestet |
-| Sensormeter WLAN | `0.9.0-rc3` (Beta) | P0–P7 + MQTT/Home Assistant | **Board-Bringup abgeschlossen** — DHT22, OLED, WLAN inkl. Fallback-AP, Taster, Webserver, SNMP, Syslog auf echtem Gerät verifiziert. MQTT gebaut/geflasht, aber noch nicht gegen einen echten Broker getestet |
-| Sensormeter Display | `0.9.0-rc3` (Beta) | P0–P8 + Live-Dashboard | **Auf echter Hardware verifiziert** — wiederholt geflasht und getestet. DHCP-Lease-Test und der neu ausgeweitete Mutex-Schutz (Sensor/Ping/Sensormeter/GraphManager) noch nicht auf echter Hardware ausgelöst |
-| Sensormeter PoE | `0.1.0-p0` (erste Fassung) | Lastenheft/Pflichtenheft vollständig umgesetzt | **Noch nicht geflasht** — kein Board zum Erstellungszeitpunkt vorhanden, nur per `pio run` gebaut/verifiziert |
+| Sensormeter | `0.9.0-rc3` (Beta) | P0–P7 + MQTT/Home Assistant + Anbieter-Branding | Code-vollständig, **Board-Bringup noch offen** — nicht vollständig auf echter Hardware verifiziert. MQTT und Branding gebaut (`pio run`), aber mangels Board weder geflasht noch live getestet |
+| Sensormeter WLAN | `0.9.0-rc3` (Beta) | P0–P7 + MQTT/Home Assistant + Anbieter-Branding | **Board-Bringup abgeschlossen** — DHT22, OLED, WLAN inkl. Fallback-AP, Taster, Webserver, SNMP, Syslog auf echtem Gerät verifiziert. MQTT geflasht, aber noch nicht gegen einen echten Broker getestet; Branding geflasht (sauberer Boot-Log verifiziert), Upload/Anzeige mangels Netzroute zum Board noch nicht per HTTP getestet |
+| Sensormeter Display | `0.9.0-rc3` (Beta) | P0–P8 + Live-Dashboard | **Auf echter Hardware verifiziert** — wiederholt geflasht und getestet. DHCP-Lease-Test und der neu ausgeweitete Mutex-Schutz (Sensor/Ping/Sensormeter/GraphManager) noch nicht auf echter Hardware ausgelöst. Kein Anbieter-Branding (Farb-TFT, Format experimentell vorbereitet) |
+| Sensormeter PoE | `0.1.0-p0` (erste Fassung) | Lastenheft/Pflichtenheft vollständig umgesetzt + Anbieter-Branding | **Noch nicht geflasht** — kein Board zum Erstellungszeitpunkt vorhanden, nur per `pio run` gebaut/verifiziert |
 
 *(Stand wird bei größeren Änderungen aktualisiert, verbindlich ist immer das
 `README.md`/`docs/entscheidungen.md` des jeweiligen Projekt-Repos.)*
@@ -49,6 +49,7 @@ Vergleich, One-Pager, gemeinsame Werkzeuge.
 | SNMP-Client (fragt andere Geräte ab) | ❌ | ❌ | ✅ bis zu 5 Sensormeter-Ziele | ❌ |
 | Syslog-Versand | ✅ | ✅ | ❌ | ✅ |
 | MQTT / Home Assistant | ✅ Sensor-Rolle | ✅ Sensor-Rolle | ❌ | ✅ Sensor- **und** Aktor-Rolle |
+| Anbieter-Branding (Weisslabel) | ✅ Name + Logo (128×64) | ✅ Name + Logo (128×64) | ❌ (Farb-TFT, Format experimentell vorbereitet) | ✅ Name + Logo (128×128) |
 | Matter | – (nicht geprüft) | – (nicht geprüft) | – (nicht geprüft) | ❌ bewusst geprüft & abgelehnt (siehe dortige `entscheidungen.md`) |
 | Lokales OTA-Update (.bin) | ✅ | ✅ | ✅ | ✅ |
 | Zabbix-Template | ✅ | ✅ | ✅ (ICMP-only, Client hat keinen Agenten) | ✅ |
