@@ -120,6 +120,40 @@ Wiederverwendung vs. eigenes `flash.sh`, macOS-Portnamen, winget-Ersatz).
 
 → [scripts/flash.ps1 im Sensormeter-Repo](https://github.com/peterhagelhof7-cmd/sensormeter/blob/main/scripts/flash.ps1)
 
+### `scripts/convert-logo.ps1` — Anbieter-Logo-Konverter fürs Branding-Feature
+
+Liegt identisch in allen vier Projekt-Repos. Konvertiert ein beliebiges
+Anbieter-Logo (PNG/JPG/BMP/…) in das fürs Anbieter-Branding-Feature
+kompatible Rohformat — fragt zuerst interaktiv (oder per
+`-Display sensormeter|wlan|poe|display|custom`), für welches Display
+konvertiert werden soll, und reduziert Auflösung **und Farbtiefe**
+konsequent auf das, was das jeweilige Display tatsächlich darstellen kann,
+statt nur die Pixelmaße anzupassen:
+
+| Display | Zielformat |
+|---|---|
+| Sensormeter / Sensormeter WLAN (OLED SSD1306, 128×64) | 1-Bit-Monochrom, 1024 Byte |
+| Sensormeter PoE (OLED SH1107, 128×128) | 1-Bit-Monochrom, 2048 Byte |
+| Sensormeter Display (TFT ST7789P3, 240×320) | RGB565, 2 Byte/Pixel — **experimentell**, Branding dort noch nicht implementiert |
+
+Das Quellbild wird seitenverhältnistreu eingepasst (nicht verzerrt) und
+zentriert mit einer wählbaren Padding-Farbe (Default Schwarz) aufgefüllt.
+Aktuell konsumiert nur Sensormeter WLAN das monochrome Ausgabeformat direkt
+(`BrandingManager`, siehe dessen `docs/entscheidungen.md`) — für
+Sensormeter und Sensormeter PoE ist das Format bereits vorbereitet, falls
+das Feature dorthin portiert wird.
+
+**Beim Bauen gefundener und behobener Bug**: PowerShells `-shl`/`-shr`
+behalten den Typ des *linken* Operanden bei — `System.Drawing.Color.R/.G/.B`
+sind `System.Byte`, ein `Byte -shl 11` überläuft dadurch beim RGB565-Packen
+stillschweigend statt auf `Int32` erweitert zu werden (aus reinem Weiß
+wurde ohne `[int]`-Cast z. B. `0x00FF` statt `0xFFFF`). Vor der Verteilung
+per generiertem Testlogo + unabhängigem Python/Pillow-Rückbau gefunden und
+mit expliziten `[int]`-Casts behoben, danach für alle vier Display-Profile
+pixelgenau gegenklickt.
+
+→ [scripts/convert-logo.ps1 im Sensormeter-Repo](https://github.com/peterhagelhof7-cmd/sensormeter/blob/main/scripts/convert-logo.ps1)
+
 ### `scripts/snmp-load.ps1` — SNMP-Lastgenerator
 
 Reine PowerShell-Implementierung eines SNMPv1-GET-Clients (kein
