@@ -1,5 +1,11 @@
 # Sensormeter-Familie
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/projektfamilie-dark.png">
+  <source media="(prefers-color-scheme: light)" srcset="docs/projektfamilie-light.png">
+  <img alt="Sensormeter Projektfamilie: Sensormeter (LAN), Sensormeter WLAN (WLAN), Sensormeter PoE (LAN+PoE) und Sensormeter Display (Touchscreen), verbunden über gemeinsame Architektur und SNMP" src="docs/projektfamilie-light.png">
+</picture>
+
 Übersichts-Repository für die vier Sensormeter-Firmware-Projekte: ein
 gemeinsamer Ursprung (Sensormeter), eine kostengünstigere WLAN-only-Variante
 (Sensormeter WLAN), ein Touchscreen-Betrachter, der beide per SNMP abfragt
@@ -73,6 +79,12 @@ aktueller Funktionsumfang):
 Diese Dateien sind lokale Kopien der jeweils aktuellsten Version aus dem
 Projekt-Repo (Quelle der Wahrheit bleibt immer `docs/` im jeweiligen
 Repo) — bei größeren Firmware-Änderungen hier nachziehen.
+
+## Architekturübersicht
+
+[docs/projektfamilie.html](docs/projektfamilie.html) — dieselbe Skizze wie
+das Bild oben, als eigenständige Seite (lokal im Browser öffnen). Identische
+Kopie liegt in allen vier Projekt-Repos.
 
 ## Werkzeuge
 
