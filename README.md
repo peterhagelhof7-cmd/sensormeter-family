@@ -51,7 +51,7 @@ Vergleich, One-Pager, gemeinsame Werkzeuge.
 | MQTT / Home Assistant | ❌ (geprüft, übertragbar – nicht umgesetzt) | ✅ Sensor-Rolle | ❌ | ✅ Sensor- **und** Aktor-Rolle |
 | Matter | – (nicht geprüft) | – (nicht geprüft) | – (nicht geprüft) | ❌ bewusst geprüft & abgelehnt (siehe dortige `entscheidungen.md`) |
 | Lokales OTA-Update (.bin) | ✅ | ✅ | ✅ | ✅ |
-| Zabbix-Template | ✅ | ❌ | ✅ (ICMP-only, Client hat keinen Agenten) | ❌ |
+| Zabbix-Template | ✅ | ✅ | ✅ (ICMP-only, Client hat keinen Agenten) | ✅ |
 | PRTG-Template | ✅ | ✅ | – (kein Agent, Ping genügt) | ✅ |
 | Gemeinsame SNMP-Basis-OID `.1.3.6.1.4.1.99999` | ✅ | ✅ (eigenes Sub-Schema, siehe unten) | – (fragt sie ab) | ✅ (identisch zu Sensormeter) |
 
@@ -78,23 +78,23 @@ Repo) — bei größeren Firmware-Änderungen hier nachziehen.
 ### Monitoring-Integration (Zabbix / PRTG)
 
 Jedes der drei SNMP-Agent-Projekte (Sensormeter, Sensormeter WLAN,
-Sensormeter PoE) bringt eigene, fertige Monitoring-Templates mit —
-Sensormeter Display braucht keins, da es selbst nur SNMP-**Client** ist
-und sich stattdessen per einfachem ICMP-Ping überwachen lässt (siehe
-dessen `docs/ZABBIX.md`).
+Sensormeter PoE) bringt inzwischen für **beide** Monitoring-Systeme
+fertige Templates mit — Sensormeter Display braucht keins, da es selbst
+nur SNMP-**Client** ist und sich stattdessen per einfachem ICMP-Ping
+überwachen lässt (siehe dessen `docs/ZABBIX.md`).
 
 | Projekt | Zabbix | PRTG |
 |---|---|---|
 | Sensormeter | [ZABBIX.md](https://github.com/peterhagelhof7-cmd/sensormeter/blob/main/docs/ZABBIX.md) · [Template](https://github.com/peterhagelhof7-cmd/sensormeter/blob/main/docs/zabbix-template-sensormeter.yaml) | [PRTG.md](https://github.com/peterhagelhof7-cmd/sensormeter/blob/main/docs/PRTG.md) · [Template](https://github.com/peterhagelhof7-cmd/sensormeter/blob/main/docs/prtg-template-sensormeter.odt) |
-| Sensormeter WLAN | – | [PRTG.md](https://github.com/peterhagelhof7-cmd/sensormeter-wlan/blob/main/docs/PRTG.md) · [Template](https://github.com/peterhagelhof7-cmd/sensormeter-wlan/blob/main/docs/prtg-template-sensormeter-wlan.odt) |
+| Sensormeter WLAN | [ZABBIX.md](https://github.com/peterhagelhof7-cmd/sensormeter-wlan/blob/main/docs/ZABBIX.md) · [Template](https://github.com/peterhagelhof7-cmd/sensormeter-wlan/blob/main/docs/zabbix-template-sensormeter-wlan.yaml) | [PRTG.md](https://github.com/peterhagelhof7-cmd/sensormeter-wlan/blob/main/docs/PRTG.md) · [Template](https://github.com/peterhagelhof7-cmd/sensormeter-wlan/blob/main/docs/prtg-template-sensormeter-wlan.odt) |
 | Sensormeter Display | [ZABBIX.md](https://github.com/peterhagelhof7-cmd/sensormeter-display/blob/main/docs/ZABBIX.md) (ICMP-only) · [Template](https://github.com/peterhagelhof7-cmd/sensormeter-display/blob/main/docs/zabbix-template-sensormeter-display.yaml) | – |
-| Sensormeter PoE | – | [PRTG.md](https://github.com/peterhagelhof7-cmd/sensormeter-poe/blob/main/docs/PRTG.md) · [Template](https://github.com/peterhagelhof7-cmd/sensormeter-poe/blob/main/docs/prtg-template-sensormeter-poe.odt) |
+| Sensormeter PoE | [ZABBIX.md](https://github.com/peterhagelhof7-cmd/sensormeter-poe/blob/main/docs/ZABBIX.md) · [Template](https://github.com/peterhagelhof7-cmd/sensormeter-poe/blob/main/docs/zabbix-template-sensormeter-poe.yaml) | [PRTG.md](https://github.com/peterhagelhof7-cmd/sensormeter-poe/blob/main/docs/PRTG.md) · [Template](https://github.com/peterhagelhof7-cmd/sensormeter-poe/blob/main/docs/prtg-template-sensormeter-poe.odt) |
 
-**Wichtig für PRTG:** Sensormeter WLAN hat ein **eigenes, abweichendes**
+**Wichtig:** Sensormeter WLAN hat ein **eigenes, abweichendes**
 OID-Schema (kein LAN-Interface, kein zweiter Sensor → WLAN-IP und
 RSSI liegen auf anderen OID-Positionen als bei Sensormeter/Sensormeter
-PoE) – dessen PRTG-Template ist deshalb NICHT mit den beiden anderen
-austauschbar, siehe die jeweilige `PRTG.md`.
+PoE) – dessen Zabbix- und PRTG-Templates sind deshalb NICHT mit den
+beiden anderen austauschbar, siehe die jeweiligen `ZABBIX.md`/`PRTG.md`.
 
 ### `scripts/flash.ps1` — gemeinsames Setup-/Flash-Skript
 
