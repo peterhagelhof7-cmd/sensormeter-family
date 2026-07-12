@@ -56,7 +56,6 @@ Vergleich, One-Pager, gemeinsame Werkzeuge.
 | Syslog-Versand | ✅ | ✅ | ❌ | ✅ |
 | MQTT / Home Assistant | ✅ Sensor-Rolle | ✅ Sensor-Rolle | ❌ | ✅ Sensor- **und** Aktor-Rolle |
 | Anbieter-Branding (Weisslabel) | ✅ Name + Logo (128×64, 1bpp) | ✅ Name + Logo (128×64, 1bpp) | ✅ Name + Logo (128×64, RGB565) — TFT-Farbkanal-Vorbehalt nicht auf echter Hardware verifiziert | ✅ Name + Logo (128×128, 1bpp) |
-| Matter | – (nicht geprüft) | – (nicht geprüft) | – (nicht geprüft) | ❌ bewusst geprüft & abgelehnt (siehe dortige `entscheidungen.md`) |
 | Werksreset mit wählbarem Umfang (Alles/Konfiguration/Messwerte/Branding) | ✅ | ✅ | ✅ | ✅ |
 | Serial-Kommandozeile (USB): status/dhcp/ip/wifi/reset | ✅ (dhcp/ip mit Interface-Argument `lan\|wlan`) | ✅ | ✅ (kein LAN, daher ohne Interface-Argument) | ✅ (dhcp/ip mit Interface-Argument `lan\|wlan`) |
 | Serial-Kommandozeile: dump/upload (Config-Backup per USB) | ✅ | ✅ | ❌ (kein XML-Konfigurationsdokument, Settings liegen einzeln in NVS) | ✅ |
@@ -302,11 +301,7 @@ ein Netzwerkproblem jenseits eines simplen Timeouts.
   dann unverändert im Konzept auf Sensormeter (WT32-ETH01) übertragen
   (Sensor-Rolle, Transport per einfachem `WiFiClient` funktioniert dort
   interface-unabhängig für LAN **und** WLAN) und bei Sensormeter PoE um
-  eine Aktor-Rolle (Relais) erweitert; Matter wurde für Sensormeter PoE
-  bewusst geprüft und verworfen
-  (W5500/CHIP-SDK-Treiberlücke, Arduino- vs. ESP-IDF-Konflikt,
-  3-MB-No-OTA-Partitionsanforderung) — MQTT ist die funktionale
-  Alternative, siehe dessen `entscheidungen.md`.
+  eine Aktor-Rolle (Relais) erweitert.
 
 ## Über dieses Repository
 
