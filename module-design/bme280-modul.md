@@ -5,7 +5,10 @@ Kategorie-1-Modul der Familie, steckt in die RJ45-Buchse von Sensormeter
 oder Sensormeter PoE und wird von `SensorDetector::runDetection()` beim
 Boot bzw. auf Anfrage automatisch am I2C-Bus erkannt (Adresse 0x76/0x77,
 siehe `KNOWN_CHIPS` in `SensorDetector.cpp` in beiden Firmware-Repos) —
-setzt „Sensor 2 aktiv" automatisch, genau wie das DHT22-Modul.
+setzt „Sensor 2 aktiv" automatisch, genau wie das DHT22-Modul. **Anders
+als beim DHT22-Modul liest die Firmware die Messwerte aktuell aber noch
+nicht aus** (siehe „Bekannte Einschränkungen") — dieser Entwurf ist bewusst
+reine Hardware-Vorarbeit für den geplanten I2C-Lesepfad.
 
 **Kompatible Geräte:** Sensormeter (WT32-ETH01), Sensormeter PoE
 (ESP32-S3-ETH). Nicht relevant für Sensormeter WLAN/Display (kein
@@ -130,6 +133,18 @@ sie auf dem Bus — eines auf `0x76`, das andere auf `0x77` verdrahten.
 
 ## Bekannte Einschränkungen
 
+- **Werte werden aktuell NICHT ausgelesen — nur erkannt**: `SensorManager::
+  readExternalSensorIfEnabled()` liest „Sensor 2" ausschließlich per
+  DHT-Protokoll auf Pin 5 (`dhtExternal.readHumidity()/readTemperature()`),
+  unabhängig davon, was `SensorDetector` am I2C-Bus gefunden hat. Ein
+  erkanntes BME280 schaltet den Systemtyp zwar automatisch auf „PRO" um
+  (`sensor2Enabled = true`), aber der anschließende Leseversuch schlägt
+  immer fehl („Sensor extern: Fehler beim Lesen des DHT22" im Log), da auf
+  Pin 5 gar kein DHT-Sensor hängt. **Dieses Modul ist damit ein reiner
+  Hardware-Entwurf — ohne eine noch ausstehende Firmware-Erweiterung
+  (I2C-Lesepfad in `SensorManager`, passend zum von `SensorDetector`
+  erkannten Chiptyp) liefert Sensor 2 keine Werte.** Gilt für **jedes**
+  Kategorie-1-Modul dieser Familie gleichermaßen.
 - **Erkennt nur den ersten Treffer**: `SensorDetector::runDetection()`
   bricht den I2C-Scan beim ersten gefundenen Gerät ab („ein Modul
   erwartet") und setzt „Sensor 2 aktiv" dafür. Ein zweites BME280- oder

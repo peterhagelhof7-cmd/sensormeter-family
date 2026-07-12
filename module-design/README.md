@@ -97,21 +97,33 @@ Bereits in `SensorDetector.cpp` (Sensormeter/Sensormeter PoE) als
 erkennbare Chips hinterlegt:
 
 - [BME280](bme280-modul.md) (Temperatur/Feuchte/Druck) — ✅ entworfen, erstes Kategorie-1-Modul
-- SHT30/31/35 (Temperatur/Feuchte)
-- AHT20/21 (Temperatur/Feuchte)
-- BH1750 (Helligkeit)
-- perspektivisch: SGP30/CCS811 (CO₂/VOC)
+- [BH1750](bh1750-modul.md) (Helligkeit) — ✅ entworfen
+- [AHT20/21](aht20-modul.md) (Temperatur/Feuchte) — ✅ entworfen
+- [CCS811](bme280-ccs811-modul.md) (eCO₂/TVOC) — ✅ entworfen, **kombiniert mit BME280** auf einem Modul (CCS811 braucht Temp/Feuchte zur Kompensation, die BME280 gleich mitliefert)
+- SHT30/31/35 (Temperatur/Feuchte) — 📋 vorgemerkt, weiterer Kandidat derselben Nische wie AHT20/21
 
-Weitere Kandidaten (BH1750 etc.) folgen bei Bedarf — das BME280-Modul
-dient als Vorlage für künftige Kategorie-1-Module.
+Vier von fünf ursprünglich genannten Kandidaten sind jetzt entworfen — nur
+SHT30/31/35 steht noch aus (redundant zu AHT20/21, daher niedrige
+Priorität). Die vorhandenen Module dienen als Vorlage für künftige
+Kategorie-1-Module.
+
+**Firmware-Lücke, betrifft die gesamte Kategorie**: `SensorDetector`
+erkennt I2C-Chips zuverlässig und setzt „Sensor 2 aktiv", aber
+`SensorManager::readExternalSensorIfEnabled()` liest „Sensor 2" bislang
+ausschließlich per DHT-Protokoll auf Pin 5 — es gibt noch **keinen**
+I2C-Lesepfad. Jedes Kategorie-1-Modul ist daher aktuell reine
+Hardware-Vorarbeit: der Chip wird erkannt, aber keine Werte gelangen in
+„Sensor 2", bis `SensorManager` um einen zum erkannten Chiptyp passenden
+I2C-Lesepfad erweitert wird. Siehe jeweiliges Modul-Dokument, Abschnitt
+„Bekannte Einschränkungen".
 
 | Modul | I2C-Adresse | Status |
 |---|---|---|
 | [BME280-Sensormodul](bme280-modul.md) | 0x76/0x77 | ✅ entworfen (Standard + Lite, BOM + [interaktiver Plan](bme280-verdrahtungsplan.html)) |
-| BH1750 (Helligkeit) | 0x23/0x5C | 📋 vorgemerkt |
+| [BH1750-Sensormodul](bh1750-modul.md) | 0x23/0x5C | ✅ entworfen (Standard + Lite, BOM + [interaktiver Plan](bh1750-verdrahtungsplan.html)) |
+| [AHT20/21-Sensormodul](aht20-modul.md) | 0x38 (fest) | ✅ entworfen (Standard + Lite, BOM + [interaktiver Plan](aht20-verdrahtungsplan.html)) |
+| [BME280+CCS811-Kombimodul](bme280-ccs811-modul.md) | 0x76/0x77 + 0x5A/0x5B | ✅ entworfen (Standard + Lite, BOM + [interaktiver Plan](bme280-ccs811-verdrahtungsplan.html)) |
 | SHT30/31/35 (Temperatur/Feuchte) | 0x44/0x45 | 📋 vorgemerkt |
-| AHT20/21 (Temperatur/Feuchte) | 0x38 | 📋 vorgemerkt |
-| SGP30/CCS811 (CO₂/VOC) | — | 📋 perspektivisch |
 
 ### Kategorie 2 — Direkt-Module (Einzelpin)
 

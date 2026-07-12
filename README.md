@@ -95,12 +95,18 @@ interaktive Verdrahtungspläne für die über den RJ45-Modularanschluss
 steckbaren Erweiterungsmodule (nur Sensormeter/Sensormeter PoE, siehe
 dortiges `README.md`). Zwei Kategorien, jeweils in einer Standard-Variante
 mit 2 Buchsen und einer kabelgebundenen Lite-Variante ohne Kettenfähigkeit:
-**Bus-Module** (I2C, mehrere gleichzeitig steckbar — erstes Modul
-[BME280](module-design/bme280-modul.md)) und **Direkt-Module** (dedizierter
-Einzelpin, genau eines gleichzeitig — alle drei vorgesehenen Module fertig
-entworfen: [DHT22-Sensormodul](module-design/dht22-modul.md),
+**Bus-Module** (I2C, mehrere gleichzeitig steckbar —
+[BME280](module-design/bme280-modul.md), [BH1750](module-design/bh1750-modul.md),
+[AHT20/21](module-design/aht20-modul.md) sowie das
+[BME280+CCS811-Kombimodul](module-design/bme280-ccs811-modul.md)) und
+**Direkt-Module** (dedizierter Einzelpin, genau eines gleichzeitig — alle
+drei vorgesehenen Module fertig entworfen:
+[DHT22-Sensormodul](module-design/dht22-modul.md),
 [Türkontakt-Modul](module-design/tuerkontakt-modul.md),
-[Relais/Aktor-Modul](module-design/relais-modul.md)).
+[Relais/Aktor-Modul](module-design/relais-modul.md)). Die I2C-Module sind
+aktuell reine Hardware-Vorarbeit — der Firmware fehlt noch ein
+allgemeiner I2C-Lesepfad für „Sensor 2" (siehe `module-design/README.md`,
+Abschnitt „Firmware-Lücke").
 
 ## Werkzeuge
 
