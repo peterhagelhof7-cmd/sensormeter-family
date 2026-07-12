@@ -112,9 +112,9 @@ RSSI liegen auf anderen OID-Positionen als bei Sensormeter/Sensormeter
 PoE) – dessen Zabbix- und PRTG-Templates sind deshalb NICHT mit den
 beiden anderen austauschbar, siehe die jeweiligen `ZABBIX.md`/`PRTG.md`.
 
-### `scripts/flash.ps1` — gemeinsames Setup-/Flash-Skript
+### `scripts/flash.ps1` (Windows) / `scripts/flash.sh` (macOS/Linux) — gemeinsame Setup-/Flash-Skripte
 
-Liegt identisch in allen vier Projekt-Repos (`scripts/flash.ps1`) —
+`flash.ps1` liegt identisch in allen vier Projekt-Repos —
 installiert Python/Git/PlatformIO bei Bedarf, klont/aktualisiert das
 gewählte Repo, baut und flasht. Fragt zuerst interaktiv (oder per
 `-Project sensormeter|wlan|display|poe`), welches der vier Projekte
@@ -129,12 +129,22 @@ ungeschützter Build hätte die Pakete der anderen drei Projekte
 überschrieben; Sensormeter PoEs `platformio.ini` isoliert das inzwischen
 per eigenem `core_dir`).
 
-**Geplant, noch nicht umgesetzt:** Mac-Unterstützung, ausdrücklich nur für
-Apple-Silicon-Macs (ARM, kein Intel-Mac) — siehe Entscheidungsprotokoll im
-Sensormeter-Repo für offene Fragen zur Umsetzung (PowerShell-Core-
-Wiederverwendung vs. eigenes `flash.sh`, macOS-Portnamen, winget-Ersatz).
+**`flash.sh`** (Version `1.0.0`) ist das Bash-Pendant für macOS
+(**ausdrücklich nur Apple Silicon/arm64, kein Intel-Mac**) und Linux,
+liegt ebenfalls identisch in allen vier Repos. Gleicher Ablauf wie
+`flash.ps1`, nur mit plattformgerechten Anpassungen: Werkzeug-Installation
+über Homebrew (`brew`, muss vorab manuell installiert sein) auf macOS bzw.
+den erkannten Paketmanager (`apt`/`dnf`/`pacman`/`zypper`) auf Linux statt
+winget; serielle Geräte als `/dev/cu.*` (macOS) bzw. `/dev/ttyUSB*`/
+`/dev/ttyACM*` (Linux) statt COM-Ports; automatischer
+`--break-system-packages`-Fallback für die PlatformIO-Installation, falls
+das System-Python „externally managed" ist (neuere Debian-/Ubuntu-
+Versionen). Bewusst **nur** der Flash-Vorgang — `convert-logo.ps1` und
+`snmp-load.ps1` bleiben Windows-only, dafür gibt es (noch) kein
+Bash-Äquivalent.
 
-→ [scripts/flash.ps1 im Sensormeter-Repo](https://github.com/peterhagelhof7-cmd/sensormeter/blob/main/scripts/flash.ps1)
+→ [scripts/flash.ps1 im Sensormeter-Repo](https://github.com/peterhagelhof7-cmd/sensormeter/blob/main/scripts/flash.ps1) ·
+[scripts/flash.sh im Sensormeter-Repo](https://github.com/peterhagelhof7-cmd/sensormeter/blob/main/scripts/flash.sh)
 
 ### `scripts/convert-logo.ps1` — Anbieter-Logo-Konverter fürs Branding-Feature
 
@@ -276,8 +286,9 @@ ein Netzwerkproblem jenseits eines simplen Timeouts.
   sich zwangsläufig (anderer Chip), Steckmodule sind aber zwischen beiden
   Projekten austauschbar.
 - Gemeinsames Einrichtungs-Skript [`scripts/flash.ps1`](https://github.com/peterhagelhof7-cmd/sensormeter/blob/main/scripts/flash.ps1)
-  (liegt identisch in allen vier Repos) — installiert Abhängigkeiten,
-  klont, baut und flasht jedes der vier Projekte.
+  (Windows) bzw. [`scripts/flash.sh`](https://github.com/peterhagelhof7-cmd/sensormeter/blob/main/scripts/flash.sh)
+  (macOS/Linux) (beide liegen identisch in allen vier Repos) — installiert
+  Abhängigkeiten, klont, baut und flasht jedes der vier Projekte.
 - Werksreset mit wählbarem Umfang (Alles/Konfiguration/Messwerte/Branding)
   über die Weboberfläche sowie eine Serial-Kommandozeile über USB
   (`status`, `dhcp`, `ip`, `wifi`, `reset[ all]`, bei Sensormeter und
