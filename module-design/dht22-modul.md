@@ -10,15 +10,32 @@ Firmware-Repos).
 (ESP32-S3-ETH). Nicht relevant für Sensormeter WLAN/Display (kein
 RJ45-Modularanschluss).
 
+**Interaktiver Verdrahtungsplan:** [dht22-verdrahtungsplan.html](dht22-verdrahtungsplan.html)
+(Standard- und Lite-Variante, anklickbare Drähte).
+
+## Varianten
+
+| | Standard | Lite |
+|---|---|---|
+| Buchsen | 2 (IN + OUT) | 0 — fest angeschlagenes Kabel mit RJ45-**Stecker** (male) |
+| Durchschleifen | Ja, siehe `README.md` „Durchschleif-Regel" | Nein — Kette endet hier vollständig, auch Kategorie-1-Pins (3/4) |
+| Preis/Aufwand | Höher (2. Buchse + Durchschleif-Verdrahtung) | Niedriger (nur Kabel + Stecker) |
+| Einsatzzweck | Modul soll in einer Kette mit weiteren Modulen stehen | Modul ist das letzte/einzige am Gerät, keine Kette geplant |
+
+Beide Varianten sind für die Firmware identisch (dieselben drei Adern
+VCC/GND/DATA auf denselben Pins) — der Unterschied ist rein mechanisch.
+
 ## Pinbelegung des Modul-Steckers
+
+### Standard (2 Buchsen)
 
 Kategorie-2-Modul mit **zwei** RJ45-Buchsen (IN + OUT) gemäß der
 Durchschleif-Regel in `README.md`: Pin 1/2/3/4/8 werden 1:1 von IN nach
 OUT durchgeschleift, Pin 5 wird auf dem Modul-PCB abgegriffen (DHT22
 DATA) und auf der OUT-Buchse **terminiert** (nicht weitergereicht) — so
-kann in derselben Kette kein zweites Pin-5-Modul (z. B. ein künftiger
-Türkontakt) versehentlich dahinterhängen. Pin 6/7 (Relais) sind für dieses
-Modul irrelevant und werden ebenfalls einfach durchgeschleift, damit ein
+kann in derselben Kette kein zweites Pin-5-Modul (z. B. ein Türkontakt)
+versehentlich dahinterhängen. Pin 6/7 (Relais) sind für dieses Modul
+irrelevant und werden ebenfalls einfach durchgeschleift, damit ein
 Relais-Modul weiter hinten in der Kette funktioniert.
 
 | RJ45-Pin | Signal | IN-Buchse | OUT-Buchse |
@@ -32,7 +49,24 @@ Relais-Modul weiter hinten in der Kette funktioniert.
 | 7 | Relais-Feedback | — (unbenutzt) | durchgeschleift (= IN Pin 7) |
 | 8 | Reserve | — (unbenutzt) | durchgeschleift (= IN Pin 8) |
 
+### Lite (1 Kabel mit Stecker)
+
+Kein IN/OUT mehr — ein einzelner RJ45-**Stecker** (male) am Ende eines
+fest angeschlagenen Kabels, direkt zum DHT22 verdrahtet. Nur Pin 1/2/5
+werden überhaupt angeschlossen, alle anderen Pins bleiben am Stecker
+unbeschaltet (n.c.) — es gibt nichts zum Durchschleifen, da keine zweite
+Buchse existiert.
+
+| RJ45-Pin | Signal | Verbunden mit |
+|---|---|---|
+| 1 | 3V3 | DHT22 VCC |
+| 2 | GND | DHT22 GND |
+| 5 | Einzelpin A (DHT-Data) | DHT22 DATA (+ Pull-up, siehe unten) |
+| 3, 4, 6, 7, 8 | — | nicht angeschlossen (n.c.) |
+
 ## Stückliste
+
+### Standard-Variante
 
 | Bauteil | Menge | Hinweis |
 |---|---|---|
@@ -45,11 +79,24 @@ Relais-Modul weiter hinten in der Kette funktioniert.
 | Gehäuse (optional) | 1 | z. B. kleines 3D-gedrucktes Gehäuse mit 2 RJ45-Durchbrüchen |
 
 **Steckerkonvention**: analog zu bestehenden Grove-/Ethernet-Ketten
-bekommt jedes Modul zwei **Buchsen** (female), die Verbindung zwischen
-Gerät und Modul bzw. zwischen zwei Modulen erfolgt über ein normales
-Patchkabel mit Steckern (male) an beiden Enden — damit ist die
-Kettenreihenfolge beliebig steckbar und es gibt keine Unterscheidung
-zwischen einem fest angeschlagenen Kabel und einem Modul „mit Stecker".
+bekommt jedes Standard-Modul zwei **Buchsen** (female), die Verbindung
+zwischen Gerät und Modul bzw. zwischen zwei Modulen erfolgt über ein
+normales Patchkabel mit Steckern (male) an beiden Enden — damit ist die
+Kettenreihenfolge beliebig steckbar.
+
+### Lite-Variante
+
+| Bauteil | Menge | Hinweis |
+|---|---|---|
+| DHT22 (AM2302), 3-Draht-Breakout | 1 | wie Standard |
+| Pull-up-Widerstand 4,7 kΩ | 0–1 | wie Standard |
+| RJ45-Stecker, 8P8C (male) | 1 | fest am Kabelende, kein Gegenstück am Modul |
+| Kabel, 3-adrig, mit Stecker vergossen/gecrimpt | 1 | Länge je nach Einbausituation, kein Zwischenstecker |
+| Schrumpfschlauch/Mini-Gehäuse am Sensor (optional) | 1 | kein RJ45-Durchbruch nötig |
+
+Spart eine Buchse und die Durchschleif-Verdrahtung, kostet aber die
+Kettenfähigkeit vollständig — auch für ein Kategorie-1-Modul, das sonst
+hinter diesem Modul stecken könnte (siehe „Bekannte Einschränkungen").
 
 ## Verdrahtungstabelle
 
@@ -86,13 +133,17 @@ funktioniert.
   (`SensorManager`/`SensorDetector`, `dhtProbe(PIN_DHT_EXTERNAL, DHT22)`).
   Ein versehentlich gestecktes DHT11-Modul auf diesem Steckplatz liefert
   falsche oder keine Werte.
-- **Durchschleifung**: Pin 1/2/3/4/6/7/8 werden zur OUT-Buchse
-  weitergereicht, Pin 5 wird terminiert — dadurch ist in derselben Kette
-  zusätzlich ein Kategorie-1-Modul (I2C) und/oder ein Relais-Modul (Pin
-  6+7) kombinierbar, aber kein zweites Pin-5-Modul (siehe `README.md`,
-  Abschnitt „Durchschleif-Regel"). Empfohlene Kettenlänge: maximal 1
-  Kategorie-1- + 1 Kategorie-2-Modul (siehe dortige Begründung zum
-  aufgehobenen GND-Sternpunkt).
+- **Durchschleifung (nur Standard)**: Pin 1/2/3/4/6/7/8 werden zur
+  OUT-Buchse weitergereicht, Pin 5 wird terminiert — dadurch ist in
+  derselben Kette zusätzlich ein Kategorie-1-Modul (I2C) und/oder ein
+  Relais-Modul (Pin 6+7) kombinierbar, aber kein zweites Pin-5-Modul
+  (siehe `README.md`, Abschnitt „Durchschleif-Regel"). Empfohlene
+  Kettenlänge: maximal 1 Kategorie-1- + 1 Kategorie-2-Modul (siehe
+  dortige Begründung zum aufgehobenen GND-Sternpunkt).
+- **Lite hat keine Kettenfähigkeit**: die Lite-Variante besitzt keine
+  OUT-Buchse — dahinter kann weder ein zweites Kategorie-2- noch ein
+  Kategorie-1-Modul stecken. Nur sinnvoll, wenn dieses Modul das letzte
+  bzw. einzige am Gerät ist.
 - **Auto-Erkennung**: `SensorDetector::runDetection()` probiert bei
   fehlgeschlagenem I2C-Scan einen DHT-Leseversuch auf Pin 5 — bei Erfolg
   wird „Sensor 2 aktiv" automatisch gesetzt (ein bereits manuell

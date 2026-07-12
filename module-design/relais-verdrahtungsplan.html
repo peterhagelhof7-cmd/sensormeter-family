@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>Relais/Aktor-Modul — Verdrahtungsplan (interaktiv)</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  @page { size: A4; margin: 18mm 16mm 20mm 16mm; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    color: #1c2430;
+    background: #ffffff;
+    font-size: 12.5px;
+    line-height: 1.5;
+  }
+  header {
+    background: #0f1f3d;
+    color: #fff;
+    margin: -18mm -16mm 8mm -16mm;
+    padding: 10mm 16mm 8mm 16mm;
+  }
+  .eyebrow { font-size: 9px; letter-spacing: .14em; text-transform: uppercase; color: #9fb3d9; margin-bottom: 3mm; }
+  h1 { margin: 0 0 2mm 0; font-size: 22px; }
+  .subtitle { color: #cdd8ec; font-size: 12px; }
+  .badges { margin-top: 5mm; display: flex; gap: 6px; flex-wrap: wrap; }
+  .badge { display: inline-block; padding: 3px 9px; border-radius: 3px; font-size: 10px; font-weight: 600; background: #24365c; color: #cdd8ec; }
+  .badge-orange { background: #c8622a; color: #fff; }
+
+  h2 { font-size: 13.5px; color: #8f4a1e; margin: 7mm 0 3mm 0; border-bottom: 1px solid #e4e1d8; padding-bottom: 1.5mm; }
+  h3 { font-size: 12px; color: #1c2430; margin: 5mm 0 2mm 0; }
+  p { margin: 0 0 3mm 0; }
+  code { font-family: Consolas, "Cascadia Mono", "Courier New", monospace; background: #f2f0e9; border: 1px solid #e4e1d8; border-radius: 3px; padding: 1px 5px; font-size: 11px; }
+  table { border-collapse: collapse; width: 100%; margin: 2mm 0 4mm 0; }
+  table th, table td { border: 1px solid #e4e1d8; padding: 1.8mm 3mm; font-size: 11.5px; text-align: left; vertical-align: middle; }
+  table th { background: #f2f0e9; }
+  .callout { border-left: 3px solid #c8622a; background: #fbf3ee; padding: 3mm 4mm; margin: 3mm 0; border-radius: 0 3px 3px 0; }
+  .callout-title { font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: .04em; color: #8f4a1e; margin-bottom: 1mm; }
+  .callout.warn { border-left-color: #a63d2e; background: #fbeeec; }
+  .callout.warn .callout-title { color: #a63d2e; }
+
+  .variant-toggle { display: flex; gap: 8px; margin: 2mm 0 4mm 0; }
+  .variant-toggle button {
+    font: inherit; font-size: 12px; font-weight: 600; padding: 6px 14px; cursor: pointer;
+    border: 1px solid #c7c2b4; background: #f2f0e9; color: #6b7280; border-radius: 4px;
+  }
+  .variant-toggle button.active { background: #0f1f3d; border-color: #0f1f3d; color: #fff; }
+
+  .wire { cursor: pointer; transition: stroke-width .12s ease, opacity .12s ease; }
+  .wire-hit { fill: none; stroke: transparent; stroke-width: 11; cursor: pointer; }
+  .wire.active { stroke-width: 3.4; filter: drop-shadow(0 0 2.5px rgba(0,0,0,.55)); }
+  .wire.dimmed { opacity: .18; }
+  .wire-info {
+    margin-top: 3mm; padding: 3mm 4mm; border-radius: 3px;
+    background: #f2f0e9; border: 1px solid #e4e1d8; color: #6b7280;
+    font-size: 11px; min-height: 1.5em;
+  }
+  .wire-info.active { background: #fbf3ee; border-color: #e2b493; color: #1c2430; }
+  .wire-info b { color: #8f4a1e; }
+  footer { margin-top: 10mm; padding-top: 3mm; border-top: 1px solid #e4e1d8; font-size: 9.5px; color: #6b7280; }
+  @media print {
+    .wire, .wire-hit { cursor: default; }
+    .wire-info, .variant-toggle { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">Sensormeter-Family · Modul-Hardware · Kategorie 2 (Direkt-Modul)</div>
+  <h1>RELAIS/AKTOR-MODUL — VERDRAHTUNGSPLAN</h1>
+  <div class="subtitle">Schaltbarer Aktor für Sensormeter (WT32-ETH01) und Sensormeter PoE (ESP32-S3-ETH)</div>
+  <div class="badges">
+    <span class="badge badge-orange">Pin 1/2/6/7 · VCC/GND/CTRL/FB</span>
+    <span class="badge">Kategorie 2 · zwei Einzelpins</span>
+    <span class="badge">github.com/peterhagelhof7-cmd/sensormeter-family</span>
+  </div>
+</header>
+
+<p>Siehe <code>relais-modul.md</code> für Zweck, vollständige Stückliste und
+bekannte Einschränkungen — diese Seite ist die interaktive Kurzfassung der
+Verdrahtung. Zwei Bauvarianten, siehe Umschalter unten.</p>
+
+<div class="variant-toggle">
+  <button data-variant="standard" class="active">Standard (2 Buchsen, durchschleifbar)</button>
+  <button data-variant="lite">Lite (1 Kabel mit Stecker, kein Durchschleifen)</button>
+</div>
+
+<h2>Schema</h2>
+<p style="font-size:10px;color:#6b7280;margin-top:-1mm;">Interaktiv: Klick auf einen Draht hebt ihn hervor und zeigt Start-/Zielpin unten an. Klick auf die freie Fläche hebt die Auswahl wieder auf.</p>
+
+<svg id="wiringSvg" viewBox="0 0 900 440" style="width:100%; max-width:180mm; height:auto; font-family:inherit;">
+
+  <!-- ================= STANDARD-VARIANTE ================= -->
+  <g id="variant-standard">
+    <rect x="40" y="30" width="150" height="380" rx="6" fill="#4a5568"/>
+    <text x="115" y="50" text-anchor="middle" font-size="10" fill="#fff" font-weight="700">RJ45 IN</text>
+    <text x="115" y="63" text-anchor="middle" font-size="8" fill="#9fb3d9">vom Gerät / Vormodul</text>
+    <g font-size="8.5" fill="#fff">
+      <text x="180" y="73" text-anchor="end">1 3V3</text>
+      <text x="180" y="108" text-anchor="end">2 GND</text>
+      <text x="180" y="143" text-anchor="end">3 SCL</text>
+      <text x="180" y="178" text-anchor="end">4 SDA</text>
+      <text x="180" y="213" text-anchor="end">5 DATA</text>
+      <text x="180" y="248" text-anchor="end" font-weight="700" fill="#ffb3a4">6 Relais</text>
+      <text x="180" y="283" text-anchor="end" font-weight="700" fill="#ffe08a">7 Fdbk</text>
+      <text x="180" y="318" text-anchor="end">8 Res.</text>
+    </g>
+    <g>
+      <circle cx="190" cy="70" r="3" fill="#c0392b"/>
+      <circle cx="190" cy="105" r="3" fill="#1c2430"/>
+      <circle cx="190" cy="140" r="3" fill="#c8622a"/>
+      <circle cx="190" cy="175" r="3" fill="#5c9e6c"/>
+      <circle cx="190" cy="210" r="3" fill="#2e6da4"/>
+      <circle cx="190" cy="245" r="3.4" fill="#a63d2e" stroke="#fff" stroke-width="1"/>
+      <circle cx="190" cy="280" r="3.4" fill="#c9a227" stroke="#fff" stroke-width="1"/>
+      <circle cx="190" cy="315" r="3" fill="#8a93a3"/>
+    </g>
+
+    <rect x="710" y="30" width="150" height="380" rx="6" fill="#4a5568"/>
+    <text x="785" y="50" text-anchor="middle" font-size="10" fill="#fff" font-weight="700">RJ45 OUT</text>
+    <text x="785" y="63" text-anchor="middle" font-size="8" fill="#9fb3d9">zum nächsten Modul</text>
+    <g font-size="8.5" fill="#fff">
+      <text x="720" y="73">1 3V3</text>
+      <text x="720" y="108">2 GND</text>
+      <text x="720" y="143">3 SCL</text>
+      <text x="720" y="178">4 SDA</text>
+      <text x="720" y="213">5 DATA</text>
+      <text x="720" y="248" fill="#c9a4a4">6 term.</text>
+      <text x="720" y="283" fill="#c9a4a4">7 term.</text>
+      <text x="720" y="318">8 Res.</text>
+    </g>
+    <g>
+      <circle cx="710" cy="70" r="3" fill="#c0392b"/>
+      <circle cx="710" cy="105" r="3" fill="#1c2430"/>
+      <circle cx="710" cy="140" r="3" fill="#c8622a"/>
+      <circle cx="710" cy="175" r="3" fill="#5c9e6c"/>
+      <circle cx="710" cy="210" r="3" fill="#2e6da4"/>
+      <circle cx="710" cy="245" r="3.4" fill="none" stroke="#a63d2e" stroke-width="1.6"/>
+      <circle cx="710" cy="280" r="3.4" fill="none" stroke="#c9a227" stroke-width="1.6"/>
+      <circle cx="710" cy="315" r="3" fill="#8a93a3"/>
+    </g>
+    <text x="785" y="262" text-anchor="middle" font-size="7.5" fill="#a63d2e">Pin 6+7 terminiert</text>
+
+    <!-- Relaisplatine -->
+    <rect x="380" y="140" width="180" height="160" rx="4" fill="#f2f0e9" stroke="#c7c2b4"/>
+    <text x="470" y="162" text-anchor="middle" font-size="10" font-weight="700">Relaisplatine</text>
+    <text x="470" y="175" text-anchor="middle" font-size="8" fill="#6b7280">Low-Level-Trigger</text>
+    <circle cx="390" cy="200" r="3" fill="#c0392b"/><text x="400" y="204" font-size="9">VCC</text>
+    <circle cx="390" cy="230" r="3" fill="#1c2430"/><text x="400" y="234" font-size="9">GND</text>
+    <circle cx="390" cy="260" r="3" fill="#a63d2e"/><text x="400" y="264" font-size="9">IN (ctrl)</text>
+    <circle cx="390" cy="285" r="3" fill="#c9a227"/><text x="400" y="289" font-size="8">FB (optional)</text>
+    <rect x="500" y="240" width="40" height="24" rx="3" fill="#fff" stroke="#c7c2b4"/>
+    <text x="520" y="256" text-anchor="middle" font-size="7" fill="#8a93a3">Relais</text>
+
+    <path class="wire-hit" data-wire="s1" d="M190,70 L710,70"/>
+    <path class="wire" data-wire="s1" data-from="IN Pin 1 (3V3)" data-to="OUT Pin 1 (3V3, durchgeschleift)" d="M190,70 L710,70" fill="none" stroke="#c0392b" stroke-width="1.4" stroke-dasharray="5 3"/>
+    <path class="wire-hit" data-wire="s2" d="M190,105 L710,105"/>
+    <path class="wire" data-wire="s2" data-from="IN Pin 2 (GND)" data-to="OUT Pin 2 (GND, durchgeschleift)" d="M190,105 L710,105" fill="none" stroke="#1c2430" stroke-width="1.4" stroke-dasharray="5 3"/>
+    <path class="wire-hit" data-wire="s3" d="M190,140 L710,140"/>
+    <path class="wire" data-wire="s3" data-from="IN Pin 3 (SCL)" data-to="OUT Pin 3 (durchgeschleift)" d="M190,140 L710,140" fill="none" stroke="#c8622a" stroke-width="1.4" stroke-dasharray="5 3"/>
+    <path class="wire-hit" data-wire="s4" d="M190,175 L710,175"/>
+    <path class="wire" data-wire="s4" data-from="IN Pin 4 (SDA)" data-to="OUT Pin 4 (durchgeschleift)" d="M190,175 L710,175" fill="none" stroke="#5c9e6c" stroke-width="1.4" stroke-dasharray="5 3"/>
+    <path class="wire-hit" data-wire="s5" d="M190,210 L710,210"/>
+    <path class="wire" data-wire="s5" data-from="IN Pin 5 (Einzelpin A)" data-to="OUT Pin 5 (durchgeschleift)" d="M190,210 L710,210" fill="none" stroke="#2e6da4" stroke-width="1.4" stroke-dasharray="5 3"/>
+    <path class="wire-hit" data-wire="s8" d="M190,315 L710,315"/>
+    <path class="wire" data-wire="s8" data-from="IN Pin 8 (Reserve)" data-to="OUT Pin 8 (durchgeschleift)" d="M190,315 L710,315" fill="none" stroke="#8a93a3" stroke-width="1.4" stroke-dasharray="5 3"/>
+
+    <path class="wire-hit" data-wire="s9" d="M190,70 C 300,70 300,200 390,200"/>
+    <path class="wire" data-wire="s9" data-from="IN Pin 1 (3V3)" data-to="Relaisplatine VCC" d="M190,70 C 300,70 300,200 390,200" fill="none" stroke="#c0392b" stroke-width="1.8"/>
+    <path class="wire-hit" data-wire="s10" d="M190,105 C 310,105 310,230 390,230"/>
+    <path class="wire" data-wire="s10" data-from="IN Pin 2 (GND)" data-to="Relaisplatine GND" d="M190,105 C 310,105 310,230 390,230" fill="none" stroke="#1c2430" stroke-width="1.8"/>
+    <path class="wire-hit" data-wire="s11" d="M190,245 L390,260"/>
+    <path class="wire" data-wire="s11" data-from="IN Pin 6 (Relais-Steuerung)" data-to="Relaisplatine IN (endet hier, nicht auf OUT)" d="M190,245 L390,260" fill="none" stroke="#a63d2e" stroke-width="2.2"/>
+    <path class="wire-hit" data-wire="s12" d="M190,280 L390,285"/>
+    <path class="wire" data-wire="s12" data-from="IN Pin 7 (Relais-Feedback)" data-to="Relaisplatine Feedback-Kontakt (optional, endet hier)" d="M190,280 L390,285" fill="none" stroke="#c9a227" stroke-width="2.2"/>
+  </g>
+
+  <!-- ================= LITE-VARIANTE ================= -->
+  <g id="variant-lite" style="display:none">
+    <rect x="60" y="130" width="140" height="180" rx="6" fill="#4a5568"/>
+    <text x="130" y="152" text-anchor="middle" font-size="10" fill="#fff" font-weight="700">RJ45-Stecker</text>
+    <text x="130" y="165" text-anchor="middle" font-size="8" fill="#9fb3d9">male, fest am Kabel</text>
+    <g font-size="8.5" fill="#fff">
+      <text x="190" y="193" text-anchor="end">1 3V3</text>
+      <text x="190" y="218" text-anchor="end">2 GND</text>
+      <text x="190" y="243" text-anchor="end" font-weight="700" fill="#ffb3a4">6 Relais</text>
+      <text x="190" y="268" text-anchor="end" font-weight="700" fill="#ffe08a">7 Fdbk</text>
+      <text x="190" y="293" text-anchor="end" fill="#c9c5b8">3,4,5,8 n.c.</text>
+    </g>
+    <circle cx="200" cy="190" r="3" fill="#c0392b"/>
+    <circle cx="200" cy="215" r="3" fill="#1c2430"/>
+    <circle cx="200" cy="240" r="3.4" fill="#a63d2e" stroke="#fff" stroke-width="1"/>
+    <circle cx="200" cy="265" r="3.4" fill="#c9a227" stroke="#fff" stroke-width="1"/>
+
+    <rect x="420" y="140" width="180" height="160" rx="4" fill="#f2f0e9" stroke="#c7c2b4"/>
+    <text x="510" y="162" text-anchor="middle" font-size="10" font-weight="700">Relaisplatine</text>
+    <text x="510" y="175" text-anchor="middle" font-size="8" fill="#6b7280">Low-Level-Trigger</text>
+    <circle cx="430" cy="200" r="3" fill="#c0392b"/><text x="440" y="204" font-size="9">VCC</text>
+    <circle cx="430" cy="230" r="3" fill="#1c2430"/><text x="440" y="234" font-size="9">GND</text>
+    <circle cx="430" cy="260" r="3" fill="#a63d2e"/><text x="440" y="264" font-size="9">IN (ctrl)</text>
+    <circle cx="430" cy="285" r="3" fill="#c9a227"/><text x="440" y="289" font-size="8">FB (optional)</text>
+    <rect x="540" y="240" width="40" height="24" rx="3" fill="#fff" stroke="#c7c2b4"/>
+    <text x="560" y="256" text-anchor="middle" font-size="7" fill="#8a93a3">Relais</text>
+
+    <path class="wire-hit" data-wire="l1" d="M200,190 C 300,190 300,200 430,200"/>
+    <path class="wire" data-wire="l1" data-from="Stecker Pin 1 (3V3)" data-to="Relaisplatine VCC" d="M200,190 C 300,190 300,200 430,200" fill="none" stroke="#c0392b" stroke-width="1.8"/>
+    <path class="wire-hit" data-wire="l2" d="M200,215 C 310,215 310,230 430,230"/>
+    <path class="wire" data-wire="l2" data-from="Stecker Pin 2 (GND)" data-to="Relaisplatine GND" d="M200,215 C 310,215 310,230 430,230" fill="none" stroke="#1c2430" stroke-width="1.8"/>
+    <path class="wire-hit" data-wire="l3" d="M200,240 L430,260"/>
+    <path class="wire" data-wire="l3" data-from="Stecker Pin 6 (Relais-Steuerung)" data-to="Relaisplatine IN" d="M200,240 L430,260" fill="none" stroke="#a63d2e" stroke-width="2.2"/>
+    <path class="wire-hit" data-wire="l4" d="M200,265 L430,285"/>
+    <path class="wire" data-wire="l4" data-from="Stecker Pin 7 (Relais-Feedback)" data-to="Relaisplatine Feedback-Kontakt (optional)" d="M200,265 L430,285" fill="none" stroke="#c9a227" stroke-width="2.2"/>
+
+    <text x="130" y="330" text-anchor="middle" font-size="9" fill="#a63d2e" font-weight="700">Keine zweite Buchse</text>
+    <text x="130" y="343" text-anchor="middle" font-size="8" fill="#6b7280">Kette endet hier komplett -</text>
+    <text x="130" y="355" text-anchor="middle" font-size="8" fill="#6b7280">auch Kategorie-1-Pins (3/4)</text>
+    <text x="130" y="367" text-anchor="middle" font-size="8" fill="#6b7280">werden NICHT durchgeschleift.</text>
+  </g>
+</svg>
+<div id="wireInfo" class="wire-info">Klicke auf einen Draht, um Start- und Zielpin anzuzeigen.</div>
+<p style="font-size:10px;color:#6b7280;">Gestrichelte Linien (nur Standard) = reines Durchschleifen, dieses Modul wertet das Signal nicht aus.</p>
+
+<script>
+(function () {
+  var svg = document.getElementById('wiringSvg');
+  var info = document.getElementById('wireInfo');
+  var buttons = document.querySelectorAll('.variant-toggle button');
+  var groups = { standard: document.getElementById('variant-standard'), lite: document.getElementById('variant-lite') };
+  if (!svg || !info) return;
+
+  function clearSelection() {
+    svg.querySelectorAll('.wire').forEach(function (w) { w.classList.remove('active', 'dimmed'); });
+    info.textContent = 'Klicke auf einen Draht, um Start- und Zielpin anzuzeigen.';
+    info.classList.remove('active');
+  }
+
+  function selectWire(id) {
+    var wire = svg.querySelector('.wire[data-wire="' + id + '"]');
+    if (!wire) return;
+    if (wire.classList.contains('active')) { clearSelection(); return; }
+    svg.querySelectorAll('.wire').forEach(function (w) {
+      if (w === wire) { w.classList.add('active'); w.classList.remove('dimmed'); }
+      else { w.classList.add('dimmed'); w.classList.remove('active'); }
+    });
+    info.innerHTML = '<b>' + wire.dataset.from + '</b> &rarr; <b>' + wire.dataset.to + '</b>';
+    info.classList.add('active');
+  }
+
+  svg.addEventListener('click', function (e) {
+    var hit = e.target.closest('.wire, .wire-hit');
+    if (hit) selectWire(hit.dataset.wire);
+    else clearSelection();
+  });
+
+  buttons.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      buttons.forEach(function (b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      var variant = btn.dataset.variant;
+      groups.standard.style.display = (variant === 'standard') ? '' : 'none';
+      groups.lite.style.display = (variant === 'lite') ? '' : 'none';
+      clearSelection();
+    });
+  });
+})();
+</script>
+
+<h2>Stückliste (BOM)</h2>
+<h3>Standard-Variante (2 Buchsen)</h3>
+<table>
+  <tr><th>Bauteil</th><th>Menge</th><th>Hinweis</th></tr>
+  <tr><td>Relaismodul, Low-Level-Trigger</td><td>1</td><td>active LOW, kein Pegelwandler nötig</td></tr>
+  <tr><td>RJ45-Buchse, 8P8C (female), IN</td><td>1</td><td>zum Gerät bzw. Vormodul</td></tr>
+  <tr><td>RJ45-Buchse, 8P8C (female), OUT</td><td>1</td><td>zum nächsten Modul, Pin 6+7 terminiert</td></tr>
+  <tr><td>Platinenverdrahtung IN↔OUT</td><td>1 Satz</td><td>Pin 1/2/3/4/5/8 durchschleifen</td></tr>
+  <tr><td>Litze zur Relaisplatine</td><td>3–4-adrig</td><td>4. Ader nur bei genutztem Feedback</td></tr>
+  <tr><td>Gehäuse</td><td>1</td><td>optional, Lastseite sicher isolieren</td></tr>
+</table>
+<h3>Lite-Variante (1 Kabel mit Stecker)</h3>
+<table>
+  <tr><th>Bauteil</th><th>Menge</th><th>Hinweis</th></tr>
+  <tr><td>Relaismodul, Low-Level-Trigger</td><td>1</td><td>wie Standard</td></tr>
+  <tr><td>RJ45-Stecker, 8P8C (male)</td><td>1</td><td>fest am Kabelende, kein Gegenstück am Modul</td></tr>
+  <tr><td>Kabel, 3–4-adrig, mit Stecker vergossen/gecrimpt</td><td>1</td><td>kein Zwischenstecker</td></tr>
+  <tr><td>Gehäuse</td><td>1</td><td>optional, kein RJ45-Durchbruch nötig</td></tr>
+</table>
+<p style="font-size:11px;color:#6b7280;">Lite spart eine RJ45-Buchse und die Durchschleif-Verdrahtung, kostet
+aber die Kettenfähigkeit vollständig — siehe <code>relais-modul.md</code>.</p>
+
+<div class="callout warn">
+  <div class="callout-title">Ansteuerung beachten</div>
+  Nur Low-Level-Trigger-Relaismodule (active LOW) direkt verwenden — passt
+  zu <code>RelayManager</code> ohne zusätzlichen Pegelwandler. High-Level-
+  Trigger-Module invertieren das Schaltverhalten.
+</div>
+
+<footer>
+  Sensormeter-Family — Relais/Aktor-Modul, Verdrahtungsplan (interaktiv) · github.com/peterhagelhof7-cmd/sensormeter-family ·
+  Entwickelt mit Unterstützung von Claude (Anthropic) als Coding-Assistent
+</footer>
+
+</body>
+</html>

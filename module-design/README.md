@@ -98,38 +98,46 @@ bus-fähig), aber dank Durchschleif-Regel oben trotzdem mit einem
 Kategorie-1-Modul in derselben Kette kombinierbar. Der Einzelpin selbst
 wird auf der OUT-Buchse terminiert, siehe oben.
 
+Jedes Kategorie-2-Modul gibt es in zwei Bauvarianten (siehe jeweiliges
+Modul-Dokument, Abschnitt „Varianten"): **Standard** (2 Buchsen,
+durchschleifbar für Kategorie-1-Module dahinter) und **Lite** (1 Kabel
+mit fest angeschlagenem RJ45-Stecker, Sensor/Aktor direkt am Kabelende,
+keine zweite Buchse, keine Kettenfähigkeit — günstiger/einfacher, aber
+das letzte Modul in der Kette).
+
 | Modul | Pin(s) | Status |
 |---|---|---|
-| [DHT22-Sensormodul](dht22-modul.md) | 5 | ✅ entworfen |
-| Türkontakt (Reed-/Magnetkontakt) | 5 (gemeinsam mit DHT22, siehe unten) | 📋 vorgemerkt |
-| Relais/Aktor-Modul | 6 (Steuerung) + 7 (Feedback) | 📋 noch nicht entworfen (Firmware bereits fertig, siehe `sensormeter-poe`/`sensormeter` `entscheidungen.md`) |
+| [DHT22-Sensormodul](dht22-modul.md) | 5 | ✅ entworfen (Standard + Lite, BOM + [interaktiver Plan](dht22-verdrahtungsplan.html)) |
+| [Türkontakt-Modul](tuerkontakt-modul.md) (Reed-/Magnetkontakt) | 5 (gemeinsam mit DHT22, siehe unten) | ✅ entworfen (Standard + Lite, BOM + [interaktiver Plan](tuerkontakt-verdrahtungsplan.html)) |
+| [Relais/Aktor-Modul](relais-modul.md) | 6 (Steuerung) + 7 (Feedback) | ✅ entworfen (Standard + Lite, BOM + [interaktiver Plan](relais-verdrahtungsplan.html)) |
 
 **DHT22 und Türkontakt teilen sich Pin 5, schließen sich gegenseitig aus.**
 Elektrisch identische Pull-up-Topologie (Pin 5 → 4,7 kΩ → 3V3, Sensor bzw.
 Kontakt zieht die Leitung aktiv auf GND) — beide passen auf denselben
 Steckplatz, nur eines der beiden kann gleichzeitig gesteckt sein.
 
-**Bekannte Einschränkung der Auto-Erkennung für einen künftigen
-Türkontakt**: `SensorDetector::runDetection()` versucht bei fehlgeschlagenem
-I2C-Scan aktuell einen DHT-Leseversuch auf Pin 5. Ein Türkontakt-Modul
-würde dabei nur erkannt, wenn der Kontakt beim Scan **geschlossen** ist
-(Pin auf LOW) — ein offener Kontakt sieht elektrisch identisch aus wie
-„nichts gesteckt" (Pull-up hält die Leitung HIGH), der DHT-Leseversuch
-schlägt in beiden Fällen gleich fehl. Genau wie bei Sensor 2 heute schon
-(„Erkennung setzt nur automatisch, deaktiviert nie automatisch") bräuchte
-ein Türkontakt-Modul zusätzlich eine manuelle Override-Option in den
-Einstellungen, um zuverlässig zu funktionieren, wenn die Tür beim
-Boot-Scan gerade offen ist.
+**Bekannte Einschränkung der Auto-Erkennung, in der Firmware gelöst durch
+rein manuelle Modultyp-Wahl**: ein Türkontakt wäre bei einer
+DHT-Leseversuch-basierten Auto-Erkennung nur erkennbar, wenn der Kontakt
+beim Scan **geschlossen** ist (Pin auf LOW) — ein offener Kontakt sieht
+elektrisch identisch aus wie „nichts gesteckt" (Pull-up hält die Leitung
+HIGH). Umgesetzt wurde daher **keine** Auto-Erkennung für dieses Modul,
+sondern eine rein manuelle Modultyp-Auswahl „Sensor"/„Kontakt" auf der
+Einstellungsseite (`cfg.pin5Mode`, siehe `sensormeter/repo/docs/
+entscheidungen.md` „Türkontakt auf RJ45 Pin 5"). `SensorDetector`
+überspringt den DHT-Leseversuch entsprechend, wenn „Kontakt" gewählt ist.
 
 **Wichtiger Unterschied zu Sensor 2**: ein Türkontakt liefert nur
-offen/geschlossen (binär), kein Temperatur-/Feuchte-Paar. Er kann daher
-NICHT einfach den bestehenden „Sensor 2"-Datenpfad (SNMP-Zweig `.4.x`,
-MQTT-`sensor`-Discovery, Web-UI-Sensorformular) mitbenutzen, sondern
-bräuchte einen eigenen, neuen Datenpfad (eigenes Config-Feld, eigene
-SNMP-OID, MQTT `binary_sensor` statt `sensor`) — das ist ein separates,
-späteres Firmware-Thema und betrifft nur die Software, nicht den
-Hardware-Entwurf des Steckers selbst (der ist mit dem DHT22-Modul bereits
-identisch).
+offen/geschlossen (binär), kein Temperatur-/Feuchte-Paar. Er nutzt daher
+NICHT den bestehenden „Sensor 2"-Datenpfad (SNMP-Zweig `.4.x`,
+MQTT-`sensor`-Discovery, Web-UI-Sensorformular), sondern einen eigenen
+`ContactManager` mit eigenem Config-Feld (`contactName`, `contactAlarmAt`)
+und eigenem REST-Endpunkt (`/api/contact`) — bislang aber **ohne**
+MQTT-/SNMP-Anbindung (ein binärer Zustand passt nicht in deren
+Temperatur/Feuchte- bzw. `sensor`-Schema; eine `binary_sensor`-Discovery
+bzw. eigene SNMP-OID ist ein offenes, separates Firmware-Thema und
+betrifft nur die Software, nicht den Hardware-Entwurf des Steckers selbst,
+der mit dem DHT22-Modul identisch ist).
 
 ## Stückliste-Konvention
 
@@ -138,15 +146,22 @@ Verzeichnis mit mindestens:
 
 1. **Zweck** — was das Modul misst/steuert, welche(s) Gerät(e) es
    unterstützen (Sensormeter / Sensormeter PoE / beide)
-2. **Pinbelegung des Modul-Steckers** — welche der 8 RJ45-Pins wie
-   beschaltet werden
-3. **Stückliste** — Bauteile, Werte, Anzahl
-4. **Verdrahtungstabelle** — Bauteil-Pin → RJ45-Pin, analog zu den
+2. **Varianten** — Standard (2 Buchsen, durchschleifbar) vs. Lite (1
+   Kabel mit Stecker, keine Kettenfähigkeit), siehe oben
+3. **Pinbelegung des Modul-Steckers** — welche der 8 RJ45-Pins wie
+   beschaltet werden, je Variante
+4. **Stückliste** — Bauteile, Werte, Anzahl, je Variante
+5. **Verdrahtungstabelle** — Bauteil-Pin → RJ45-Pin, analog zu den
    bestehenden `verdrahtungsplan.html`-Dokumenten der Hauptgeräte
-5. **Bekannte Einschränkungen** — z. B. Auto-Erkennungs-Grenzen,
-   gegenseitiger Ausschluss mit anderen Modulen am selben Pin
+6. **Bekannte Einschränkungen** — z. B. Auto-Erkennungs-Grenzen,
+   gegenseitiger Ausschluss mit anderen Modulen am selben Pin, fehlende
+   Kettenfähigkeit bei Lite
 
-Eine interaktive HTML-Visualisierung (analog zu
-`sensormeter/repo/docs/verdrahtungsplan.html`) ist für eine spätere Runde
-vorgesehen, sobald mehrere Module fertig sind — die Text-/Tabellenform
-hier ist die Grundlage dafür.
+Jedes Modul bekommt außerdem eine eigene interaktive HTML-Visualisierung
+`<modulname>-verdrahtungsplan.html` (analog zu `sensormeter/repo/docs/
+verdrahtungsplan.html`: anklickbare Drähte, Start-/Zielpin-Anzeige) mit
+einem Umschalter zwischen Standard- und Lite-Ansicht sowie den BOM-Tabellen
+beider Varianten — siehe [dht22-verdrahtungsplan.html](dht22-verdrahtungsplan.html),
+[relais-verdrahtungsplan.html](relais-verdrahtungsplan.html) und
+[tuerkontakt-verdrahtungsplan.html](tuerkontakt-verdrahtungsplan.html) als
+Vorlage für künftige Module.

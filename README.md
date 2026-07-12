@@ -90,12 +90,17 @@ Kopie liegt in allen vier Projekt-Repos.
 
 ## RJ45-Steckmodule (Hardware-Entwürfe)
 
-[module-design/](module-design/) — Stücklisten und Verdrahtungstabellen für
-die über den RJ45-Modularanschluss steckbaren Erweiterungsmodule (nur
-Sensormeter/Sensormeter PoE, siehe dortiges `README.md`). Zwei Kategorien:
-**Bus-Module** (I2C, mehrere gleichzeitig steckbar) und **Direkt-Module**
-(dedizierter Einzelpin, genau eines gleichzeitig — z. B. das erste fertige
-Modul, [DHT22-Sensormodul](module-design/dht22-modul.md)).
+[module-design/](module-design/) — Stücklisten, Verdrahtungstabellen und
+interaktive Verdrahtungspläne für die über den RJ45-Modularanschluss
+steckbaren Erweiterungsmodule (nur Sensormeter/Sensormeter PoE, siehe
+dortiges `README.md`). Zwei Kategorien: **Bus-Module** (I2C, mehrere
+gleichzeitig steckbar, noch kein Modul entworfen) und **Direkt-Module**
+(dedizierter Einzelpin, genau eines gleichzeitig — alle drei bislang
+vorgesehenen Module fertig entworfen, jeweils in einer Standard-Variante
+mit 2 Buchsen und einer kabelgebundenen Lite-Variante ohne
+Kettenfähigkeit): [DHT22-Sensormodul](module-design/dht22-modul.md),
+[Türkontakt-Modul](module-design/tuerkontakt-modul.md),
+[Relais/Aktor-Modul](module-design/relais-modul.md).
 
 ## Werkzeuge
 
