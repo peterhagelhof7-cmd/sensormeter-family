@@ -190,41 +190,37 @@ der Verdrahtung. Zwei Bauvarianten, siehe Umschalter unten.</p>
     <text x="130" y="162" text-anchor="middle" font-size="10" fill="#fff" font-weight="700">RJ45-Stecker</text>
     <text x="130" y="175" text-anchor="middle" font-size="8" fill="#9fb3d9">male, fest am Kabel</text>
     <g font-size="8.5" fill="#fff">
-      <text x="190" y="203" text-anchor="end">1 3V3</text>
       <text x="190" y="228" text-anchor="end">2 GND</text>
       <text x="190" y="253" text-anchor="end" font-weight="700" fill="#ffd8a8">5 DATA</text>
-      <text x="190" y="278" text-anchor="end" fill="#c9c5b8">3,4,6,7,8 n.c.</text>
+      <text x="190" y="278" text-anchor="end" fill="#c9c5b8">1,3,4,6,7,8 n.c.</text>
     </g>
-    <circle cx="200" cy="200" r="3" fill="#c0392b"/>
     <circle cx="200" cy="225" r="3" fill="#1c2430"/>
     <circle cx="200" cy="250" r="3.4" fill="#2e6da4" stroke="#fff" stroke-width="1"/>
 
     <rect x="420" y="150" width="180" height="150" rx="4" fill="#f2f0e9" stroke="#c7c2b4"/>
     <text x="510" y="172" text-anchor="middle" font-size="10" font-weight="700">Türkontakt-Modul</text>
-    <text x="510" y="185" text-anchor="middle" font-size="8" fill="#6b7280">Pull-up + Reed-Kontakt</text>
-    <rect x="490" y="200" width="14" height="34" fill="none" stroke="#8a93a3" stroke-width="1.6"/>
-    <line x1="497" y1="195" x2="497" y2="200" stroke="#8a93a3" stroke-width="1.6"/>
-    <line x1="497" y1="234" x2="497" y2="239" stroke="#8a93a3" stroke-width="1.6"/>
-    <text x="515" y="220" font-size="7.5" fill="#8a93a3">4k7</text>
-    <line x1="480" y1="270" x2="500" y2="255" stroke="#2e6da4" stroke-width="1.8"/>
-    <circle cx="480" cy="270" r="2.2" fill="#2e6da4"/>
-    <circle cx="515" cy="255" r="2.2" fill="#2e6da4"/>
-    <text x="520" y="275" font-size="7.5" fill="#2e6da4">Reed</text>
-    <circle cx="430" cy="197" r="3" fill="#c0392b"/><text x="440" y="201" font-size="9">VCC (Pull-up)</text>
-    <circle cx="430" cy="255" r="3" fill="#2e6da4"/><text x="440" y="259" font-size="9">DATA-Knoten</text>
+    <text x="510" y="185" text-anchor="middle" font-size="8" fill="#6b7280">nur Reed-Kontakt, kein Pull-up</text>
+    <line x1="470" y1="255" x2="490" y2="240" stroke="#2e6da4" stroke-width="1.8"/>
+    <circle cx="470" cy="255" r="2.2" fill="#2e6da4"/>
+    <circle cx="490" cy="240" r="2.2" fill="#2e6da4"/>
+    <text x="500" y="245" font-size="7.5" fill="#2e6da4">Reed</text>
+    <circle cx="430" cy="255" r="3" fill="#2e6da4"/><text x="440" y="259" font-size="9">DATA (Reed A)</text>
     <circle cx="430" cy="285" r="3" fill="#1c2430"/><text x="440" y="289" font-size="9">GND (Reed B)</text>
+    <text x="510" y="215" text-anchor="middle" font-size="7.5" fill="#a63d2e">Pull-up kommt vom Gerät (intern,</text>
+    <text x="510" y="226" text-anchor="middle" font-size="7.5" fill="#a63d2e">INPUT_PULLUP in ContactManager)</text>
 
-    <path class="wire-hit" data-wire="l1" d="M200,200 C 300,200 300,197 430,197"/>
-    <path class="wire" data-wire="l1" data-from="Stecker Pin 1 (3V3)" data-to="Pull-up 4,7k&#0937; (oberes Ende)" d="M200,200 C 300,200 300,197 430,197" fill="none" stroke="#c0392b" stroke-width="1.8"/>
     <path class="wire-hit" data-wire="l2" d="M200,225 C 310,225 310,285 430,285"/>
     <path class="wire" data-wire="l2" data-from="Stecker Pin 2 (GND)" data-to="Reed-Kontakt Anschluss B" d="M200,225 C 310,225 310,285 430,285" fill="none" stroke="#1c2430" stroke-width="1.8"/>
     <path class="wire-hit" data-wire="l3" d="M200,250 L430,255"/>
-    <path class="wire" data-wire="l3" data-from="Stecker Pin 5 (Einzelpin A)" data-to="Pull-up unteres Ende + Reed Anschluss A" d="M200,250 L430,255" fill="none" stroke="#2e6da4" stroke-width="2.2"/>
+    <path class="wire" data-wire="l3" data-from="Stecker Pin 5 (Einzelpin A, interner Pull-up des Geräts)" data-to="Reed-Kontakt Anschluss A" d="M200,250 L430,255" fill="none" stroke="#2e6da4" stroke-width="2.2"/>
 
     <text x="130" y="330" text-anchor="middle" font-size="9" fill="#a63d2e" font-weight="700">Keine zweite Buchse</text>
     <text x="130" y="343" text-anchor="middle" font-size="8" fill="#6b7280">Kette endet hier komplett -</text>
     <text x="130" y="355" text-anchor="middle" font-size="8" fill="#6b7280">auch Kategorie-1-Pins (3/4)</text>
     <text x="130" y="367" text-anchor="middle" font-size="8" fill="#6b7280">werden NICHT durchgeschleift.</text>
+    <text x="130" y="384" text-anchor="middle" font-size="9" fill="#a63d2e" font-weight="700">Max. 3 m, geschirmtes Kabel</text>
+    <text x="130" y="396" text-anchor="middle" font-size="8" fill="#6b7280">(schwacher interner Pull-up,</text>
+    <text x="130" y="408" text-anchor="middle" font-size="8" fill="#6b7280">Schirm auf GND auflegen)</text>
   </g>
 </svg>
 <div id="wireInfo" class="wire-info">Klicke auf einen Draht, um Start- und Zielpin anzuzeigen.</div>
@@ -287,24 +283,33 @@ der Verdrahtung. Zwei Bauvarianten, siehe Umschalter unten.</p>
   <tr><td>Kabel zum Reed-Kontakt (2-adrig)</td><td>nach Bedarf</td><td>Türrahmen ↔ Modul</td></tr>
   <tr><td>Gehäuse</td><td>1</td><td>optional, 2 RJ45-Durchbrüche</td></tr>
 </table>
-<h3>Lite-Variante (1 Kabel mit Stecker)</h3>
+<h3>Lite-Variante (1 Kabel mit Stecker, 2-Draht)</h3>
 <table>
   <tr><th>Bauteil</th><th>Menge</th><th>Hinweis</th></tr>
   <tr><td>Reed-/Magnetkontakt (2-Draht)</td><td>1</td><td>wie Standard</td></tr>
-  <tr><td>Pull-up-Widerstand 4,7 kΩ</td><td>1</td><td>wie Standard</td></tr>
   <tr><td>RJ45-Stecker, 8P8C (male)</td><td>1</td><td>fest am Kabelende, kein Gegenstück am Modul</td></tr>
-  <tr><td>Kabel mit Stecker vergossen/gecrimpt</td><td>1</td><td>kein Zwischenstecker</td></tr>
+  <tr><td>Kabel, 2-adrig, <b>geschirmt</b>, max. 3 m, mit Stecker vergossen/gecrimpt</td><td>1</td><td>Schirm auf GND (Pin 2) auflegen, kein Zwischenstecker</td></tr>
   <tr><td>Gehäuse</td><td>1</td><td>optional, kein RJ45-Durchbruch nötig</td></tr>
 </table>
-<p style="font-size:11px;color:#6b7280;">Lite spart eine RJ45-Buchse und die Durchschleif-Verdrahtung, kostet
-aber die Kettenfähigkeit vollständig — siehe <code>tuerkontakt-modul.md</code>.</p>
+<p style="font-size:11px;color:#6b7280;">Lite spart eine RJ45-Buchse, die Durchschleif-Verdrahtung UND den
+Pull-up-Widerstand (nutzt stattdessen den internen ESP32-Pull-up, siehe
+Schema oben), kostet aber die Kettenfähigkeit vollständig und ist auf
+3 m geschirmtes Kabel begrenzt — siehe <code>tuerkontakt-modul.md</code>.</p>
+
+<div class="callout warn">
+  <div class="callout-title">Lite: nur bis 3 m, geschirmt</div>
+  Ohne externen Pull-up ist die Störfestigkeit geringer als bei der
+  Standard-Variante — bei längeren oder exponierten Kabelwegen (Außentür,
+  Verlegung entlang von Netzleitungen) die Standard-Variante mit externem
+  4,7-kΩ-Pull-up verwenden.
+</div>
 
 <div class="callout">
   <div class="callout-title">Gemeinsamer Steckplatz mit dem DHT22-Modul</div>
-  Beide Module nutzen dieselbe elektrische Pull-up-Topologie auf Pin 5 -
-  nur eines der beiden kann gleichzeitig gesteckt sein. Die Modultyp-Wahl
-  „Sensor"/„Kontakt" auf der Einstellungsseite ist rein manuell, siehe
-  <code>tuerkontakt-modul.md</code>.
+  Beide Module nutzen dieselbe Pull-up-Logik auf Pin 5 (bei Standard extern
+  auf dem Modul, bei Lite intern im Gerät) - nur eines der beiden kann
+  gleichzeitig gesteckt sein. Die Modultyp-Wahl „Sensor"/„Kontakt" auf der
+  Einstellungsseite ist rein manuell, siehe <code>tuerkontakt-modul.md</code>.
 </div>
 
 <footer>

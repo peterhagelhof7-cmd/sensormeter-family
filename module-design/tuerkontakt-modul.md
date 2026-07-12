@@ -18,13 +18,16 @@ RJ45-Modularanschluss).
 | | Standard | Lite |
 |---|---|---|
 | Buchsen | 2 (IN + OUT) | 0 — fest angeschlagenes Kabel mit RJ45-**Stecker** (male) |
+| Adern | 3 (VCC/GND/DATA), externer Pull-up auf dem Modul | **2 (nur GND/DATA)**, kein Pull-up auf dem Modul |
+| Pull-up | Extern, 4,7 kΩ auf dem Modul-PCB | Keiner — nutzt den internen ESP32-Pull-up (`ContactManager::begin()` setzt `INPUT_PULLUP`) |
+| Kabellänge/Schirmung | Unkritisch (starker externer Pull-up) | **Maximal 3 m, geschirmtes Kabel verwenden** — siehe Hinweis unten |
 | Durchschleifen | Ja, siehe `README.md` „Durchschleif-Regel" | Nein — Kette endet hier vollständig, auch Kategorie-1-Pins (3/4) |
-| Preis/Aufwand | Höher (2. Buchse + Durchschleif-Verdrahtung) | Niedriger (nur Kabel + Stecker) |
-| Einsatzzweck | Modul soll in einer Kette mit weiteren Modulen stehen | Modul ist das letzte/einzige am Gerät, keine Kette geplant |
+| Preis/Aufwand | Höher (2. Buchse + Durchschleif-Verdrahtung + Widerstand) | Niedriger (nur 2-adriges Kabel + Stecker, kein Bauteil) |
+| Einsatzzweck | Modul soll in einer Kette mit weiteren Modulen stehen, oder längere/exponierte Kabelwege | Kurze, saubere Kabelführung, letztes/einziges Modul am Gerät |
 
-Beide Varianten sind für die Firmware identisch (dieselben Adern
-VCC/GND/DATA auf denselben Pins wie das DHT22-Modul) — der Unterschied
-ist rein mechanisch.
+Für die Firmware sind beide Varianten identisch (`ContactManager` liest in
+beiden Fällen denselben Pin 5 als LOW-aktiv) — der Unterschied ist
+elektrisch (Pull-up-Quelle) und mechanisch (Buchsen/Kettenfähigkeit).
 
 ## Pinbelegung des Modul-Steckers
 
@@ -48,18 +51,26 @@ werden ebenfalls einfach durchgeschleift.
 | 7 | Relais-Feedback | — (unbenutzt) | durchgeschleift (= IN Pin 7) |
 | 8 | Reserve | — (unbenutzt) | durchgeschleift (= IN Pin 8) |
 
-### Lite (1 Kabel mit Stecker)
+### Lite (1 Kabel mit Stecker, 2-Draht)
 
 Kein IN/OUT mehr — ein einzelner RJ45-**Stecker** (male) am Ende eines
 fest angeschlagenen Kabels, direkt zum Reed-Kontakt verdrahtet. Nur Pin
-1/2/5 werden überhaupt angeschlossen.
+2/5 werden angeschlossen — **kein Pull-up, kein Pin 1 (3V3)** nötig, da
+`ContactManager::begin()` bereits `INPUT_PULLUP` auf dem Gerät aktiviert
+(anders als beim DHT22-Modul, dessen Protokoll einen echten externen
+Pull-up braucht — ein simpler mechanischer Kontakt nicht).
 
 | RJ45-Pin | Signal | Verbunden mit |
 |---|---|---|
-| 1 | 3V3 | Pull-up-Widerstand (oberes Ende) |
 | 2 | GND | Reed-Kontakt (Anschluss B) |
-| 5 | Einzelpin A (Kontakt-Data) | Pull-up (unteres Ende) + Reed-Kontakt (Anschluss A) |
-| 3, 4, 6, 7, 8 | — | nicht angeschlossen (n.c.) |
+| 5 | Einzelpin A (Kontakt-Data) | Reed-Kontakt (Anschluss A) — Pull-up kommt vom Gerät (intern) |
+| 1, 3, 4, 6, 7, 8 | — | nicht angeschlossen (n.c.) |
+
+**Maximal 3 m Kabellänge, geschirmtes Kabel verwenden** (Schirm auf GND
+auflegen) — der interne ESP32-Pull-up (~45 kΩ) ist deutlich schwächer als
+der externe 4,7-kΩ-Widerstand der Standard-Variante und dadurch
+empfindlicher gegenüber eingekoppelten Störungen auf längeren/ungeschirmten
+Leitungen. Siehe „Bekannte Einschränkungen".
 
 ## Stückliste
 
@@ -75,21 +86,24 @@ fest angeschlagenen Kabels, direkt zum Reed-Kontakt verdrahtet. Nur Pin
 | Kabel zum Reed-Kontakt (2-adrig) | nach Bedarf | Länge je nach Einbausituation (Türrahmen ↔ Modul) |
 | Gehäuse (optional) | 1 | z. B. kleines 3D-gedrucktes Gehäuse mit 2 RJ45-Durchbrüchen |
 
-### Lite-Variante
+### Lite-Variante (2-Draht)
 
 | Bauteil | Menge | Hinweis |
 |---|---|---|
 | Reed-/Magnetkontakt (2-Draht, potentialfrei) | 1 | wie Standard |
-| Pull-up-Widerstand 4,7 kΩ | 1 | wie Standard |
 | RJ45-Stecker, 8P8C (male) | 1 | fest am Kabelende, kein Gegenstück am Modul |
-| Kabel, 2-adrig zzgl. Zuleitung zum Stecker, mit Stecker vergossen/gecrimpt | 1 | kein Zwischenstecker |
+| Kabel, 2-adrig, **geschirmt**, max. 3 m, mit Stecker vergossen/gecrimpt | 1 | Schirm auf GND (Pin 2) auflegen, kein Zwischenstecker |
 | Gehäuse (optional) | 1 | kein RJ45-Durchbruch nötig |
 
-Spart eine Buchse und die Durchschleif-Verdrahtung, kostet aber die
-Kettenfähigkeit vollständig — auch für ein Kategorie-1-Modul, das sonst
-hinter diesem Modul stecken könnte (siehe „Bekannte Einschränkungen").
+Kein Pull-up-Widerstand nötig (siehe „Pinbelegung" oben) — spart zusätzlich
+zur Buchse und Durchschleif-Verdrahtung auch das einzige Bauteil dieser
+Variante. Kostet dafür die Kettenfähigkeit vollständig — auch für ein
+Kategorie-1-Modul, das sonst hinter diesem Modul stecken könnte (siehe
+„Bekannte Einschränkungen") — und ist auf 3 m geschirmtes Kabel begrenzt.
 
 ## Verdrahtungstabelle
+
+### Standard
 
 | Bauteil-Anschluss | RJ45-Pin (abgegriffen) | Signal |
 |---|---|---|
@@ -97,25 +111,41 @@ hinter diesem Modul stecken könnte (siehe „Bekannte Einschränkungen").
 | Pull-up 4,7 kΩ, unteres Ende + Reed-Kontakt Anschluss A | 5 | Einzelpin A (Kontakt-Data) |
 | Reed-Kontakt Anschluss B | 2 | GND |
 
-Der Pull-up hält Pin 5 im Ruhezustand (Kontakt offen) auf HIGH; schließt
-der Reed-Kontakt (Tür/Fenster zu), wird Pin 5 nach GND gezogen (LOW) —
+Alle übrigen Pins (1/2/3/4/6/7/8) werden zusätzlich 1:1 auf die OUT-Buchse
+durchverdrahtet — nur Pin 5 endet am Reed-Kontakt.
+
+### Lite
+
+| Bauteil-Anschluss | RJ45-Pin (abgegriffen) | Signal |
+|---|---|---|
+| Reed-Kontakt Anschluss A | 5 | Einzelpin A (Kontakt-Data) — Pull-up kommt vom Gerät (intern) |
+| Reed-Kontakt Anschluss B | 2 | GND |
+
+Beide Varianten: der Pull-up (extern bei Standard, intern bei Lite) hält
+Pin 5 im Ruhezustand (Kontakt offen) auf HIGH; schließt der Reed-Kontakt
+(Tür/Fenster zu), wird Pin 5 nach GND gezogen (LOW) —
 `ContactManager::isClosed()` liest genau dieses LOW als „geschlossen".
-Bei der Standard-Variante werden alle übrigen Pins (1/2/3/4/6/7/8)
-zusätzlich 1:1 auf die OUT-Buchse durchverdrahtet — nur Pin 5 endet am
-Reed-Kontakt.
 
 ## Hinweis zum Pull-up-Widerstand
 
 Anders als beim DHT22-Modul bringt ein Reed-Kontakt selbst **keinen**
-Pull-up mit (er ist ein reiner potentialfreier Schalter) — der
-4,7-kΩ-Widerstand muss auf diesem Modul **immer** ergänzt werden, sonst
-liegt Pin 5 bei offenem Kontakt in der Luft (undefinierter Pegel, keine
-zuverlässige Erkennung). Denselben Widerstandswert wie beim DHT22-Modul
-verwenden, damit sich beide Modultypen am selben Steckplatz identisch
-verhalten (siehe „Bekannte Einschränkungen" im DHT22-Modul-Dokument zum
-Vermeiden doppelter Pull-ups, falls versehentlich beide gleichzeitig
-bestückt würden — was durch die gegenseitige Ausschlussregel ohnehin nicht
-vorgesehen ist).
+Pull-up mit (er ist ein reiner potentialfreier Schalter) — Pin 5 braucht
+also in jedem Fall einen Pull-up, sonst liegt er bei offenem Kontakt in
+der Luft (undefinierter Pegel, keine zuverlässige Erkennung). Zwei
+Quellen dafür, je nach Variante:
+
+- **Standard**: externer 4,7-kΩ-Widerstand auf dem Modul-PCB — derselbe
+  Wert wie beim DHT22-Modul, damit sich beide Modultypen am selben
+  Steckplatz identisch verhalten (keinen doppelten Pull-up bestücken,
+  falls versehentlich beide gleichzeitig vorhanden wären — durch die
+  gegenseitige Ausschlussregel ohnehin nicht vorgesehen).
+- **Lite**: kein Bauteil auf dem Modul — `ContactManager::begin()`
+  aktiviert `INPUT_PULLUP` direkt auf dem Geräte-Pin (~45 kΩ, deutlich
+  schwächer als 4,7 kΩ). Für einen simplen mechanischen Kontakt (kein
+  zeitkritisches Protokoll wie bei DHT22) elektrisch ausreichend, aber
+  empfindlicher gegenüber Störeinkopplung und Leckströmen auf dem Kabel —
+  daher die Begrenzung auf max. 3 m **geschirmtes** Kabel bei dieser
+  Variante.
 
 ## Bekannte Einschränkungen
 
@@ -140,6 +170,13 @@ vorgesehen ist).
 - **Lite hat keine Kettenfähigkeit**: die Lite-Variante besitzt keine
   OUT-Buchse — dahinter kann weder ein zweites Kategorie-2- noch ein
   Kategorie-1-Modul stecken.
+- **Lite: max. 3 m, geschirmtes Kabel**: da Lite ohne externen Pull-up
+  auskommt und sich auf den schwächeren internen ESP32-Pull-up verlässt
+  (siehe „Hinweis zum Pull-up-Widerstand"), ist die Kabellänge bewusst auf
+  3 m begrenzt und ein geschirmtes Kabel (Schirm auf GND) vorgeschrieben —
+  bei längeren oder exponierten Kabelwegen (z. B. Außentür, Verlegung
+  entlang von Netzleitungen) die Standard-Variante mit externem Pull-up
+  verwenden.
 - **Kein eigener MQTT-/SNMP-Datenpfad** (Stand `sensormeter/repo/docs/
   entscheidungen.md` „Türkontakt auf RJ45 Pin 5"): der Kontaktzustand ist
   aktuell nur über Weboberfläche/REST-API (`/api/contact`) und das lokale
