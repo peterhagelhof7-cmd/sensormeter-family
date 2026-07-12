@@ -180,20 +180,28 @@ Verdrahtung. Zwei Bauvarianten, siehe Umschalter unten.</p>
 
   <!-- ================= LITE-VARIANTE ================= -->
   <g id="variant-lite" style="display:none">
-    <rect x="60" y="130" width="140" height="180" rx="6" fill="#4a5568"/>
-    <text x="130" y="152" text-anchor="middle" font-size="10" fill="#fff" font-weight="700">RJ45-Stecker</text>
-    <text x="130" y="165" text-anchor="middle" font-size="8" fill="#9fb3d9">male, fest am Kabel</text>
+    <!-- RJ45-Stecker (male, Kabelende) - alle 8 Pins gezeichnet, nur 1/2/6/7 genutzt -->
+    <rect x="40" y="30" width="150" height="380" rx="6" fill="#4a5568"/>
+    <text x="115" y="50" text-anchor="middle" font-size="10" fill="#fff" font-weight="700">RJ45-Stecker</text>
+    <text x="115" y="63" text-anchor="middle" font-size="8" fill="#9fb3d9">male, fest am Kabel</text>
     <g font-size="8.5" fill="#fff">
-      <text x="190" y="193" text-anchor="end">1 3V3</text>
-      <text x="190" y="218" text-anchor="end">2 GND</text>
-      <text x="190" y="243" text-anchor="end" font-weight="700" fill="#ffb3a4">6 Relais</text>
-      <text x="190" y="268" text-anchor="end" font-weight="700" fill="#ffe08a">7 Fdbk</text>
-      <text x="190" y="293" text-anchor="end" fill="#c9c5b8">3,4,5,8 n.c.</text>
+      <text x="180" y="73" text-anchor="end">1 3V3</text>
+      <text x="180" y="108" text-anchor="end">2 GND</text>
+      <text x="180" y="143" text-anchor="end" fill="#9aa3b5">3 SCL n.c.</text>
+      <text x="180" y="178" text-anchor="end" fill="#9aa3b5">4 SDA n.c.</text>
+      <text x="180" y="213" text-anchor="end" fill="#9aa3b5">5 DATA n.c.</text>
+      <text x="180" y="248" text-anchor="end" font-weight="700" fill="#ffb3a4">6 Relais</text>
+      <text x="180" y="283" text-anchor="end" font-weight="700" fill="#ffe08a">7 Fdbk</text>
+      <text x="180" y="318" text-anchor="end" fill="#9aa3b5">8 Res. n.c.</text>
     </g>
-    <circle cx="200" cy="190" r="3" fill="#c0392b"/>
-    <circle cx="200" cy="215" r="3" fill="#1c2430"/>
-    <circle cx="200" cy="240" r="3.4" fill="#a63d2e" stroke="#fff" stroke-width="1"/>
-    <circle cx="200" cy="265" r="3.4" fill="#c9a227" stroke="#fff" stroke-width="1"/>
+    <circle cx="190" cy="70" r="3" fill="#c0392b"/>
+    <circle cx="190" cy="105" r="3" fill="#1c2430"/>
+    <circle cx="190" cy="140" r="2.2" fill="#9aa3b5"/>
+    <circle cx="190" cy="175" r="2.2" fill="#9aa3b5"/>
+    <circle cx="190" cy="210" r="2.2" fill="#9aa3b5"/>
+    <circle cx="190" cy="245" r="3.4" fill="#a63d2e" stroke="#fff" stroke-width="1"/>
+    <circle cx="190" cy="280" r="3.4" fill="#c9a227" stroke="#fff" stroke-width="1"/>
+    <circle cx="190" cy="315" r="2.2" fill="#9aa3b5"/>
 
     <rect x="420" y="140" width="180" height="160" rx="4" fill="#f2f0e9" stroke="#c7c2b4"/>
     <text x="510" y="162" text-anchor="middle" font-size="10" font-weight="700">Relaisplatine</text>
@@ -205,19 +213,19 @@ Verdrahtung. Zwei Bauvarianten, siehe Umschalter unten.</p>
     <rect x="540" y="240" width="40" height="24" rx="3" fill="#fff" stroke="#c7c2b4"/>
     <text x="560" y="256" text-anchor="middle" font-size="7" fill="#8a93a3">Relais</text>
 
-    <path class="wire-hit" data-wire="l1" d="M200,190 C 300,190 300,200 430,200"/>
-    <path class="wire" data-wire="l1" data-from="Stecker Pin 1 (3V3)" data-to="Relaisplatine VCC" d="M200,190 C 300,190 300,200 430,200" fill="none" stroke="#c0392b" stroke-width="1.8"/>
-    <path class="wire-hit" data-wire="l2" d="M200,215 C 310,215 310,230 430,230"/>
-    <path class="wire" data-wire="l2" data-from="Stecker Pin 2 (GND)" data-to="Relaisplatine GND" d="M200,215 C 310,215 310,230 430,230" fill="none" stroke="#1c2430" stroke-width="1.8"/>
-    <path class="wire-hit" data-wire="l3" d="M200,240 L430,260"/>
-    <path class="wire" data-wire="l3" data-from="Stecker Pin 6 (Relais-Steuerung)" data-to="Relaisplatine IN" d="M200,240 L430,260" fill="none" stroke="#a63d2e" stroke-width="2.2"/>
-    <path class="wire-hit" data-wire="l4" d="M200,265 L430,285"/>
-    <path class="wire" data-wire="l4" data-from="Stecker Pin 7 (Relais-Feedback)" data-to="Relaisplatine Feedback-Kontakt (optional)" d="M200,265 L430,285" fill="none" stroke="#c9a227" stroke-width="2.2"/>
+    <path class="wire-hit" data-wire="l1" d="M190,70 C 300,70 300,200 430,200"/>
+    <path class="wire" data-wire="l1" data-from="Stecker Pin 1 (3V3)" data-to="Relaisplatine VCC" d="M190,70 C 300,70 300,200 430,200" fill="none" stroke="#c0392b" stroke-width="1.8"/>
+    <path class="wire-hit" data-wire="l2" d="M190,105 C 310,105 310,230 430,230"/>
+    <path class="wire" data-wire="l2" data-from="Stecker Pin 2 (GND)" data-to="Relaisplatine GND" d="M190,105 C 310,105 310,230 430,230" fill="none" stroke="#1c2430" stroke-width="1.8"/>
+    <path class="wire-hit" data-wire="l3" d="M190,245 L430,260"/>
+    <path class="wire" data-wire="l3" data-from="Stecker Pin 6 (Relais-Steuerung)" data-to="Relaisplatine IN" d="M190,245 L430,260" fill="none" stroke="#a63d2e" stroke-width="2.2"/>
+    <path class="wire-hit" data-wire="l4" d="M190,280 L430,285"/>
+    <path class="wire" data-wire="l4" data-from="Stecker Pin 7 (Relais-Feedback)" data-to="Relaisplatine Feedback-Kontakt (optional)" d="M190,280 L430,285" fill="none" stroke="#c9a227" stroke-width="2.2"/>
 
-    <text x="130" y="330" text-anchor="middle" font-size="9" fill="#a63d2e" font-weight="700">Keine zweite Buchse</text>
-    <text x="130" y="343" text-anchor="middle" font-size="8" fill="#6b7280">Kette endet hier komplett -</text>
-    <text x="130" y="355" text-anchor="middle" font-size="8" fill="#6b7280">auch Kategorie-1-Pins (3/4)</text>
-    <text x="130" y="367" text-anchor="middle" font-size="8" fill="#6b7280">werden NICHT durchgeschleift.</text>
+    <text x="510" y="320" text-anchor="middle" font-size="9" fill="#a63d2e" font-weight="700">Keine zweite Buchse</text>
+    <text x="510" y="333" text-anchor="middle" font-size="8" fill="#6b7280">Kette endet hier komplett -</text>
+    <text x="510" y="345" text-anchor="middle" font-size="8" fill="#6b7280">auch Kategorie-1-Pins (3/4)</text>
+    <text x="510" y="357" text-anchor="middle" font-size="8" fill="#6b7280">werden NICHT durchgeschleift.</text>
   </g>
 </svg>
 <div id="wireInfo" class="wire-info">Klicke auf einen Draht, um Start- und Zielpin anzuzeigen.</div>

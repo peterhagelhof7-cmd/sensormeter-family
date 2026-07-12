@@ -184,19 +184,28 @@ Verdrahtung. Zwei Bauvarianten, siehe Umschalter unten.</p>
 
   <!-- ================= LITE-VARIANTE ================= -->
   <g id="variant-lite" style="display:none">
-    <!-- RJ45-Stecker (male, Kabelende) -->
-    <rect x="60" y="140" width="140" height="160" rx="6" fill="#4a5568"/>
-    <text x="130" y="162" text-anchor="middle" font-size="10" fill="#fff" font-weight="700">RJ45-Stecker</text>
-    <text x="130" y="175" text-anchor="middle" font-size="8" fill="#9fb3d9">male, fest am Kabel</text>
+    <!-- RJ45-Stecker (male, Kabelende) - alle 8 Pins gezeichnet, nur 1/2/5 genutzt -->
+    <rect x="40" y="30" width="150" height="380" rx="6" fill="#4a5568"/>
+    <text x="115" y="50" text-anchor="middle" font-size="10" fill="#fff" font-weight="700">RJ45-Stecker</text>
+    <text x="115" y="63" text-anchor="middle" font-size="8" fill="#9fb3d9">male, fest am Kabel</text>
     <g font-size="8.5" fill="#fff">
-      <text x="190" y="203" text-anchor="end">1 3V3</text>
-      <text x="190" y="228" text-anchor="end">2 GND</text>
-      <text x="190" y="253" text-anchor="end" font-weight="700" fill="#ffd8a8">5 DATA</text>
-      <text x="190" y="278" text-anchor="end" fill="#c9c5b8">3,4,6,7,8 n.c.</text>
+      <text x="180" y="73" text-anchor="end">1 3V3</text>
+      <text x="180" y="108" text-anchor="end">2 GND</text>
+      <text x="180" y="143" text-anchor="end" fill="#9aa3b5">3 SCL n.c.</text>
+      <text x="180" y="178" text-anchor="end" fill="#9aa3b5">4 SDA n.c.</text>
+      <text x="180" y="213" text-anchor="end" font-weight="700" fill="#ffd8a8">5 DATA</text>
+      <text x="180" y="248" text-anchor="end" fill="#9aa3b5">6 Relais n.c.</text>
+      <text x="180" y="283" text-anchor="end" fill="#9aa3b5">7 Fdbk n.c.</text>
+      <text x="180" y="318" text-anchor="end" fill="#9aa3b5">8 Res. n.c.</text>
     </g>
-    <circle cx="200" cy="200" r="3" fill="#c0392b"/>
-    <circle cx="200" cy="225" r="3" fill="#1c2430"/>
-    <circle cx="200" cy="250" r="3.4" fill="#2e6da4" stroke="#fff" stroke-width="1"/>
+    <circle cx="190" cy="70" r="3" fill="#c0392b"/>
+    <circle cx="190" cy="105" r="3" fill="#1c2430"/>
+    <circle cx="190" cy="140" r="2.2" fill="#9aa3b5"/>
+    <circle cx="190" cy="175" r="2.2" fill="#9aa3b5"/>
+    <circle cx="190" cy="210" r="3.4" fill="#2e6da4" stroke="#fff" stroke-width="1"/>
+    <circle cx="190" cy="245" r="2.2" fill="#9aa3b5"/>
+    <circle cx="190" cy="280" r="2.2" fill="#9aa3b5"/>
+    <circle cx="190" cy="315" r="2.2" fill="#9aa3b5"/>
 
     <!-- DHT22-Modul -->
     <rect x="420" y="150" width="180" height="140" rx="4" fill="#f2f0e9" stroke="#c7c2b4"/>
@@ -205,20 +214,20 @@ Verdrahtung. Zwei Bauvarianten, siehe Umschalter unten.</p>
     <circle cx="430" cy="210" r="3" fill="#c0392b"/><text x="440" y="214" font-size="9">VCC</text>
     <circle cx="430" cy="245" r="3" fill="#1c2430"/><text x="440" y="249" font-size="9">GND</text>
     <circle cx="430" cy="280" r="3" fill="#2e6da4"/><text x="440" y="284" font-size="9">DATA</text>
-    <circle cx="510" cy="255" r="16" fill="none" stroke="#e4e1d8"/>
-    <text x="510" y="259" text-anchor="middle" font-size="7" fill="#8a93a3">4k7 PU</text>
+    <circle cx="580" cy="255" r="16" fill="none" stroke="#e4e1d8"/>
+    <text x="580" y="259" text-anchor="middle" font-size="7" fill="#8a93a3">4k7 PU</text>
 
-    <path class="wire-hit" data-wire="l1" d="M200,200 C 300,200 300,210 430,210"/>
-    <path class="wire" data-wire="l1" data-from="Stecker Pin 1 (3V3)" data-to="DHT22 VCC" d="M200,200 C 300,200 300,210 430,210" fill="none" stroke="#c0392b" stroke-width="1.8"/>
-    <path class="wire-hit" data-wire="l2" d="M200,225 C 310,225 310,245 430,245"/>
-    <path class="wire" data-wire="l2" data-from="Stecker Pin 2 (GND)" data-to="DHT22 GND" d="M200,225 C 310,225 310,245 430,245" fill="none" stroke="#1c2430" stroke-width="1.8"/>
-    <path class="wire-hit" data-wire="l3" d="M200,250 L430,280"/>
-    <path class="wire" data-wire="l3" data-from="Stecker Pin 5 (Einzelpin A)" data-to="DHT22 DATA" d="M200,250 L430,280" fill="none" stroke="#2e6da4" stroke-width="2.2"/>
+    <path class="wire-hit" data-wire="l1" d="M190,70 C 300,70 300,210 430,210"/>
+    <path class="wire" data-wire="l1" data-from="Stecker Pin 1 (3V3)" data-to="DHT22 VCC" d="M190,70 C 300,70 300,210 430,210" fill="none" stroke="#c0392b" stroke-width="1.8"/>
+    <path class="wire-hit" data-wire="l2" d="M190,105 C 310,105 310,245 430,245"/>
+    <path class="wire" data-wire="l2" data-from="Stecker Pin 2 (GND)" data-to="DHT22 GND" d="M190,105 C 310,105 310,245 430,245" fill="none" stroke="#1c2430" stroke-width="1.8"/>
+    <path class="wire-hit" data-wire="l3" d="M190,210 L430,280"/>
+    <path class="wire" data-wire="l3" data-from="Stecker Pin 5 (Einzelpin A)" data-to="DHT22 DATA" d="M190,210 L430,280" fill="none" stroke="#2e6da4" stroke-width="2.2"/>
 
-    <text x="130" y="330" text-anchor="middle" font-size="9" fill="#a63d2e" font-weight="700">Keine zweite Buchse</text>
-    <text x="130" y="343" text-anchor="middle" font-size="8" fill="#6b7280">Kette endet hier komplett -</text>
-    <text x="130" y="355" text-anchor="middle" font-size="8" fill="#6b7280">auch Kategorie-1-Pins (3/4)</text>
-    <text x="130" y="367" text-anchor="middle" font-size="8" fill="#6b7280">werden NICHT durchgeschleift.</text>
+    <text x="510" y="315" text-anchor="middle" font-size="9" fill="#a63d2e" font-weight="700">Keine zweite Buchse</text>
+    <text x="510" y="328" text-anchor="middle" font-size="8" fill="#6b7280">Kette endet hier komplett -</text>
+    <text x="510" y="340" text-anchor="middle" font-size="8" fill="#6b7280">auch Kategorie-1-Pins (3/4)</text>
+    <text x="510" y="352" text-anchor="middle" font-size="8" fill="#6b7280">werden NICHT durchgeschleift.</text>
   </g>
 </svg>
 <div id="wireInfo" class="wire-info">Klicke auf einen Draht, um Start- und Zielpin anzuzeigen.</div>
