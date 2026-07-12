@@ -52,15 +52,17 @@ kollidieren.
 ### Lite (1 Kabel mit Stecker)
 
 Kein IN/OUT mehr — ein einzelner RJ45-**Stecker** (male) am Ende eines
-fest angeschlagenen Kabels, direkt zur Relaisplatine verdrahtet. Nur Pin
-1/2/6(/7) werden überhaupt angeschlossen.
+fest angeschlagenen Kabels, direkt zur Relaisplatine verdrahtet.
+**Minimalausführung: nur 3 Adern (Pin 1/2/6)** — Feedback (Pin 7) ist ein
+rein optionaler 4. Draht, kein Pflichtbestandteil (siehe „Hinweis zur
+Ansteuerung").
 
 | RJ45-Pin | Signal | Verbunden mit |
 |---|---|---|
 | 1 | 3V3 | Relaisplatine VCC |
 | 2 | GND | Relaisplatine GND |
 | 6 | Relais-Steuerung | Relaisplatine IN (active LOW) |
-| 7 | Relais-Feedback | Relaisplatine Feedback-Kontakt (optional, oft weggelassen) |
+| 7 *(optional)* | Relais-Feedback | Relaisplatine Feedback-Kontakt — nur verdrahten, falls die Relaisplatine einen bietet |
 | 3, 4, 5, 8 | — | nicht angeschlossen (n.c.) |
 
 ## Stückliste
@@ -73,7 +75,8 @@ fest angeschlagenen Kabels, direkt zur Relaisplatine verdrahtet. Nur Pin
 | RJ45-Buchse, 8P8C (female), IN | 1 | zum Gerät bzw. vorherigen Modul in der Kette |
 | RJ45-Buchse, 8P8C (female), OUT | 1 | zum nächsten Modul in der Kette, Pin 6+7 hier terminiert |
 | Platinenverdrahtung IN↔OUT (Pin 1/2/3/4/5/8) | 1 Satz | Durchschleifung auf dem Modul-PCB, siehe Tabelle oben |
-| Litze zur Relaisplatine | 3–4-adrig | Länge je nach Einbausituation, 4. Ader nur bei genutztem Feedback |
+| Litze zur Relaisplatine, 3-adrig (VCC/GND/CTRL) | 1 Satz | Minimalausführung, Länge je nach Einbausituation |
+| Zusätzliche Ader für Feedback (optional) | 0–1 | nur falls die Relaisplatine einen Feedback-Kontakt bietet UND genutzt werden soll |
 | Gehäuse (optional) | 1 | z. B. kleines 3D-gedrucktes Gehäuse mit 2 RJ45-Durchbrüchen, beachte Schaltspannung/-strom auf der Lastseite |
 
 ### Lite-Variante
@@ -82,7 +85,8 @@ fest angeschlagenen Kabels, direkt zur Relaisplatine verdrahtet. Nur Pin
 |---|---|---|
 | Relaismodul, Low-Level-Trigger | 1 | wie Standard |
 | RJ45-Stecker, 8P8C (male) | 1 | fest am Kabelende, kein Gegenstück am Modul |
-| Kabel, 3–4-adrig, mit Stecker vergossen/gecrimpt | 1 | Länge je nach Einbausituation, kein Zwischenstecker |
+| Kabel, 3-adrig (VCC/GND/CTRL), mit Stecker vergossen/gecrimpt | 1 | Minimalausführung, kein Zwischenstecker |
+| Zusätzliche Ader für Feedback (optional) | 0–1 | nur falls genutzt, sonst weglassen — kein Zusatzbauteil am Gerät nötig |
 | Gehäuse (optional) | 1 | kein RJ45-Durchbruch nötig, Lastseite trotzdem sicher isolieren |
 
 Spart eine Buchse und die Durchschleif-Verdrahtung, kostet aber die
@@ -117,8 +121,12 @@ Ansteuerlogik im Modul selbst zu invertieren.
 Das Feedback auf Pin 7 ist **optional** und rein informativ
 (`RelayManager::feedbackOn()` hat keinen Einfluss auf den kommandierten
 Zustand) — viele einfache Relaismodule bieten dafür keinen eigenen
-Kontakt; in dem Fall Pin 7 am Modul einfach unbeschaltet lassen (das
-Gerät liest über einen internen Pull-up dann dauerhaft „kein Feedback").
+Kontakt; in dem Fall Pin 7 am Modul einfach unbeschaltet lassen. Wie beim
+Türkontakt-Modul aktiviert das Gerät bereits selbst einen internen
+Pull-up auf Pin 7 (`RelayManager::begin()` setzt `INPUT_PULLUP`) — ein
+externer Pull-up-Widerstand auf dem Modul ist **nie** nötig, egal ob
+Feedback genutzt wird oder nicht. Das Weglassen von Feedback spart daher
+wirklich nur die vierte Ader, kein Bauteil.
 
 ## Bekannte Einschränkungen
 
