@@ -28,15 +28,23 @@ jedes Moduls verdrahtet sein), nicht die geräteseitige GPIO-Zuordnung.
 | 7 | Einzelpin C (Relais-Feedback) | ❌ Nein | optional, gehört zum Relais-Modul auf Pin 6 |
 | 8 | Reserve | — | Bei Sensormeter (WT32-ETH01) Boot-Strapping-Pin des Geräts (muss beim Boot LOW sein) — **geräteseitig** per Pull-down gelöst, Module müssen hier nichts tun. Bei Sensormeter PoE frei. |
 
-Pull-up-Widerstände (4,7 kΩ nach 3V3) für SDA/SCL sowie für Pin 5 sitzen
-bei der **Standard-Variante** eines Kategorie-2-Moduls auf dem Modul,
-nicht auf dem Gerät — das Gerät stellt dort nur die Pins zur Verfügung,
-siehe jeweilige Modul-Stückliste. **Ausnahme**: die Lite-Variante des
-[Türkontakt-Moduls](tuerkontakt-modul.md) verzichtet bewusst auf den
-externen Pull-up und nutzt stattdessen den internen Pull-up des jeweiligen
-Geräte-GPIO (siehe dortiger Hinweis zum Pull-up-Widerstand) — Lite-Module
-sind also nicht pauschal pull-up-frei vom Gerät, das ist eine
-modulspezifische Entscheidung.
+Pull-up-Widerstände sitzen grundsätzlich **auf dem Modul**, nicht auf dem
+Gerät — das Gerät stellt nur die Pins zur Verfügung. Zwei getrennte Fälle:
+
+- **SDA/SCL (Kategorie 1, Bus)**: 4,7 kΩ nach 3V3, aber **nur, falls der
+  Bus noch keinen Pull-up hat** — der gemeinsame Bus mit dem OLED-Display
+  des Geräts kann dort bereits einen mitbringen (viele SSD1306-Breakouts
+  haben einen eingebauten Pull-up). Vor dem Bestücken mit Multimeter
+  prüfen, ein doppelter Pull-up (Gerät/Display *und* Modul) senkt den
+  effektiven Widerstand unnötig — siehe jeweilige I2C-Modul-Stückliste,
+  z. B. [bme280-modul.md](bme280-modul.md).
+- **Pin 5 (Kategorie 2, DHT22/Kontakt)**: 4,7 kΩ nach 3V3 bei der
+  **Standard-Variante** — **Ausnahme**: die Lite-Variante des
+  [Türkontakt-Moduls](tuerkontakt-modul.md) verzichtet bewusst auf den
+  externen Pull-up und nutzt stattdessen den internen Pull-up des
+  jeweiligen Geräte-GPIO (siehe dortiger Hinweis zum Pull-up-Widerstand) —
+  Lite-Module sind also nicht pauschal pull-up-frei vom Gerät, das ist
+  eine modulspezifische Entscheidung.
 
 ## Durchschleif-Regel (IN + OUT an jedem Modul)
 
@@ -88,13 +96,22 @@ das ohnehin möglich, auch wenn der Ausgangspunkt hier nur „1+1" war.
 Bereits in `SensorDetector.cpp` (Sensormeter/Sensormeter PoE) als
 erkennbare Chips hinterlegt:
 
-- BME280 (Temperatur/Feuchte/Druck)
+- [BME280](bme280-modul.md) (Temperatur/Feuchte/Druck) — ✅ entworfen, erstes Kategorie-1-Modul
 - SHT30/31/35 (Temperatur/Feuchte)
 - AHT20/21 (Temperatur/Feuchte)
 - BH1750 (Helligkeit)
 - perspektivisch: SGP30/CCS811 (CO₂/VOC)
 
-**Noch kein Modul aus dieser Kategorie entworfen** — folgt nach Kategorie 2.
+Weitere Kandidaten (BH1750 etc.) folgen bei Bedarf — das BME280-Modul
+dient als Vorlage für künftige Kategorie-1-Module.
+
+| Modul | I2C-Adresse | Status |
+|---|---|---|
+| [BME280-Sensormodul](bme280-modul.md) | 0x76/0x77 | ✅ entworfen (Standard + Lite, BOM + [interaktiver Plan](bme280-verdrahtungsplan.html)) |
+| BH1750 (Helligkeit) | 0x23/0x5C | 📋 vorgemerkt |
+| SHT30/31/35 (Temperatur/Feuchte) | 0x44/0x45 | 📋 vorgemerkt |
+| AHT20/21 (Temperatur/Feuchte) | 0x38 | 📋 vorgemerkt |
+| SGP30/CCS811 (CO₂/VOC) | — | 📋 perspektivisch |
 
 ### Kategorie 2 — Direkt-Module (Einzelpin)
 

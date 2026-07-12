@@ -93,14 +93,14 @@ Kopie liegt in allen vier Projekt-Repos.
 [module-design/](module-design/) — Stücklisten, Verdrahtungstabellen und
 interaktive Verdrahtungspläne für die über den RJ45-Modularanschluss
 steckbaren Erweiterungsmodule (nur Sensormeter/Sensormeter PoE, siehe
-dortiges `README.md`). Zwei Kategorien: **Bus-Module** (I2C, mehrere
-gleichzeitig steckbar, noch kein Modul entworfen) und **Direkt-Module**
-(dedizierter Einzelpin, genau eines gleichzeitig — alle drei bislang
-vorgesehenen Module fertig entworfen, jeweils in einer Standard-Variante
-mit 2 Buchsen und einer kabelgebundenen Lite-Variante ohne
-Kettenfähigkeit): [DHT22-Sensormodul](module-design/dht22-modul.md),
+dortiges `README.md`). Zwei Kategorien, jeweils in einer Standard-Variante
+mit 2 Buchsen und einer kabelgebundenen Lite-Variante ohne Kettenfähigkeit:
+**Bus-Module** (I2C, mehrere gleichzeitig steckbar — erstes Modul
+[BME280](module-design/bme280-modul.md)) und **Direkt-Module** (dedizierter
+Einzelpin, genau eines gleichzeitig — alle drei vorgesehenen Module fertig
+entworfen: [DHT22-Sensormodul](module-design/dht22-modul.md),
 [Türkontakt-Modul](module-design/tuerkontakt-modul.md),
-[Relais/Aktor-Modul](module-design/relais-modul.md).
+[Relais/Aktor-Modul](module-design/relais-modul.md)).
 
 ## Werkzeuge
 
