@@ -62,7 +62,7 @@ Vergleich, One-Pager, gemeinsame Werkzeuge.
 | Lokales OTA-Update (.bin) | ✅ | ✅ | ✅ | ✅ |
 | Zabbix-Template | ✅ | ✅ | ✅ (ICMP-only, Client hat keinen Agenten) | ✅ |
 | PRTG-Template | ✅ | ✅ | – (kein Agent, Ping genügt) | ✅ |
-| Gemeinsame SNMP-Basis-OID `.1.3.6.1.4.1.99999` | ✅ | ✅ (eigenes Sub-Schema, siehe unten) | – (fragt sie ab) | ✅ (identisch zu Sensormeter) |
+| Gemeinsame SNMP-Basis-OID `.1.3.6.1.4.1.99999`, identische Offsets | ✅ | ✅ (seit 2026-07-12, siehe unten) | – (fragt sie ab) | ✅ (identisch zu Sensormeter) |
 
 **Legende:** ✅ vorhanden · ❌ nicht vorhanden/nicht umgesetzt · – nicht zutreffend für diese Geräterolle
 
@@ -206,11 +206,16 @@ Funktioniert unverändert für Sensormeter, Sensormeter WLAN und
 Sensormeter PoE, ohne dass vorher bekannt sein muss, welche Variante
 gerade angesprochen wird:
 
-| Variante | Antwortet auf Zweig `.4.x` (Sensor 2)? | Antwortet auf `.2.3.0` (WLAN-RSSI bei LAN+WLAN)? |
+| Variante | Antwortet auf `.2.1.0` (LAN-IP)? | Antwortet auf Zweig `.4.x` (Sensor 2)? |
 |---|---|---|
-| Sensormeter / Sensormeter PoE | Nein (Sensor 2 deaktiviert) | Ja |
+| Sensormeter / Sensormeter PoE | Ja | Nein (Sensor 2 deaktiviert) |
 | Sensormeter / Sensormeter PoE PRO | Ja | Ja |
-| Sensormeter WLAN | Nein (kein Sensor 2 möglich) | Nein (nur ein Interface, RSSI liegt dort auf `.2.2.0`) |
+| Sensormeter WLAN | Nein (kein LAN-Interface vorhanden) | Nein (kein Sensor 2 möglich) |
+
+WLAN-IP (`.2.2.0`) und WLAN-RSSI (`.2.3.0`) liegen bei allen drei
+Varianten auf denselben Offsets - das war vor dem 2026-07-12-Fix bei
+Sensormeter WLAN noch anders (dort auf `.2.1.0`/`.2.2.0` verschoben),
+siehe dessen `entscheidungen.md`.
 
 Nicht beantwortete OIDs zählen als normaler Timeout, nicht als Fehler —
 das Skript muss also nicht wissen, mit welcher Variante es spricht.
@@ -264,12 +269,15 @@ ein Netzwerkproblem jenseits eines simplen Timeouts.
 
 ## Was die Familie verbindet
 
-- Gemeinsame SNMP-Basis-OID `.1.3.6.1.4.1.99999.x` (SNMP v1/v2c, read-only)
-  bei den drei Agent-Projekten — Sensormeter Display kann Geräte aus allen
-  drei Produktlinien ohne Codeänderung abfragen. **Nicht 100 % identisch:**
-  Sensormeter WLAN hat wegen fehlendem LAN-Interface und fehlendem zweiten
-  Sensor ein eigenes, verschobenes Sub-Schema unter `.2.x` und keinen
-  `.4.x`-Zweig (siehe Feature-Vergleich oben und die jeweilige `PRTG.md`).
+- Gemeinsame, jetzt vollständig einheitliche SNMP-Basis-OID-Struktur
+  `.1.3.6.1.4.1.99999.x` (SNMP v1/v2c, read-only) bei den drei
+  Agent-Projekten — Sensormeter Display kann Geräte aus allen drei
+  Produktlinien mit identischen OID-Offsets ohne Codeänderung abfragen.
+  Sensormeter WLAN hatte bis 2026-07-11 noch ein verschobenes Sub-Schema
+  unter `.2.x` (WLAN-IP/RSSI auf `.2.1.0`/`.2.2.0` statt `.2.2.0`/`.2.3.0`)
+  - seit dem Fix bleiben dort nur die Zweige unbeantwortet, für die keine
+  passende Hardware existiert (`.2.1.0` LAN-IP, `.4.x` Sensor 2), siehe
+  Feature-Vergleich oben und die jeweilige `PRTG.md`/`ZABBIX.md`.
 - Fallback-WLAN-Konvention `installer`/`installer` bei Verbindungsverlust
   (echter, selbst aufgespannter Access Point bei WLAN/PoE; Sensormeter
   selbst tritt stattdessen noch einem bestehenden Netz mit diesem Namen

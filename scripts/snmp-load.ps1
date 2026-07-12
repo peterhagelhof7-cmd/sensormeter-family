@@ -64,19 +64,22 @@ param(
 $ErrorActionPreference = "Stop"
 
 # ----------------------------------------------------------------------------
-# Bekannte OIDs (Vereinigung aus Sensormeter + Sensormeter WLAN, siehe jeweilige
-# docs/admin-guide.pdf Abschnitt 6). Nicht jede OID existiert auf jeder Variante -
-# nicht beantwortete OIDs sind erwartungsgemaess und werden als Timeout gezaehlt,
-# kein Skriptfehler.
+# Bekannte OIDs (Vereinigung aus Sensormeter, Sensormeter WLAN und
+# Sensormeter PoE, siehe jeweilige docs/admin-guide.pdf Abschnitt 6). Seit
+# dem OID-Vereinheitlichungs-Fix (2026-07-12) liegen WLAN-IP/RSSI bei allen
+# drei Varianten auf denselben Offsets (.2.2.0/.2.3.0) - .2.1.0 (LAN-IP)
+# bleibt nur bei Sensormeter WLAN unbeantwortet (kein LAN-Interface). Nicht
+# jede OID existiert auf jeder Variante - nicht beantwortete OIDs sind
+# erwartungsgemaess und werden als Timeout gezaehlt, kein Skriptfehler.
 # ----------------------------------------------------------------------------
 $BaseOid = "1.3.6.1.4.1.99999"
 $Oids = @(
     @{ Suffix = "1.1.0"; Label = "Systemname" }
     @{ Suffix = "1.2.0"; Label = "Firmwareversion" }
     @{ Suffix = "1.3.0"; Label = "Systemtyp" }
-    @{ Suffix = "2.1.0"; Label = "LAN-IP / WLAN-IP" }
-    @{ Suffix = "2.2.0"; Label = "WLAN-IP / WLAN-RSSI" }
-    @{ Suffix = "2.3.0"; Label = "WLAN-RSSI (nur Sensormeter LAN+WLAN)" }
+    @{ Suffix = "2.1.0"; Label = "LAN-IP (nur Sensormeter/PoE)" }
+    @{ Suffix = "2.2.0"; Label = "WLAN-IP" }
+    @{ Suffix = "2.3.0"; Label = "WLAN-RSSI" }
     @{ Suffix = "3.1.0"; Label = "Sensor 1 Name" }
     @{ Suffix = "3.2.0"; Label = "Sensor 1 Temperatur" }
     @{ Suffix = "3.3.0"; Label = "Sensor 1 Luftfeuchte" }
