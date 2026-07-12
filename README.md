@@ -45,16 +45,16 @@ Vergleich, One-Pager, gemeinsame Werkzeuge.
 | WLAN | ✅ Fallback-AP | ✅ primär, Fallback-AP | ✅ primär | ✅ parallel, Fallback-AP |
 | PoE | ❌ | ❌ | ❌ | ✅ optional (Huckepack-Modul) |
 | Eigene Sensoren | 1–2× DHT (Sensor 2 optional, "PRO") | 1× DHT22 | 1× DHT11 (nur eigener Status) | 1–2× DHT-22 (Sensor 2 optional, "PRO") |
-| RJ45-Modularanschluss | ✅ (Sensor 2 / Relais-Pins reserviert) | ❌ | ❌ | ✅ (Sensor 2 / Relais) |
-| Automatische Modul-Erkennung | ❌ (nur manuell) | – (kein Anschluss) | – | ✅ I2C-Scan + DHT-Probe beim Boot |
-| Relais/Aktor | ❌ (Pins reserviert, nicht angesteuert) | – (kein Anschluss) | – | ✅ Web/REST/MQTT |
+| RJ45-Modularanschluss | ✅ (Sensor 2 / Relais) | ❌ | ❌ | ✅ (Sensor 2 / Relais) |
+| Automatische Modul-Erkennung | ✅ I2C-Scan + DHT-Probe beim Boot | – (kein Anschluss) | – | ✅ I2C-Scan + DHT-Probe beim Boot |
+| Relais/Aktor | ✅ Web/REST/MQTT | – (kein Anschluss) | – | ✅ Web/REST/MQTT |
 | Display | OLED SSD1306 128×64 | OLED SSD1306 128×64 | 2,8" TFT ST7789P3, **Touch** | OLED SH1107 1,5" 128×128 |
 | BOOT-Taster als Bedienelement | ❌ (GPIO0 fest am Ethernet-Takt) | ✅ Seitenwechsel/Werksreset | – (Touch-Bedienung) | ✅ Seitenwechsel/Werksreset |
 | Webserver (Status + Einstellungen) | ✅ | ✅ | ✅ (+ öffentliches Live-Dashboard) | ✅ |
 | SNMP-Agent (read-only, v1/v2c) | ✅ | ✅ | ❌ (ist SNMP-**Client**) | ✅ |
 | SNMP-Client (fragt andere Geräte ab) | ❌ | ❌ | ✅ bis zu 5 Sensormeter-Ziele | ❌ |
 | Syslog-Versand | ✅ | ✅ | ❌ | ✅ |
-| MQTT / Home Assistant | ✅ Sensor-Rolle | ✅ Sensor-Rolle | ❌ | ✅ Sensor- **und** Aktor-Rolle |
+| MQTT / Home Assistant | ✅ Sensor- **und** Aktor-Rolle | ✅ Sensor-Rolle | ❌ | ✅ Sensor- **und** Aktor-Rolle |
 | Anbieter-Branding (Weisslabel) | ✅ Name + Logo (128×64, 1bpp) | ✅ Name + Logo (128×64, 1bpp) | ✅ Name + Logo (128×64, RGB565) — TFT-Farbkanal-Vorbehalt nicht auf echter Hardware verifiziert | ✅ Name + Logo (128×128, 1bpp) |
 | Werksreset mit wählbarem Umfang (Alles/Konfiguration/Messwerte/Branding) | ✅ | ✅ | ✅ | ✅ |
 | Serial-Kommandozeile (USB): status/dhcp/ip/wifi/reset | ✅ (dhcp/ip mit Interface-Argument `lan\|wlan`) | ✅ | ✅ (kein LAN, daher ohne Interface-Argument) | ✅ (dhcp/ip mit Interface-Argument `lan\|wlan`) |
@@ -291,7 +291,11 @@ ein Netzwerkproblem jenseits eines simplen Timeouts.
   und Sensormeter PoE (Pin 3/4 I2C, Pin 5 externer DHT, Pin 6/7
   Relais-Steuerung/-Feedback) — die konkreten GPIO-Nummern unterscheiden
   sich zwangsläufig (anderer Chip), Steckmodule sind aber zwischen beiden
-  Projekten austauschbar.
+  Projekten austauschbar. Beide implementieren inzwischen auch identische
+  Software dafür: automatische Modul-Erkennung (I2C-Scan + DHT-Probe beim
+  Boot) und Relais/Aktor-Steuerung über Web/REST/MQTT — bei Sensormeter
+  PoE zuerst entworfen, dann auf Sensormeter nachgerüstet (siehe dessen
+  `entscheidungen.md`).
 - Gemeinsames Einrichtungs-Skript [`scripts/flash.ps1`](https://github.com/peterhagelhof7-cmd/sensormeter/blob/main/scripts/flash.ps1)
   (Windows) bzw. [`scripts/flash.sh`](https://github.com/peterhagelhof7-cmd/sensormeter/blob/main/scripts/flash.sh)
   (macOS/Linux) (beide liegen identisch in allen vier Repos) — installiert
