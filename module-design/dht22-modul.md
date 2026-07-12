@@ -124,8 +124,8 @@ funktioniert.
 
 ## Bekannte Einschränkungen
 
-- **Schließt sich mit einem künftigen Türkontakt-Modul gegenseitig aus**
-  (beide auf Pin 5, ein Steckplatz gleichzeitig) — siehe `README.md`.
+- **Schließt sich mit dem [Türkontakt-Modul](tuerkontakt-modul.md) gegenseitig
+  aus** (beide auf Pin 5, ein Steckplatz gleichzeitig) — siehe `README.md`.
 - **Firmware unterscheidet nicht zwischen DHT11 und DHT22** als Kategorie
   (`SensorDetector` erkennt nur „DHT-Sensor" allgemein, laut Lastenheft
   bewusst so, da eine Unterscheidung unzuverlässig wäre) — für Sensor 2
@@ -145,8 +145,12 @@ funktioniert.
   Kategorie-1-Modul stecken. Nur sinnvoll, wenn dieses Modul das letzte
   bzw. einzige am Gerät ist.
 - **Auto-Erkennung**: `SensorDetector::runDetection()` probiert bei
-  fehlgeschlagenem I2C-Scan einen DHT-Leseversuch auf Pin 5 — bei Erfolg
-  wird „Sensor 2 aktiv" automatisch gesetzt (ein bereits manuell
-  deaktivierter Schalter wird dabei nie stillschweigend wieder aktiviert).
-  Kein bekanntes Problem für dieses Modul (anders als beim künftigen
-  Türkontakt-Modul, das nur bei geschlossenem Kontakt sicher erkannt wird).
+  fehlgeschlagenem I2C-Scan einen DHT-Leseversuch auf Pin 5 — aber nur,
+  wenn `cfg.pin5Mode == "sensor"` gesetzt ist (Default). Bei Erfolg wird
+  „Sensor 2 aktiv" automatisch gesetzt (ein bereits manuell deaktivierter
+  Schalter wird dabei nie stillschweigend wieder aktiviert). Kein
+  bekanntes Problem für dieses Modul — anders als beim
+  [Türkontakt-Modul](tuerkontakt-modul.md), für das aus genau diesem Grund
+  (ein offener Kontakt ist elektrisch nicht von „nichts gesteckt"
+  unterscheidbar) **keine** Auto-Erkennung existiert, sondern der
+  Modultyp „Sensor"/„Kontakt" auf Pin 5 immer manuell gewählt wird.

@@ -29,8 +29,14 @@ jedes Moduls verdrahtet sein), nicht die geräteseitige GPIO-Zuordnung.
 | 8 | Reserve | — | Bei Sensormeter (WT32-ETH01) Boot-Strapping-Pin des Geräts (muss beim Boot LOW sein) — **geräteseitig** per Pull-down gelöst, Module müssen hier nichts tun. Bei Sensormeter PoE frei. |
 
 Pull-up-Widerstände (4,7 kΩ nach 3V3) für SDA/SCL sowie für Pin 5 sitzen
-**auf dem Modul**, nicht auf dem Gerät — das Gerät stellt nur die Pins zur
-Verfügung, siehe jeweilige Modul-Stückliste.
+bei der **Standard-Variante** eines Kategorie-2-Moduls auf dem Modul,
+nicht auf dem Gerät — das Gerät stellt dort nur die Pins zur Verfügung,
+siehe jeweilige Modul-Stückliste. **Ausnahme**: die Lite-Variante des
+[Türkontakt-Moduls](tuerkontakt-modul.md) verzichtet bewusst auf den
+externen Pull-up und nutzt stattdessen den internen Pull-up des jeweiligen
+Geräte-GPIO (siehe dortiger Hinweis zum Pull-up-Widerstand) — Lite-Module
+sind also nicht pauschal pull-up-frei vom Gerät, das ist eine
+modulspezifische Entscheidung.
 
 ## Durchschleif-Regel (IN + OUT an jedem Modul)
 
@@ -136,8 +142,11 @@ und eigenem REST-Endpunkt (`/api/contact`) — bislang aber **ohne**
 MQTT-/SNMP-Anbindung (ein binärer Zustand passt nicht in deren
 Temperatur/Feuchte- bzw. `sensor`-Schema; eine `binary_sensor`-Discovery
 bzw. eigene SNMP-OID ist ein offenes, separates Firmware-Thema und
-betrifft nur die Software, nicht den Hardware-Entwurf des Steckers selbst,
-der mit dem DHT22-Modul identisch ist).
+betrifft nur die Software, nicht den Hardware-Entwurf des Steckers selbst
+— bei der **Standard**-Variante ist der Pin-1/2/5-Anschluss elektrisch
+identisch zum DHT22-Modul; die **Lite**-Varianten unterscheiden sich
+dagegen (Türkontakt-Lite kommt ohne Pin 1/externen Pull-up aus, DHT22-Lite
+braucht beides — siehe jeweiliges Modul-Dokument).
 
 ## Stückliste-Konvention
 

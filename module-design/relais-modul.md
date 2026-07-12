@@ -121,19 +121,22 @@ Ansteuerlogik im Modul selbst zu invertieren.
 Das Feedback auf Pin 7 ist **optional** und rein informativ
 (`RelayManager::feedbackOn()` hat keinen Einfluss auf den kommandierten
 Zustand) — viele einfache Relaismodule bieten dafür keinen eigenen
-Kontakt; in dem Fall Pin 7 am Modul einfach unbeschaltet lassen. Wie beim
-Türkontakt-Modul aktiviert das Gerät bereits selbst einen internen
-Pull-up auf Pin 7 (`RelayManager::begin()` setzt `INPUT_PULLUP`) — ein
-externer Pull-up-Widerstand auf dem Modul ist **nie** nötig, egal ob
-Feedback genutzt wird oder nicht. Das Weglassen von Feedback spart daher
+Kontakt; in dem Fall Pin 7 am Modul einfach unbeschaltet lassen. Das
+Gerät aktiviert bereits selbst einen internen Pull-up auf Pin 7
+(`RelayManager::begin()` setzt `INPUT_PULLUP`) — ein externer
+Pull-up-Widerstand auf dem Modul ist **nie** nötig, egal ob Feedback
+genutzt wird oder nicht, und zwar bei **beiden** Varianten (anders als
+beim [Türkontakt-Modul](tuerkontakt-modul.md), wo nur die Lite-Variante
+den internen Pull-up nutzt und die Standard-Variante bewusst einen
+externen Widerstand vorsieht). Das Weglassen von Feedback spart daher
 wirklich nur die vierte Ader, kein Bauteil.
 
 ## Bekannte Einschränkungen
 
-- **Keine Auto-Erkennung möglich**: anders als DHT22/I2C-Sensoren liefert
-  ein Relaismodul kein auswertbares Rücksignal für `SensorDetector` — das
-  Aktivieren erfolgt daher immer manuell über die Einstellungsseite
-  („Relais aktiv").
+- **Keine Auto-Erkennung möglich**: anders als [DHT22](dht22-modul.md)/I2C-Sensoren
+  liefert ein Relaismodul kein auswertbares Rücksignal für
+  `SensorDetector` — das Aktivieren erfolgt daher immer manuell über die
+  Einstellungsseite („Relais aktiv").
 - **Zwei Einzelpins statt einem**: als einziges Kategorie-2-Modul belegt
   dieses Modul zwei dedizierte Pins (6 **und** 7) gleichzeitig — dennoch
   weiterhin nur „ein Relais-Modul pro Gerät bzw. Kette“ möglich, da beide
@@ -141,8 +144,9 @@ wirklich nur die vierte Ader, kein Bauteil.
 - **Durchschleifung (nur Standard)**: Pin 1/2/3/4/5/8 werden zur
   OUT-Buchse weitergereicht, Pin 6/7 werden terminiert — dadurch ist in
   derselben Kette zusätzlich ein Kategorie-1-Modul (I2C) und/oder ein
-  DHT22-/Kontakt-Modul (Pin 5) kombinierbar, aber kein zweites
-  Relais-Modul (siehe `README.md`, Abschnitt „Durchschleif-Regel").
+  [DHT22](dht22-modul.md)-/[Kontakt](tuerkontakt-modul.md)-Modul (Pin 5)
+  kombinierbar, aber kein zweites Relais-Modul (siehe `README.md`,
+  Abschnitt „Durchschleif-Regel").
   Empfohlene Kettenlänge: maximal 1 Kategorie-1- + 1 Kategorie-2-Modul.
 - **Lite hat keine Kettenfähigkeit**: die Lite-Variante besitzt keine
   OUT-Buchse — dahinter kann weder ein zweites Kategorie-2- noch ein
