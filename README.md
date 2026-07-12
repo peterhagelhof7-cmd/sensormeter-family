@@ -88,6 +88,15 @@ Repo) — bei größeren Firmware-Änderungen hier nachziehen.
 das Bild oben, als eigenständige Seite (lokal im Browser öffnen). Identische
 Kopie liegt in allen vier Projekt-Repos.
 
+## RJ45-Steckmodule (Hardware-Entwürfe)
+
+[module-design/](module-design/) — Stücklisten und Verdrahtungstabellen für
+die über den RJ45-Modularanschluss steckbaren Erweiterungsmodule (nur
+Sensormeter/Sensormeter PoE, siehe dortiges `README.md`). Zwei Kategorien:
+**Bus-Module** (I2C, mehrere gleichzeitig steckbar) und **Direkt-Module**
+(dedizierter Einzelpin, genau eines gleichzeitig — z. B. das erste fertige
+Modul, [DHT22-Sensormodul](module-design/dht22-modul.md)).
+
 ## Werkzeuge
 
 ### Monitoring-Integration (Zabbix / PRTG)
