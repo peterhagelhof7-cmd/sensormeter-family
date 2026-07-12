@@ -20,7 +20,7 @@ jedes Moduls verdrahtet sein), nicht die geräteseitige GPIO-Zuordnung.
 | Pin | Signal | Bus-fähig? | Bedeutung |
 |---|---|---|---|
 | 1 | 3V3 | — | Versorgung, alle Module 3,3V-tolerant |
-| 2 | GND | — | **Sternpunkt, keine Daisy-Chains** — jedes Modul bekommt seine eigene Masserückführung zum Gerät, nicht durch ein anderes Modul hindurch |
+| 2 | GND | — | Rückführung — bei den Modulen bewusst als Kette durchgeschleift (siehe „Durchschleif-Regel" unten), **nicht** zu verwechseln mit der geräteinternen Verdrahtung (Display etc.), die weiterhin sternförmig bleibt |
 | 3 | SCL | ✅ Ja | I2C-Takt, gemeinsamer Bus mit dem OLED-Display des Geräts |
 | 4 | SDA | ✅ Ja | I2C-Daten, gemeinsamer Bus |
 | 5 | Einzelpin A | ❌ Nein | DHT-Data **oder** Kontakt-Eingang (siehe Kategorie 2) — genau ein Modul |
@@ -32,17 +32,55 @@ Pull-up-Widerstände (4,7 kΩ nach 3V3) für SDA/SCL sowie für Pin 5 sitzen
 **auf dem Modul**, nicht auf dem Gerät — das Gerät stellt nur die Pins zur
 Verfügung, siehe jeweilige Modul-Stückliste.
 
+## Durchschleif-Regel (IN + OUT an jedem Modul)
+
+**Jedes Modul bekommt zwei RJ45-Buchsen** (IN vom Gerät bzw. vorherigen
+Modul, OUT zum nächsten) — Ziel: an einem Kabelstrang lassen sich immer
+ein Kategorie-1- **und** ein Kategorie-2-Modul gleichzeitig betreiben, in
+beliebiger Reihenfolge (Gerät→Kat1→Kat2 oder Gerät→Kat2→Kat1).
+
+- **1 (3V3), 2 (GND), 3 (SCL), 4 (SDA), 8 (Reserve)**: immer 1:1
+  durchgeschleift, unabhängig von der Modulkategorie.
+- **Der jeweils vom Modul exklusiv genutzte Einzelpin (5 bei
+  DHT22/Türkontakt, 6+7 beim Relais) wird auf der OUT-Buchse NICHT
+  durchgeschleift**, sondern terminiert (nicht verbunden). Das erzwingt
+  die „genau ein Modul dieser Art"-Regel schon auf Hardware-Ebene: ein
+  versehentlich weiter hinten in der Kette gestecktes zweites
+  Einzelpin-Modul am selben Pin bekommt eine offene Leitung statt eines
+  Kollision mit dem ersten Modul.
+- Kategorie-1-Module (I2C) terminieren dagegen **nichts** zusätzlich —
+  Pin 3/4 sind bei ihnen gleichzeitig „genutzt" UND „durchgeschleift"
+  (echter Bus-Abgriff, kein Schalter).
+
+**Bewusste Abweichung von der bisherigen Geräte-Doku**: die
+`verdrahtungsplan.html`-Dokumente der Hauptgeräte legen GND intern als
+Sternpunkt fest („keine Daisy-Chains") — das gilt weiterhin für die
+Verdrahtung **innerhalb** des Geräts (WT32-ETH01/ESP32-S3-ETH-Board,
+Display, etc.). Für die **Modulkette** wird das hier bewusst aufgehoben:
+bei der vorgesehenen Kettenlänge (max. 1 Kategorie-1- + 1
+Kategorie-2-Modul, also maximal ein zusätzlicher Steckverbinder-Hop) ist
+der Spannungsabfall/Übergangswiderstand vernachlässigbar — ein etabliertes
+Muster in vergleichbaren modularen Sensor-Ökosystemen (z. B. Grove-I2C-
+Ketten). Die Kette bewusst kurz halten (nicht beliebig viele Module in
+Serie hängen) — dafür ist die Empfehlung „ein Kat1 + ein Kat2" gedacht,
+nicht als harte Firmware-Grenze, sondern als Auslegungsgrenze des
+Hardware-Entwurfs.
+
 ## Zwei Modulkategorien
 
-Ergibt sich direkt aus der Bus-Fähigkeit der Pins (siehe Tabelle oben):
+Ergibt sich direkt aus der Bus-Fähigkeit der Pins (siehe Tabelle oben) —
+beide Kategorien haben nach der Durchschleif-Regel oben jeweils zwei
+RJ45-Buchsen (IN + OUT):
 
 ### Kategorie 1 — Bus-Module (I2C)
 
-Nutzen nur Pin 1/2/3/4. Da I2C ein echter Multi-Drop-Bus ist, bekommen
-diese Module **zwei** RJ45-Buchsen (IN + OUT, Pin 1–4 elektrisch
-durchgeschleift) — mehrere Bus-Module gleichzeitig steckbar, solange sich
-die I2C-Adressen nicht überschneiden. Bereits in `SensorDetector.cpp`
-(Sensormeter/Sensormeter PoE) als erkennbare Chips hinterlegt:
+Nutzen Pin 1/2/3/4. Da I2C ein echter Multi-Drop-Bus ist, können
+zusätzlich zum vorgesehenen einen Kategorie-2-Modul auch **mehrere**
+Kategorie-1-Module gleichzeitig in derselben Kette stecken, solange sich
+die I2C-Adressen nicht überschneiden — die Zwei-Buchsen-Regel oben macht
+das ohnehin möglich, auch wenn der Ausgangspunkt hier nur „1+1" war.
+Bereits in `SensorDetector.cpp` (Sensormeter/Sensormeter PoE) als
+erkennbare Chips hinterlegt:
 
 - BME280 (Temperatur/Feuchte/Druck)
 - SHT30/31/35 (Temperatur/Feuchte)
@@ -52,13 +90,13 @@ die I2C-Adressen nicht überschneiden. Bereits in `SensorDetector.cpp`
 
 **Noch kein Modul aus dieser Kategorie entworfen** — folgt nach Kategorie 2.
 
-### Kategorie 2 — Direkt-Module (Einzelpin, Punkt-zu-Punkt)
+### Kategorie 2 — Direkt-Module (Einzelpin)
 
 Belegen zusätzlich einen dedizierten Einzelpin (5, 6 oder 7) — genau
-**ein** Modul dieser Art gleichzeitig steckbar, nur **eine** RJ45-Buchse,
-kein Durchschleifen (der Einzelpin ist nicht bus-fähig, ein zweites Modul
-am selben Pin würde kollidieren bzw. wäre von der Firmware nicht
-unterscheidbar).
+**ein** Modul dieser Art gleichzeitig steckbar (der Einzelpin ist nicht
+bus-fähig), aber dank Durchschleif-Regel oben trotzdem mit einem
+Kategorie-1-Modul in derselben Kette kombinierbar. Der Einzelpin selbst
+wird auf der OUT-Buchse terminiert, siehe oben.
 
 | Modul | Pin(s) | Status |
 |---|---|---|

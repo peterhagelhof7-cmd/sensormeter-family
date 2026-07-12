@@ -12,19 +12,25 @@ RJ45-Modularanschluss).
 
 ## Pinbelegung des Modul-Steckers
 
-Nur Pin 1, 2 und 5 werden genutzt — Kategorie-2-Modul, **eine** RJ45-Buchse,
-kein Durchschleifen (siehe `README.md`).
+Kategorie-2-Modul mit **zwei** RJ45-Buchsen (IN + OUT) gemäß der
+Durchschleif-Regel in `README.md`: Pin 1/2/3/4/8 werden 1:1 von IN nach
+OUT durchgeschleift, Pin 5 wird auf dem Modul-PCB abgegriffen (DHT22
+DATA) und auf der OUT-Buchse **terminiert** (nicht weitergereicht) — so
+kann in derselben Kette kein zweites Pin-5-Modul (z. B. ein künftiger
+Türkontakt) versehentlich dahinterhängen. Pin 6/7 (Relais) sind für dieses
+Modul irrelevant und werden ebenfalls einfach durchgeschleift, damit ein
+Relais-Modul weiter hinten in der Kette funktioniert.
 
-| RJ45-Pin | Signal | Verbunden mit |
-|---|---|---|
-| 1 | 3V3 | DHT22 VCC |
-| 2 | GND | DHT22 GND |
-| 3 | SCL | — (nicht verbunden) |
-| 4 | SDA | — (nicht verbunden) |
-| 5 | Einzelpin A (DHT-Data) | DHT22 DATA (+ Pull-up, siehe unten) |
-| 6 | Relais-Steuerung | — (nicht verbunden) |
-| 7 | Relais-Feedback | — (nicht verbunden) |
-| 8 | Reserve | — (nicht verbunden) |
+| RJ45-Pin | Signal | IN-Buchse | OUT-Buchse |
+|---|---|---|---|
+| 1 | 3V3 | DHT22 VCC | durchgeschleift (= IN Pin 1) |
+| 2 | GND | DHT22 GND | durchgeschleift (= IN Pin 2) |
+| 3 | SCL | — (unbenutzt) | durchgeschleift (= IN Pin 3) |
+| 4 | SDA | — (unbenutzt) | durchgeschleift (= IN Pin 4) |
+| 5 | Einzelpin A (DHT-Data) | DHT22 DATA (+ Pull-up, siehe unten) | **terminiert, nicht verbunden** |
+| 6 | Relais-Steuerung | — (unbenutzt) | durchgeschleift (= IN Pin 6) |
+| 7 | Relais-Feedback | — (unbenutzt) | durchgeschleift (= IN Pin 7) |
+| 8 | Reserve | — (unbenutzt) | durchgeschleift (= IN Pin 8) |
 
 ## Stückliste
 
@@ -32,18 +38,31 @@ kein Durchschleifen (siehe `README.md`).
 |---|---|---|
 | DHT22 (AM2302), 3-Draht-Breakout | 1 | Temperatur/Feuchte, siehe Pull-up-Hinweis unten |
 | Pull-up-Widerstand 4,7 kΩ | 0–1 | nur falls das Breakout keinen eigenen Pull-up mitbringt — siehe Hinweis |
-| RJ45-Stecker, 8P8C (male) | 1 | fest am Modulkabel, Gegenstück zur Buchse am Gerät |
-| Kabel, 3-adrig (falls Breakout nicht direkt am Stecker sitzt) | nach Bedarf | Länge je nach Einbausituation |
-| Gehäuse (optional) | 1 | z. B. kleines 3D-gedrucktes Gehäuse, je nach Einbausituation |
+| RJ45-Buchse, 8P8C (female), IN | 1 | zum Gerät bzw. vorherigen Modul in der Kette |
+| RJ45-Buchse, 8P8C (female), OUT | 1 | zum nächsten Modul in der Kette, Pin 5 hier terminiert |
+| Kurzes Patchkabel/Platinenverdrahtung IN↔OUT (Pin 1/2/3/4/6/7/8) | 1 Satz | Durchschleifung auf dem Modul-PCB, siehe Tabelle oben |
+| Kabel/Stichleitung zum DHT22-Breakout (3-adrig) | nach Bedarf | Länge je nach Einbausituation |
+| Gehäuse (optional) | 1 | z. B. kleines 3D-gedrucktes Gehäuse mit 2 RJ45-Durchbrüchen |
+
+**Steckerkonvention**: analog zu bestehenden Grove-/Ethernet-Ketten
+bekommt jedes Modul zwei **Buchsen** (female), die Verbindung zwischen
+Gerät und Modul bzw. zwischen zwei Modulen erfolgt über ein normales
+Patchkabel mit Steckern (male) an beiden Enden — damit ist die
+Kettenreihenfolge beliebig steckbar und es gibt keine Unterscheidung
+zwischen einem fest angeschlagenen Kabel und einem Modul „mit Stecker".
 
 ## Verdrahtungstabelle
 
-| DHT22-Pin | RJ45-Pin | Signal |
+| DHT22-Pin | RJ45-Pin (IN, abgegriffen) | Signal |
 |---|---|---|
 | VCC | 1 | 3V3 |
 | DATA | 5 | Einzelpin A (DHT-Data) |
 | GND | 2 | GND |
 | NC *(nur bei 4-Pin-Rohsensor, nicht bei 3-Pin-Breakout)* | — | nicht verbunden |
+
+Alle übrigen Pins (1/2/3/4/6/7/8) werden zusätzlich 1:1 auf die OUT-Buchse
+durchverdrahtet (siehe Pinbelegungstabelle oben) — nur Pin 5 endet am
+DHT22 und wird nicht weitergeführt.
 
 ## Hinweis zum Pull-up-Widerstand
 
@@ -67,8 +86,13 @@ funktioniert.
   (`SensorManager`/`SensorDetector`, `dhtProbe(PIN_DHT_EXTERNAL, DHT22)`).
   Ein versehentlich gestecktes DHT11-Modul auf diesem Steckplatz liefert
   falsche oder keine Werte.
-- **Kein Durchschleifen** — genau ein Kategorie-2-Modul gleichzeitig
-  steckbar (siehe `README.md`, Abschnitt „Kategorie 2").
+- **Durchschleifung**: Pin 1/2/3/4/6/7/8 werden zur OUT-Buchse
+  weitergereicht, Pin 5 wird terminiert — dadurch ist in derselben Kette
+  zusätzlich ein Kategorie-1-Modul (I2C) und/oder ein Relais-Modul (Pin
+  6+7) kombinierbar, aber kein zweites Pin-5-Modul (siehe `README.md`,
+  Abschnitt „Durchschleif-Regel"). Empfohlene Kettenlänge: maximal 1
+  Kategorie-1- + 1 Kategorie-2-Modul (siehe dortige Begründung zum
+  aufgehobenen GND-Sternpunkt).
 - **Auto-Erkennung**: `SensorDetector::runDetection()` probiert bei
   fehlgeschlagenem I2C-Scan einen DHT-Leseversuch auf Pin 5 — bei Erfolg
   wird „Sensor 2 aktiv" automatisch gesetzt (ein bereits manuell
