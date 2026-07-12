@@ -20,7 +20,7 @@ RJ45-Modularanschluss).
 | Buchsen | 2 (IN + OUT) | 0 — fest angeschlagenes Kabel mit RJ45-**Stecker** (male) |
 | Adern | 3 (VCC/GND/DATA), externer Pull-up auf dem Modul | **2 (nur GND/DATA)**, kein Pull-up auf dem Modul |
 | Pull-up | Extern, 4,7 kΩ auf dem Modul-PCB | Keiner — nutzt den internen ESP32-Pull-up (`ContactManager::begin()` setzt `INPUT_PULLUP`) |
-| Kabellänge/Schirmung | Unkritisch (starker externer Pull-up) | **Maximal 3 m, geschirmtes Kabel verwenden** — siehe Hinweis unten |
+| Kabellänge/Schirmung | Kein dokumentiertes Limit (starker externer Pull-up gibt deutlich mehr Störreserve) | **Richtwert max. 3 m, geschirmtes Kabel** — konservative Empfehlung, kein berechneter Grenzwert, siehe Hinweis unten |
 | Durchschleifen | Ja, siehe `README.md` „Durchschleif-Regel" | Nein — Kette endet hier vollständig, auch Kategorie-1-Pins (3/4) |
 | Preis/Aufwand | Höher (2. Buchse + Durchschleif-Verdrahtung + Widerstand) | Niedriger (nur 2-adriges Kabel + Stecker, kein Bauteil) |
 | Einsatzzweck | Modul soll in einer Kette mit weiteren Modulen stehen, oder längere/exponierte Kabelwege | Kurze, saubere Kabelführung, letztes/einziges Modul am Gerät |
@@ -66,11 +66,20 @@ Pull-up braucht — ein simpler mechanischer Kontakt nicht).
 | 5 | Einzelpin A (Kontakt-Data) | Reed-Kontakt (Anschluss A) — Pull-up kommt vom Gerät (intern) |
 | 1, 3, 4, 6, 7, 8 | — | nicht angeschlossen (n.c.) |
 
-**Maximal 3 m Kabellänge, geschirmtes Kabel verwenden** (Schirm auf GND
-auflegen) — der interne ESP32-Pull-up (~45 kΩ) ist deutlich schwächer als
-der externe 4,7-kΩ-Widerstand der Standard-Variante und dadurch
-empfindlicher gegenüber eingekoppelten Störungen auf längeren/ungeschirmten
-Leitungen. Siehe „Bekannte Einschränkungen".
+**Richtwert: max. 3 m Kabellänge, geschirmtes Kabel verwenden** (Schirm
+auf GND auflegen). Kein durch Signaltiming begründetes Limit — die
+RC-Einschwingzeit des internen Pull-ups gegen die Kabelkapazität liegt
+selbst bei deutlich über 3 m noch weit unterhalb der ~50-ms-Abfragerate
+von `ContactManager::loop()` und ist damit irrelevant. Der eigentliche
+Grund ist **Störfestigkeit**: der interne ESP32-Pull-up (~45 kΩ) ist
+deutlich schwächer als der externe 4,7-kΩ-Widerstand der Standard-Variante
+und wird daher leichter durch eingekoppelte Störungen (Netzbrumm,
+Schaltnetzteile) oder Leckströme (Feuchtigkeit/Staub auf der
+Kabelisolierung, z. B. bei einem Außenkontakt) verfälscht. 3 m ist ein
+konservativer Richtwert für „kurzes, sauber verlegtes Innenraumkabel",
+keine berechnete physikalische Grenze — bei längerer, im Freien liegender
+oder neben Netzleitungen verlegter Kabelführung lieber die Standard-
+Variante mit externem Pull-up verwenden. Siehe „Bekannte Einschränkungen".
 
 ## Stückliste
 
@@ -142,10 +151,13 @@ Quellen dafür, je nach Variante:
 - **Lite**: kein Bauteil auf dem Modul — `ContactManager::begin()`
   aktiviert `INPUT_PULLUP` direkt auf dem Geräte-Pin (~45 kΩ, deutlich
   schwächer als 4,7 kΩ). Für einen simplen mechanischen Kontakt (kein
-  zeitkritisches Protokoll wie bei DHT22) elektrisch ausreichend, aber
-  empfindlicher gegenüber Störeinkopplung und Leckströmen auf dem Kabel —
-  daher die Begrenzung auf max. 3 m **geschirmtes** Kabel bei dieser
-  Variante.
+  zeitkritisches Protokoll wie bei DHT22) elektrisch ausreichend — die
+  RC-Einschwingzeit spielt bei jeder realistischen Kabellänge keine Rolle.
+  Empfindlicher ist der schwache Pull-up aber gegenüber Störeinkopplung
+  und Leckströmen, ein Effekt ohne scharfe Längengrenze. Der Richtwert
+  „max. 3 m, geschirmt" (siehe Pinbelegung oben) ist daher eine
+  konservative Empfehlung für kurze, saubere Innenraum-Verlegung, keine
+  berechnete Grenze.
 
 ## Bekannte Einschränkungen
 
@@ -170,13 +182,18 @@ Quellen dafür, je nach Variante:
 - **Lite hat keine Kettenfähigkeit**: die Lite-Variante besitzt keine
   OUT-Buchse — dahinter kann weder ein zweites Kategorie-2- noch ein
   Kategorie-1-Modul stecken.
-- **Lite: max. 3 m, geschirmtes Kabel**: da Lite ohne externen Pull-up
-  auskommt und sich auf den schwächeren internen ESP32-Pull-up verlässt
-  (siehe „Hinweis zum Pull-up-Widerstand"), ist die Kabellänge bewusst auf
-  3 m begrenzt und ein geschirmtes Kabel (Schirm auf GND) vorgeschrieben —
-  bei längeren oder exponierten Kabelwegen (z. B. Außentür, Verlegung
-  entlang von Netzleitungen) die Standard-Variante mit externem Pull-up
-  verwenden.
+- **Lite: Richtwert max. 3 m, geschirmtes Kabel**: kein durch Signaltiming
+  begründetes Limit (die RC-Einschwingzeit ist selbst bei deutlich mehr
+  als 3 m irrelevant gegenüber dem ~50-ms-Abfragetakt) — der Grund ist
+  Störfestigkeit. Da Lite ohne externen Pull-up auskommt und sich auf den
+  schwächeren internen ESP32-Pull-up verlässt (siehe „Hinweis zum
+  Pull-up-Widerstand"), ist es empfindlicher gegenüber eingekoppelten
+  Störungen und Leckströmen als die Standard-Variante — ein Effekt ohne
+  scharfe Längengrenze. 3 m + geschirmtes Kabel (Schirm auf GND) ist daher
+  eine konservative Empfehlung für kurze, saubere Innenraumverlegung,
+  keine berechnete Grenze — bei längeren oder exponierten Kabelwegen (z. B.
+  Außentür, Verlegung entlang von Netzleitungen) die Standard-Variante mit
+  externem Pull-up verwenden.
 - **Kein eigener MQTT-/SNMP-Datenpfad** (Stand `sensormeter/repo/docs/
   entscheidungen.md` „Türkontakt auf RJ45 Pin 5"): der Kontaktzustand ist
   aktuell nur über Weboberfläche/REST-API (`/api/contact`) und das lokale
