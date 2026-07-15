@@ -151,13 +151,19 @@ Adress-Wahlpin hat), Multiplexer verwenden oder zweiten I²C-Bus nutzen.</p>
   <div class="callout-title">Realer Adresskonflikt in dieser Familie</div>
   Beim <b>AHT20+BMP280-Kombimodul</b> und beim <b>ENS160+AHT21-Kombimodul</b>
   sitzen zwei I²C-Chips auf derselben Platine. <code>SensorDetector.cpp</code>
-  scannt aufsteigend ab 0x08 und bricht beim <b>ersten</b> Treffer ab (siehe
-  <code>module-design/README.md</code>, Abschnitt "Kategorie 1"). Da 0x38
-  (AHT20/AHT21) numerisch kleiner ist als 0x52/0x53 (ENS160) und 0x76/0x77
-  (BMP280), gewinnt der AHT-Chip <b>immer</b> — der zweite Chip auf
-  demselben Kombimodul ist für die aktuelle Firmware unsichtbar, auch wenn
-  er physisch korrekt angeschlossen ist. Das ist keine Fehlfunktion,
-  sondern die dokumentierte "genau ein Modul erwartet"-Designentscheidung.
+  scannt aufsteigend ab 0x08 und wertet seit 2026-07-15 <b>alle</b>
+  gefundenen Adressen aus (kein Abbruch beim ersten Treffer mehr — beide
+  Chips werden erkannt und geloggt, siehe
+  <code>module-design/README.md</code>, Abschnitt "Kategorie 1").
+  <b>Tatsächlich gelesen</b> wird von <code>SensorManager</code> aber
+  weiterhin nur ein einzelnes Gerät: da 0x38 (AHT20/AHT21) numerisch
+  kleiner ist als 0x52/0x53 (ENS160) und 0x76/0x77 (BMP280), gewinnt der
+  AHT-Chip als "primäres" Gerät <b>immer</b> — der zweite Chip auf
+  demselben Kombimodul bleibt für den Lesepfad unerreichbar, auch wenn er
+  physisch korrekt angeschlossen und jetzt auch erkannt wird. Das ist keine
+  Fehlfunktion, sondern die weiterhin gültige "genau ein Modul wird
+  gelesen"-Designentscheidung — nur die Erkennung/Auswertung selbst deckt
+  jetzt alle Treffer ab, nicht der Lesepfad.
 </div>
 
 <h2>4. Geschwindigkeit</h2>
@@ -376,11 +382,14 @@ elektrische Kapazität und Stromverbrauch.</p>
 <div class="callout warn">
   <div class="callout-title">Sensormeter-spezifisch — aktuelle Firmware-Grenze</div>
   Elektrisch könnten mehrere I²C-Module gleichzeitig am Bus hängen (die
-  Kombimodule zeigen das bereits, siehe Abschnitt 3). <b>Die aktuelle
-  Firmware erwartet aber bewusst genau ein Modul</b> — <code>SensorDetector</code>
-  bricht den Scan beim ersten Treffer ab. Mehrere gleichzeitig erkannte
-  Module gemeinsam auswerten ist als spätere Erweiterung vorgesehen, aktuell
-  aber noch nicht umgesetzt.
+  Kombimodule zeigen das bereits, siehe Abschnitt 3). Seit 2026-07-15
+  <b>erkennt</b> <code>SensorDetector</code> auch tatsächlich alle
+  gleichzeitig gesteckten I²C-Geräte (voller Scan ohne Abbruch beim ersten
+  Treffer, inklusive Log-Eintrag je Gerät). <b>Gelesen wird davon aber
+  weiterhin nur ein einzelnes, primäres Gerät</b> (niedrigste gefundene
+  Adresse) — <code>SensorManager</code> selbst kann noch keine mehreren
+  gleichzeitig erkannten Module gemeinsam auswerten/ausgeben. Das ist als
+  spätere Erweiterung vorgesehen, aktuell aber noch nicht umgesetzt.
 </div>
 
 <h2>8. Typische Fehler</h2>

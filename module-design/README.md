@@ -108,11 +108,14 @@ Kategorie-1-Module gleichzeitig in derselben Kette stecken, solange sich
 die I2C-Adressen nicht überschneiden.
 
 **Wichtiger Erkennungs-Hinweis für alle I2C-Module**: `SensorDetector.cpp`
-scannt Adressen aufsteigend (0x08–0x77) und bricht beim **ersten Treffer**
-ab („genau ein Modul erwartet"). Stecken mehrere I2C-Chips gleichzeitig am
-Bus — z. B. beide Chips eines Kombi-Boards —, gewinnt immer der mit der
-numerisch **niedrigeren** Adresse; der andere wird nie gesehen. Das ist bei
-beiden Kombimodulen unten relevant.
+scannt Adressen aufsteigend (0x08–0x77) und wertet seit 2026-07-15 **alle**
+gefundenen Adressen aus (kein Abbruch beim ersten Treffer mehr, siehe
+`docs/entscheidungen.md` in `sensormeter/repo`/`sensormeter-poe/repo`) —
+mehrere gleichzeitig gesteckte I2C-Chips werden also erkannt und geloggt.
+**Tatsächlich gelesen wird von `SensorManager` aber weiterhin nur eines**:
+das mit der numerisch **niedrigeren** Adresse gewinnt als „primäres"
+Gerät, der Rest bleibt für den Lesepfad unerreichbar. Das ist bei beiden
+Kombimodulen unten relevant.
 
 | Modul | I2C-Adresse(n) | Status |
 |---|---|---|
