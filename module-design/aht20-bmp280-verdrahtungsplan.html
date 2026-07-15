@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<title>BME280-Sensormodul — Verdrahtungsplan (interaktiv)</title>
+<title>AHT20+BMP280-Kombimodul — Verdrahtungsplan (interaktiv)</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
   @page { size: A4; margin: 18mm 16mm 20mm 16mm; }
@@ -12,8 +12,8 @@
     font-family: -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     color: #1c2430;
     background: #ffffff;
-    font-size: 12.5px;
-    line-height: 1.5;
+    font-size: 14.5px;
+    line-height: 1.55;
   }
   header {
     background: #0f1f3d;
@@ -21,28 +21,28 @@
     margin: -18mm -16mm 8mm -16mm;
     padding: 10mm 16mm 8mm 16mm;
   }
-  .eyebrow { font-size: 9px; letter-spacing: .14em; text-transform: uppercase; color: #9fb3d9; margin-bottom: 3mm; }
-  h1 { margin: 0 0 2mm 0; font-size: 22px; }
-  .subtitle { color: #cdd8ec; font-size: 12px; }
+  .eyebrow { font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: #9fb3d9; margin-bottom: 3mm; }
+  h1 { margin: 0 0 2mm 0; font-size: 24px; }
+  .subtitle { color: #cdd8ec; font-size: 13px; }
   .badges { margin-top: 5mm; display: flex; gap: 6px; flex-wrap: wrap; }
-  .badge { display: inline-block; padding: 3px 9px; border-radius: 3px; font-size: 10px; font-weight: 600; background: #24365c; color: #cdd8ec; }
+  .badge { display: inline-block; padding: 3px 9px; border-radius: 3px; font-size: 11px; font-weight: 600; background: #24365c; color: #cdd8ec; }
   .badge-orange { background: #c8622a; color: #fff; }
 
-  h2 { font-size: 13.5px; color: #8f4a1e; margin: 7mm 0 3mm 0; border-bottom: 1px solid #e4e1d8; padding-bottom: 1.5mm; }
-  h3 { font-size: 12px; color: #1c2430; margin: 5mm 0 2mm 0; }
+  h2 { font-size: 15px; color: #8f4a1e; margin: 7mm 0 3mm 0; border-bottom: 1px solid #e4e1d8; padding-bottom: 1.5mm; }
+  h3 { font-size: 13.5px; color: #1c2430; margin: 5mm 0 2mm 0; }
   p { margin: 0 0 3mm 0; }
-  code { font-family: Consolas, "Cascadia Mono", "Courier New", monospace; background: #f2f0e9; border: 1px solid #e4e1d8; border-radius: 3px; padding: 1px 5px; font-size: 11px; }
+  code { font-family: Consolas, "Cascadia Mono", "Courier New", monospace; background: #f2f0e9; border: 1px solid #e4e1d8; border-radius: 3px; padding: 1px 5px; font-size: 12.5px; }
   table { border-collapse: collapse; width: 100%; margin: 2mm 0 4mm 0; }
-  table th, table td { border: 1px solid #e4e1d8; padding: 1.8mm 3mm; font-size: 11.5px; text-align: left; vertical-align: middle; }
+  table th, table td { border: 1px solid #e4e1d8; padding: 1.8mm 3mm; font-size: 13px; text-align: left; vertical-align: middle; }
   table th { background: #f2f0e9; }
   .callout { border-left: 3px solid #c8622a; background: #fbf3ee; padding: 3mm 4mm; margin: 3mm 0; border-radius: 0 3px 3px 0; }
-  .callout-title { font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: .04em; color: #8f4a1e; margin-bottom: 1mm; }
+  .callout-title { font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: .04em; color: #8f4a1e; margin-bottom: 1mm; }
   .callout.warn { border-left-color: #a63d2e; background: #fbeeec; }
   .callout.warn .callout-title { color: #a63d2e; }
 
   .variant-toggle { display: flex; gap: 8px; margin: 2mm 0 4mm 0; }
   .variant-toggle button {
-    font: inherit; font-size: 12px; font-weight: 600; padding: 6px 14px; cursor: pointer;
+    font: inherit; font-size: 13px; font-weight: 600; padding: 6px 14px; cursor: pointer;
     border: 1px solid #c7c2b4; background: #f2f0e9; color: #6b7280; border-radius: 4px;
   }
   .variant-toggle button.active { background: #0f1f3d; border-color: #0f1f3d; color: #fff; }
@@ -54,11 +54,11 @@
   .wire-info {
     margin-top: 3mm; padding: 3mm 4mm; border-radius: 3px;
     background: #f2f0e9; border: 1px solid #e4e1d8; color: #6b7280;
-    font-size: 11px; min-height: 1.5em;
+    font-size: 12.5px; min-height: 1.5em;
   }
   .wire-info.active { background: #fbf3ee; border-color: #e2b493; color: #1c2430; }
   .wire-info b { color: #8f4a1e; }
-  footer { margin-top: 10mm; padding-top: 3mm; border-top: 1px solid #e4e1d8; font-size: 9.5px; color: #6b7280; }
+  footer { margin-top: 10mm; padding-top: 3mm; border-top: 1px solid #e4e1d8; font-size: 10.5px; color: #6b7280; }
   @media print {
     #wiringSvg { max-width: 180mm !important; }
     .wire, .wire-hit { cursor: default; }
@@ -79,9 +79,9 @@
       <line x1="24" y1="24.67" x2="31.07" y2="17.6" stroke="#E9E4D8" stroke-width="2.8" stroke-linecap="round"/>
       <circle cx="24" cy="24.67" r="2.6" fill="#E9E4D8"/>
     </svg>
-    <h1>BME280-SENSORMODUL — VERDRAHTUNGSPLAN</h1>
+    <h1>AHT20+BMP280-KOMBIMODUL — VERDRAHTUNGSPLAN</h1>
   </div>
-  <div class="subtitle">Externer I2C-Sensor (Temperatur/Feuchte/Druck) für Sensormeter (WT32-ETH01) und Sensormeter PoE (ESP32-S3-ETH) — erstes Kategorie-1-Modul</div>
+  <div class="subtitle">Externes I2C-Kombiboard (Temperatur/Feuchte + Druck) für Sensormeter (WT32-ETH01) und Sensormeter PoE (ESP32-S3-ETH)</div>
   <div class="badges">
     <span class="badge badge-orange">Pin 1/2/3/4 · VCC/GND/SCL/SDA</span>
     <span class="badge">Kategorie 1 · Bus, mehrere Module möglich</span>
@@ -89,9 +89,17 @@
   </div>
 </header>
 
-<p>Siehe <code>bme280-modul.md</code> für Zweck, vollständige Stückliste und
-bekannte Einschränkungen — diese Seite ist die interaktive Kurzfassung der
-Verdrahtung. Zwei Bauvarianten, siehe Umschalter unten.</p>
+<p>Siehe <code>aht20-bmp280-modul.md</code> für Zweck, vollständige
+Stückliste und bekannte Einschränkungen — diese Seite ist die interaktive
+Kurzfassung der Verdrahtung. Zwei Bauvarianten, siehe Umschalter unten.</p>
+
+<div class="callout warn">
+  <div class="callout-title">Nur der AHT20-Teil ist heute nutzbar</div>
+  AHT20 (Adresse 0x38) gewinnt beim I2C-Scan immer vor BMP280 (0x76/0x77)
+  — der Druck-Chip bleibt für die Firmware unerreichbar, solange AHT20
+  mitgesteckt ist. Beide Chips hängen fest am selben 4-Pin-Anschluss,
+  keine separate Verdrahtung möglich.
+</div>
 
 <div class="variant-toggle">
   <button data-variant="standard" class="active">Standard (2 Buchsen, Bus-Abgriff)</button>
@@ -99,24 +107,24 @@ Verdrahtung. Zwei Bauvarianten, siehe Umschalter unten.</p>
 </div>
 
 <h2>Schema</h2>
-<p style="font-size:10px;color:#6b7280;margin-top:-1mm;">Interaktiv: Klick auf einen Draht hebt ihn hervor und zeigt Start-/Zielpin unten an. Klick auf die freie Fläche hebt die Auswahl wieder auf.</p>
+<p style="font-size:11px;color:#6b7280;margin-top:-1mm;">Interaktiv: Klick auf einen Draht hebt ihn hervor und zeigt Start-/Zielpin unten an. Klick auf die freie Fläche hebt die Auswahl wieder auf.</p>
 
 <svg id="wiringSvg" viewBox="0 0 900 440" style="width:100%; max-width:380mm; height:auto; font-family:inherit;">
 
   <!-- ================= STANDARD-VARIANTE ================= -->
   <g id="variant-standard">
     <rect x="40" y="30" width="150" height="380" rx="6" fill="#4a5568"/>
-    <text x="115" y="50" text-anchor="middle" font-size="10" fill="#fff" font-weight="700">RJ45 IN</text>
-    <text x="115" y="63" text-anchor="middle" font-size="8" fill="#9fb3d9">vom Gerät / Vormodul</text>
-    <g font-size="8.5" fill="#fff">
+    <text x="115" y="50" text-anchor="middle" font-size="12" fill="#fff" font-weight="700">RJ45 IN</text>
+    <text x="115" y="64" text-anchor="middle" font-size="9.5" fill="#9fb3d9">vom Gerät / Vormodul</text>
+    <g font-size="10.5" fill="#fff">
       <text x="180" y="73" text-anchor="end">1 3V3</text>
       <text x="180" y="108" text-anchor="end">2 GND</text>
       <text x="180" y="143" text-anchor="end" font-weight="700" fill="#ffd8a8">3 SCL</text>
       <text x="180" y="178" text-anchor="end" font-weight="700" fill="#c8f0d0">4 SDA</text>
-      <text x="180" y="213" text-anchor="end">5 DATA</text>
-      <text x="180" y="248" text-anchor="end">6 Relais</text>
-      <text x="180" y="283" text-anchor="end">7 Fdbk</text>
-      <text x="180" y="318" text-anchor="end">8 Res.</text>
+      <text x="180" y="213" text-anchor="end" fill="#9aa3b5">5 DATA n.c.</text>
+      <text x="180" y="248" text-anchor="end" fill="#9aa3b5">6 Relais n.c.</text>
+      <text x="180" y="283" text-anchor="end" fill="#9aa3b5">7 Fdbk n.c.</text>
+      <text x="180" y="318" text-anchor="end" fill="#9aa3b5">8 5V n.c.</text>
     </g>
     <circle cx="190" cy="70" r="3" fill="#c0392b"/>
     <circle cx="190" cy="105" r="3" fill="#1c2430"/>
@@ -128,17 +136,17 @@ Verdrahtung. Zwei Bauvarianten, siehe Umschalter unten.</p>
     <circle cx="190" cy="315" r="2.2" fill="#9aa3b5"/>
 
     <rect x="710" y="30" width="150" height="380" rx="6" fill="#4a5568"/>
-    <text x="785" y="50" text-anchor="middle" font-size="10" fill="#fff" font-weight="700">RJ45 OUT</text>
-    <text x="785" y="63" text-anchor="middle" font-size="8" fill="#9fb3d9">zum nächsten Modul</text>
-    <g font-size="8.5" fill="#fff">
+    <text x="785" y="50" text-anchor="middle" font-size="12" fill="#fff" font-weight="700">RJ45 OUT</text>
+    <text x="785" y="64" text-anchor="middle" font-size="9.5" fill="#9fb3d9">zum nächsten Modul</text>
+    <g font-size="10.5" fill="#fff">
       <text x="720" y="73">1 3V3</text>
       <text x="720" y="108">2 GND</text>
       <text x="720" y="143" font-weight="700" fill="#ffd8a8">3 SCL</text>
       <text x="720" y="178" font-weight="700" fill="#c8f0d0">4 SDA</text>
-      <text x="720" y="213">5 DATA</text>
-      <text x="720" y="248">6 Relais</text>
-      <text x="720" y="283">7 Fdbk</text>
-      <text x="720" y="318">8 Res.</text>
+      <text x="720" y="213" fill="#9aa3b5">5 DATA n.c.</text>
+      <text x="720" y="248" fill="#9aa3b5">6 Relais n.c.</text>
+      <text x="720" y="283" fill="#9aa3b5">7 Fdbk n.c.</text>
+      <text x="720" y="318" fill="#9aa3b5">8 5V n.c.</text>
     </g>
     <circle cx="710" cy="70" r="3" fill="#c0392b"/>
     <circle cx="710" cy="105" r="3" fill="#1c2430"/>
@@ -148,55 +156,54 @@ Verdrahtung. Zwei Bauvarianten, siehe Umschalter unten.</p>
     <circle cx="710" cy="245" r="2.2" fill="#9aa3b5"/>
     <circle cx="710" cy="280" r="2.2" fill="#9aa3b5"/>
     <circle cx="710" cy="315" r="2.2" fill="#9aa3b5"/>
-    <text x="785" y="150" text-anchor="middle" font-size="7.5" fill="#5c9e6c">Bus bleibt live,</text>
-    <text x="785" y="161" text-anchor="middle" font-size="7.5" fill="#5c9e6c">nichts terminiert</text>
+    <text x="785" y="150" text-anchor="middle" font-size="9" fill="#5c9e6c">Bus bleibt live,</text>
+    <text x="785" y="162" text-anchor="middle" font-size="9" fill="#5c9e6c">nichts terminiert</text>
 
-    <!-- BME280-Modul -->
+    <!-- Kombi-Board -->
     <rect x="380" y="130" width="180" height="180" rx="4" fill="#f2f0e9" stroke="#c7c2b4"/>
-    <text x="470" y="152" text-anchor="middle" font-size="10" font-weight="700">BME280-Breakout</text>
-    <text x="470" y="165" text-anchor="middle" font-size="8" fill="#6b7280">I2C, 4-Pin</text>
-    <circle cx="390" cy="195" r="3" fill="#c0392b"/><text x="400" y="199" font-size="9">VCC</text>
-    <circle cx="390" cy="225" r="3" fill="#1c2430"/><text x="400" y="229" font-size="9">GND</text>
-    <circle cx="390" cy="255" r="3" fill="#c8622a"/><text x="400" y="259" font-size="9">SCL</text>
-    <circle cx="390" cy="285" r="3" fill="#5c9e6c"/><text x="400" y="289" font-size="9">SDA</text>
-    <text x="470" y="185" text-anchor="middle" font-size="7" fill="#8a93a3">0x76/0x77 (SDO)</text>
+    <text x="470" y="152" text-anchor="middle" font-size="12" font-weight="700">AHT20+BMP280</text>
+    <text x="470" y="166" text-anchor="middle" font-size="9.5" fill="#6b7280">I2C, 4-Pin, 2 Chips</text>
+    <circle cx="390" cy="200" r="3" fill="#c0392b"/><text x="400" y="204" font-size="10.5">VDD</text>
+    <circle cx="390" cy="230" r="3" fill="#5c9e6c"/><text x="400" y="234" font-size="10.5">SDA</text>
+    <circle cx="390" cy="260" r="3" fill="#1c2430"/><text x="400" y="264" font-size="10.5">GND</text>
+    <circle cx="390" cy="285" r="3" fill="#c8622a"/><text x="400" y="289" font-size="10.5">SCL</text>
+    <text x="470" y="185" text-anchor="middle" font-size="8.5" fill="#8a93a3">AHT20 0x38 · BMP280 0x76/77</text>
 
-    <!-- Pass-through wires (dashed = fuehrt nur durch bzw. bleibt zusaetzlich live) -->
+    <!-- Pass-through -->
     <path class="wire-hit" data-wire="s1" d="M190,70 L710,70"/>
     <path class="wire" data-wire="s1" data-from="IN Pin 1 (3V3)" data-to="OUT Pin 1 (3V3, durchgeschleift)" d="M190,70 L710,70" fill="none" stroke="#c0392b" stroke-width="1.4" stroke-dasharray="5 3"/>
     <path class="wire-hit" data-wire="s2" d="M190,105 L710,105"/>
     <path class="wire" data-wire="s2" data-from="IN Pin 2 (GND)" data-to="OUT Pin 2 (GND, durchgeschleift)" d="M190,105 L710,105" fill="none" stroke="#1c2430" stroke-width="1.4" stroke-dasharray="5 3"/>
     <path class="wire-hit" data-wire="s3" d="M190,140 L710,140"/>
-    <path class="wire" data-wire="s3" data-from="IN Pin 3 (SCL)" data-to="OUT Pin 3 (SCL, bleibt live - echter Bus-Abgriff, kein Terminieren)" d="M190,140 L710,140" fill="none" stroke="#c8622a" stroke-width="1.8"/>
+    <path class="wire" data-wire="s3" data-from="IN Pin 3 (SCL)" data-to="OUT Pin 3 (SCL, bleibt live - echter Bus-Abgriff)" d="M190,140 L710,140" fill="none" stroke="#c8622a" stroke-width="1.8"/>
     <path class="wire-hit" data-wire="s4" d="M190,175 L710,175"/>
-    <path class="wire" data-wire="s4" data-from="IN Pin 4 (SDA)" data-to="OUT Pin 4 (SDA, bleibt live - echter Bus-Abgriff, kein Terminieren)" d="M190,175 L710,175" fill="none" stroke="#5c9e6c" stroke-width="1.8"/>
+    <path class="wire" data-wire="s4" data-from="IN Pin 4 (SDA)" data-to="OUT Pin 4 (SDA, bleibt live - echter Bus-Abgriff)" d="M190,175 L710,175" fill="none" stroke="#5c9e6c" stroke-width="1.8"/>
     <path class="wire-hit" data-wire="s5" d="M190,210 L710,210"/>
     <path class="wire" data-wire="s5" data-from="IN Pin 5 (Einzelpin A)" data-to="OUT Pin 5 (durchgeschleift, von diesem Modul unbenutzt)" d="M190,210 L710,210" fill="none" stroke="#2e6da4" stroke-width="1.4" stroke-dasharray="5 3"/>
     <path class="wire-hit" data-wire="s6" d="M190,245 L710,245"/>
-    <path class="wire" data-wire="s6" data-from="IN Pin 6 (Relais-Steuerung)" data-to="OUT Pin 6 (durchgeschleift, von diesem Modul unbenutzt)" d="M190,245 L710,245" fill="none" stroke="#a63d2e" stroke-width="1.4" stroke-dasharray="5 3"/>
+    <path class="wire" data-wire="s6" data-from="IN Pin 6 (Relais-Steuerung)" data-to="OUT Pin 6 (durchgeschleift, unbenutzt)" d="M190,245 L710,245" fill="none" stroke="#a63d2e" stroke-width="1.4" stroke-dasharray="5 3"/>
     <path class="wire-hit" data-wire="s7" d="M190,280 L710,280"/>
-    <path class="wire" data-wire="s7" data-from="IN Pin 7 (Relais-Feedback)" data-to="OUT Pin 7 (durchgeschleift, von diesem Modul unbenutzt)" d="M190,280 L710,280" fill="none" stroke="#c9a227" stroke-width="1.4" stroke-dasharray="5 3"/>
+    <path class="wire" data-wire="s7" data-from="IN Pin 7 (Relais-Feedback)" data-to="OUT Pin 7 (durchgeschleift, unbenutzt)" d="M190,280 L710,280" fill="none" stroke="#c9a227" stroke-width="1.4" stroke-dasharray="5 3"/>
     <path class="wire-hit" data-wire="s8" d="M190,315 L710,315"/>
-    <path class="wire" data-wire="s8" data-from="IN Pin 8 (Reserve)" data-to="OUT Pin 8 (durchgeschleift)" d="M190,315 L710,315" fill="none" stroke="#8a93a3" stroke-width="1.4" stroke-dasharray="5 3"/>
+    <path class="wire" data-wire="s8" data-from="IN Pin 8 (5V)" data-to="OUT Pin 8 (durchgeschleift, 5V bleibt anliegen)" d="M190,315 L710,315" fill="none" stroke="#8a93a3" stroke-width="1.4" stroke-dasharray="5 3"/>
 
-    <!-- Abgriff-Wires zum BME280 -->
-    <path class="wire-hit" data-wire="s9" d="M190,70 C 290,70 290,195 390,195"/>
-    <path class="wire" data-wire="s9" data-from="IN Pin 1 (3V3)" data-to="BME280 VCC" d="M190,70 C 290,70 290,195 390,195" fill="none" stroke="#c0392b" stroke-width="1.8"/>
-    <path class="wire-hit" data-wire="s10" d="M190,105 C 300,105 300,225 390,225"/>
-    <path class="wire" data-wire="s10" data-from="IN Pin 2 (GND)" data-to="BME280 GND" d="M190,105 C 300,105 300,225 390,225" fill="none" stroke="#1c2430" stroke-width="1.8"/>
-    <path class="wire-hit" data-wire="s11" d="M190,140 L390,255"/>
-    <path class="wire" data-wire="s11" data-from="IN Pin 3 (SCL, Bus-Abgriff)" data-to="BME280 SCL" d="M190,140 L390,255" fill="none" stroke="#c8622a" stroke-width="1.8"/>
-    <path class="wire-hit" data-wire="s12" d="M190,175 L390,285"/>
-    <path class="wire" data-wire="s12" data-from="IN Pin 4 (SDA, Bus-Abgriff)" data-to="BME280 SDA" d="M190,175 L390,285" fill="none" stroke="#5c9e6c" stroke-width="1.8"/>
+    <!-- Abgriff-Wires -->
+    <path class="wire-hit" data-wire="s9" d="M190,70 C 290,70 290,200 390,200"/>
+    <path class="wire" data-wire="s9" data-from="IN Pin 1 (3V3)" data-to="Board VDD" d="M190,70 C 290,70 290,200 390,200" fill="none" stroke="#c0392b" stroke-width="1.8"/>
+    <path class="wire-hit" data-wire="s10" d="M190,105 C 300,105 300,260 390,260"/>
+    <path class="wire" data-wire="s10" data-from="IN Pin 2 (GND)" data-to="Board GND" d="M190,105 C 300,105 300,260 390,260" fill="none" stroke="#1c2430" stroke-width="1.8"/>
+    <path class="wire-hit" data-wire="s11" d="M190,140 L390,285"/>
+    <path class="wire" data-wire="s11" data-from="IN Pin 3 (SCL, Bus-Abgriff)" data-to="Board SCL" d="M190,140 L390,285" fill="none" stroke="#c8622a" stroke-width="1.8"/>
+    <path class="wire-hit" data-wire="s12" d="M190,175 L390,230"/>
+    <path class="wire" data-wire="s12" data-from="IN Pin 4 (SDA, Bus-Abgriff)" data-to="Board SDA" d="M190,175 L390,230" fill="none" stroke="#5c9e6c" stroke-width="1.8"/>
   </g>
 
   <!-- ================= LITE-VARIANTE ================= -->
   <g id="variant-lite" style="display:none">
-    <!-- RJ45-Stecker (male, Kabelende) - alle 8 Pins gezeichnet, nur 1/2/3/4 genutzt -->
     <rect x="40" y="30" width="150" height="380" rx="6" fill="#4a5568"/>
-    <text x="115" y="50" text-anchor="middle" font-size="10" fill="#fff" font-weight="700">RJ45-Stecker</text>
-    <text x="115" y="63" text-anchor="middle" font-size="8" fill="#9fb3d9">male, fest am Kabel</text>
-    <g font-size="8.5" fill="#fff">
+    <text x="115" y="50" text-anchor="middle" font-size="12" fill="#fff" font-weight="700">RJ45-Stecker</text>
+    <text x="115" y="64" text-anchor="middle" font-size="9.5" fill="#9fb3d9">male, fest am Kabel</text>
+    <g font-size="10.5" fill="#fff">
       <text x="180" y="73" text-anchor="end">1 3V3</text>
       <text x="180" y="108" text-anchor="end">2 GND</text>
       <text x="180" y="143" text-anchor="end" font-weight="700" fill="#ffd8a8">3 SCL</text>
@@ -204,7 +211,7 @@ Verdrahtung. Zwei Bauvarianten, siehe Umschalter unten.</p>
       <text x="180" y="213" text-anchor="end" fill="#9aa3b5">5 DATA n.c.</text>
       <text x="180" y="248" text-anchor="end" fill="#9aa3b5">6 Relais n.c.</text>
       <text x="180" y="283" text-anchor="end" fill="#9aa3b5">7 Fdbk n.c.</text>
-      <text x="180" y="318" text-anchor="end" fill="#9aa3b5">8 Res. n.c.</text>
+      <text x="180" y="318" text-anchor="end" fill="#9aa3b5">8 5V n.c.</text>
     </g>
     <circle cx="190" cy="70" r="3" fill="#c0392b"/>
     <circle cx="190" cy="105" r="3" fill="#1c2430"/>
@@ -215,33 +222,32 @@ Verdrahtung. Zwei Bauvarianten, siehe Umschalter unten.</p>
     <circle cx="190" cy="280" r="2.2" fill="#9aa3b5"/>
     <circle cx="190" cy="315" r="2.2" fill="#9aa3b5"/>
 
-    <!-- BME280-Modul -->
     <rect x="420" y="130" width="180" height="180" rx="4" fill="#f2f0e9" stroke="#c7c2b4"/>
-    <text x="510" y="152" text-anchor="middle" font-size="10" font-weight="700">BME280-Breakout</text>
-    <text x="510" y="165" text-anchor="middle" font-size="8" fill="#6b7280">I2C, 4-Pin</text>
-    <circle cx="430" cy="195" r="3" fill="#c0392b"/><text x="440" y="199" font-size="9">VCC</text>
-    <circle cx="430" cy="225" r="3" fill="#1c2430"/><text x="440" y="229" font-size="9">GND</text>
-    <circle cx="430" cy="255" r="3" fill="#c8622a"/><text x="440" y="259" font-size="9">SCL</text>
-    <circle cx="430" cy="285" r="3" fill="#5c9e6c"/><text x="440" y="289" font-size="9">SDA</text>
-    <text x="510" y="185" text-anchor="middle" font-size="7" fill="#8a93a3">0x76/0x77 (SDO)</text>
+    <text x="510" y="152" text-anchor="middle" font-size="12" font-weight="700">AHT20+BMP280</text>
+    <text x="510" y="166" text-anchor="middle" font-size="9.5" fill="#6b7280">I2C, 4-Pin, 2 Chips</text>
+    <circle cx="430" cy="200" r="3" fill="#c0392b"/><text x="440" y="204" font-size="10.5">VDD</text>
+    <circle cx="430" cy="230" r="3" fill="#5c9e6c"/><text x="440" y="234" font-size="10.5">SDA</text>
+    <circle cx="430" cy="260" r="3" fill="#1c2430"/><text x="440" y="264" font-size="10.5">GND</text>
+    <circle cx="430" cy="285" r="3" fill="#c8622a"/><text x="440" y="289" font-size="10.5">SCL</text>
+    <text x="510" y="185" text-anchor="middle" font-size="8.5" fill="#8a93a3">AHT20 0x38 · BMP280 0x76/77</text>
 
-    <path class="wire-hit" data-wire="l1" d="M190,70 C 300,70 300,195 430,195"/>
-    <path class="wire" data-wire="l1" data-from="Stecker Pin 1 (3V3)" data-to="BME280 VCC" d="M190,70 C 300,70 300,195 430,195" fill="none" stroke="#c0392b" stroke-width="1.8"/>
-    <path class="wire-hit" data-wire="l2" d="M190,105 C 310,105 310,225 430,225"/>
-    <path class="wire" data-wire="l2" data-from="Stecker Pin 2 (GND)" data-to="BME280 GND" d="M190,105 C 310,105 310,225 430,225" fill="none" stroke="#1c2430" stroke-width="1.8"/>
-    <path class="wire-hit" data-wire="l3" d="M190,140 L430,255"/>
-    <path class="wire" data-wire="l3" data-from="Stecker Pin 3 (SCL)" data-to="BME280 SCL" d="M190,140 L430,255" fill="none" stroke="#c8622a" stroke-width="1.8"/>
-    <path class="wire-hit" data-wire="l4" d="M190,175 L430,285"/>
-    <path class="wire" data-wire="l4" data-from="Stecker Pin 4 (SDA)" data-to="BME280 SDA" d="M190,175 L430,285" fill="none" stroke="#5c9e6c" stroke-width="1.8"/>
+    <path class="wire-hit" data-wire="l1" d="M190,70 C 300,70 300,200 430,200"/>
+    <path class="wire" data-wire="l1" data-from="Stecker Pin 1 (3V3)" data-to="Board VDD" d="M190,70 C 300,70 300,200 430,200" fill="none" stroke="#c0392b" stroke-width="1.8"/>
+    <path class="wire-hit" data-wire="l2" d="M190,105 C 310,105 310,260 430,260"/>
+    <path class="wire" data-wire="l2" data-from="Stecker Pin 2 (GND)" data-to="Board GND" d="M190,105 C 310,105 310,260 430,260" fill="none" stroke="#1c2430" stroke-width="1.8"/>
+    <path class="wire-hit" data-wire="l3" d="M190,140 L430,285"/>
+    <path class="wire" data-wire="l3" data-from="Stecker Pin 3 (SCL)" data-to="Board SCL" d="M190,140 L430,285" fill="none" stroke="#c8622a" stroke-width="1.8"/>
+    <path class="wire-hit" data-wire="l4" d="M190,175 L430,230"/>
+    <path class="wire" data-wire="l4" data-from="Stecker Pin 4 (SDA)" data-to="Board SDA" d="M190,175 L430,230" fill="none" stroke="#5c9e6c" stroke-width="1.8"/>
 
-    <text x="510" y="325" text-anchor="middle" font-size="9" fill="#a63d2e" font-weight="700">Keine zweite Buchse</text>
-    <text x="510" y="338" text-anchor="middle" font-size="8" fill="#6b7280">Kette endet hier komplett -</text>
-    <text x="510" y="350" text-anchor="middle" font-size="8" fill="#6b7280">kein weiteres I2C- oder</text>
-    <text x="510" y="362" text-anchor="middle" font-size="8" fill="#6b7280">Kategorie-2-Modul danach.</text>
+    <text x="510" y="325" text-anchor="middle" font-size="10.5" fill="#a63d2e" font-weight="700">Keine zweite Buchse</text>
+    <text x="510" y="339" text-anchor="middle" font-size="9.5" fill="#6b7280">Kette endet hier komplett -</text>
+    <text x="510" y="352" text-anchor="middle" font-size="9.5" fill="#6b7280">kein weiteres I2C- oder</text>
+    <text x="510" y="365" text-anchor="middle" font-size="9.5" fill="#6b7280">Kategorie-2-Modul danach.</text>
   </g>
 </svg>
 <div id="wireInfo" class="wire-info">Klicke auf einen Draht, um Start- und Zielpin anzuzeigen.</div>
-<p style="font-size:10px;color:#6b7280;">Gestrichelte Linien = reines Durchschleifen (unbenutzte Pins). Pin 3/4 sind bei Standard durchgezogen, da sie gleichzeitig genutzt UND weitergereicht werden (echter Bus-Abgriff, kein Terminieren).</p>
+<p style="font-size:11px;color:#6b7280;">Gestrichelte Linien = reines Durchschleifen (unbenutzte Pins). Pin 3/4 sind bei Standard durchgezogen, da sie gleichzeitig genutzt UND weitergereicht werden (echter Bus-Abgriff, kein Terminieren).</p>
 
 <script>
 (function () {
@@ -292,37 +298,34 @@ Verdrahtung. Zwei Bauvarianten, siehe Umschalter unten.</p>
 <h3>Standard-Variante (2 Buchsen)</h3>
 <table>
   <tr><th>Bauteil</th><th>Menge</th><th>Hinweis</th></tr>
-  <tr><td>BME280-Breakout (I2C, 4-Pin)</td><td>1</td><td>SDO-Pin legt Adresse 0x76/0x77 fest</td></tr>
-  <tr><td>Pull-up-Widerstände 4,7 kΩ (SCL + SDA)</td><td>0–2</td><td>nur falls der Bus noch keinen Pull-up hat — vor dem Bestücken prüfen</td></tr>
+  <tr><td>AHT20+BMP280-Breakout (I2C, 4-Pin)</td><td>1</td><td>AHT20 fest 0x38, BMP280 werksseitig fest 0x76/0x77</td></tr>
+  <tr><td>Pull-up-Widerstände 4,7 kΩ (SCL + SDA)</td><td>0–2</td><td>nur falls der Bus noch keinen Pull-up hat</td></tr>
   <tr><td>RJ45-Buchse, 8P8C (female), IN</td><td>1</td><td>zum Gerät bzw. Vormodul</td></tr>
-  <tr><td>RJ45-Buchse, 8P8C (female), OUT</td><td>1</td><td>zum nächsten Modul — Pin 3/4 bleiben live, nichts terminiert</td></tr>
+  <tr><td>RJ45-Buchse, 8P8C (female), OUT</td><td>1</td><td>zum nächsten Modul — Pin 3/4 bleiben live</td></tr>
   <tr><td>Platinenverdrahtung IN↔OUT</td><td>1 Satz</td><td>Pin 1/2/5/6/7/8 durchschleifen, Pin 3/4 als Bus-Abgriff</td></tr>
-  <tr><td>Litze zum BME280-Breakout</td><td>4-adrig</td><td>Länge je nach Einbausituation</td></tr>
-  <tr><td>Gehäuse</td><td>1</td><td>optional, 2 RJ45-Durchbrüche</td></tr>
+  <tr><td>Litze zum Breakout</td><td>4-adrig</td><td>Länge je nach Einbausituation</td></tr>
+  <tr><td>Gehäuse</td><td>1</td><td>optional</td></tr>
 </table>
 <h3>Lite-Variante (1 Kabel mit Stecker)</h3>
 <table>
   <tr><th>Bauteil</th><th>Menge</th><th>Hinweis</th></tr>
-  <tr><td>BME280-Breakout (I2C, 4-Pin)</td><td>1</td><td>wie Standard</td></tr>
+  <tr><td>AHT20+BMP280-Breakout</td><td>1</td><td>wie Standard</td></tr>
   <tr><td>Pull-up-Widerstände 4,7 kΩ (SCL + SDA)</td><td>0–2</td><td>wie Standard, nur falls nötig</td></tr>
-  <tr><td>RJ45-Stecker, 8P8C (male)</td><td>1</td><td>fest am Kabelende, kein Gegenstück am Modul</td></tr>
+  <tr><td>RJ45-Stecker, 8P8C (male)</td><td>1</td><td>fest am Kabelende</td></tr>
   <tr><td>Kabel, 4-adrig, mit Stecker vergossen/gecrimpt</td><td>1</td><td>kein Zwischenstecker</td></tr>
-  <tr><td>Gehäuse</td><td>1</td><td>optional, kein RJ45-Durchbruch nötig</td></tr>
+  <tr><td>Gehäuse</td><td>1</td><td>optional</td></tr>
 </table>
-<p style="font-size:11px;color:#6b7280;">Lite spart eine RJ45-Buchse und die Durchschleif-Verdrahtung, kostet
-aber die Kettenfähigkeit vollständig — kein weiteres I2C- oder
-Kategorie-2-Modul kann dahinterstecken, siehe <code>bme280-modul.md</code>.</p>
 
 <div class="callout">
   <div class="callout-title">Kein Terminieren — echter Bus-Abgriff</div>
-  Anders als bei Kategorie-2-Modulen (DHT22/Kontakt/Relais) wird bei der
-  Standard-Variante <b>nichts</b> auf der OUT-Buchse terminiert — Pin 3/4
-  bleiben live, ein weiteres I2C-Modul (andere Adresse!) oder ein
-  Kategorie-2-Modul auf Pin 5/6/7 kann dahinterstecken.
+  Anders als bei Kategorie-2-Modulen wird bei der Standard-Variante
+  <b>nichts</b> auf der OUT-Buchse terminiert — Pin 3/4 bleiben live, ein
+  weiteres I2C-Modul (andere Adresse!) oder ein Kategorie-2-Modul auf
+  Pin 5/6/7 kann dahinterstecken.
 </div>
 
 <footer>
-  Sensormeter-Family — BME280-Sensormodul, Verdrahtungsplan (interaktiv) · github.com/peterhagelhof7-cmd/sensormeter-family ·
+  Sensormeter-Family — AHT20+BMP280-Kombimodul, Verdrahtungsplan (interaktiv) · github.com/peterhagelhof7-cmd/sensormeter-family ·
   Entwickelt mit Unterstützung von Claude (Anthropic) als Coding-Assistent
 </footer>
 

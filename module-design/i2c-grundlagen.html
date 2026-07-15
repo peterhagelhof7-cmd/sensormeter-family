@@ -1,0 +1,425 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>I²C – das Wichtigste für Einsteiger (Sensormeter-Family)</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  @page { size: A4; margin: 18mm 16mm 20mm 16mm; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    color: #1c2430;
+    background: #ffffff;
+    font-size: 14.5px;
+    line-height: 1.55;
+  }
+  header {
+    background: #0f1f3d;
+    color: #fff;
+    margin: -18mm -16mm 8mm -16mm;
+    padding: 10mm 16mm 8mm 16mm;
+  }
+  .eyebrow { font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: #9fb3d9; margin-bottom: 3mm; }
+  h1 { margin: 0 0 2mm 0; font-size: 24px; }
+  .subtitle { color: #cdd8ec; font-size: 13px; }
+  .badges { margin-top: 5mm; display: flex; gap: 6px; flex-wrap: wrap; }
+  .badge { display: inline-block; padding: 3px 9px; border-radius: 3px; font-size: 11px; font-weight: 600; background: #24365c; color: #cdd8ec; }
+  .badge-orange { background: #c8622a; color: #fff; }
+
+  h2 { font-size: 16px; color: #8f4a1e; margin: 9mm 0 3mm 0; border-bottom: 1px solid #e4e1d8; padding-bottom: 1.5mm; }
+  h3 { font-size: 13.5px; color: #1c2430; margin: 5mm 0 2mm 0; }
+  p { margin: 0 0 3mm 0; }
+  ol, ul { margin: 0 0 3mm 0; padding-left: 5mm; }
+  li { margin-bottom: 1.2mm; }
+  code { font-family: Consolas, "Cascadia Mono", "Courier New", monospace; background: #f2f0e9; border: 1px solid #e4e1d8; border-radius: 3px; padding: 1px 5px; font-size: 12.5px; }
+  table { border-collapse: collapse; width: 100%; margin: 2mm 0 4mm 0; }
+  table th, table td { border: 1px solid #e4e1d8; padding: 1.8mm 3mm; font-size: 13px; text-align: left; vertical-align: middle; }
+  table th { background: #f2f0e9; }
+  .callout { border-left: 3px solid #c8622a; background: #fbf3ee; padding: 3mm 4mm; margin: 3mm 0; border-radius: 0 3px 3px 0; }
+  .callout-title { font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: .04em; color: #8f4a1e; margin-bottom: 1mm; }
+  .callout.warn { border-left-color: #a63d2e; background: #fbeeec; }
+  .callout.warn .callout-title { color: #a63d2e; }
+  .callout.ok { border-left-color: #5c9e6c; background: #eef7f0; }
+  .callout.ok .callout-title { color: #3f7a4d; }
+
+  .diagrams { display: flex; gap: 6mm; flex-wrap: wrap; margin: 3mm 0; }
+  .diagram-card { flex: 1 1 380px; border: 1px solid #e4e1d8; border-radius: 4px; padding: 3mm; }
+  .diagram-card h3 { margin-top: 0; }
+  .diagram-caption { font-size: 11.5px; color: #6b7280; margin-top: 1mm; }
+
+  footer { margin-top: 10mm; padding-top: 3mm; border-top: 1px solid #e4e1d8; font-size: 10.5px; color: #6b7280; }
+  @media print {
+    svg { max-width: 100% !important; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">Sensormeter-Family · Grundlagen · Für Modulbau &amp; Einsteiger</div>
+  <div style="display:flex; align-items:center; gap:12px;">
+    <svg viewBox="0 0 48 48" fill="none" width="32" height="32" style="flex-shrink:0;">
+      <path d="M24,9 L37.6,32.5 L10.4,32.5 Z" stroke="#8E97A3" stroke-width="2.2" stroke-linejoin="round"/>
+      <circle cx="24" cy="9" r="5" fill="#E08A4C"/>
+      <circle cx="37.6" cy="32.5" r="5" fill="#7FA0D9"/>
+      <circle cx="10.4" cy="32.5" r="5" fill="#74B7A6"/>
+      <line x1="24" y1="24.67" x2="31.07" y2="17.6" stroke="#E9E4D8" stroke-width="2.8" stroke-linecap="round"/>
+      <circle cx="24" cy="24.67" r="2.6" fill="#E9E4D8"/>
+    </svg>
+    <h1>I²C – DAS WICHTIGSTE FÜR EINSTEIGER</h1>
+  </div>
+  <div class="subtitle">Allgemeine Grundlagen plus Sensormeter/Sensormeter-PoE-spezifische Praxis für den RJ45-Modulbau</div>
+  <div class="badges">
+    <span class="badge badge-orange">SDA/SCL · Pull-ups · Adressen</span>
+    <span class="badge">Ergänzt die modulspezifischen *-modul.md-Dokumente</span>
+    <span class="badge">github.com/peterhagelhof7-cmd/sensormeter-family</span>
+  </div>
+</header>
+
+<p>I²C (Inter-Integrated Circuit) ist ein einfacher serieller Datenbus, mit
+dem ein Mikrocontroller (hier: der ESP32 im Sensormeter bzw. Sensormeter
+PoE) viele Sensoren und andere Bausteine mit nur zwei Datenleitungen
+verbinden kann. Dieses Dokument erklärt zunächst die Grundlagen allgemein
+und geht dann konkret auf die Sensormeter-Family ein — inklusive einer
+praktischen Anleitung, wie man mit einem einfachen Multimeter prüft, ob ein
+vorliegendes Sensor-Modul bereits eigene Pull-up-Widerstände mitbringt.</p>
+
+<h2>1. Die zwei Leitungen</h2>
+<p>Ein I²C-Bus braucht immer:</p>
+<ul>
+  <li><b>SDA</b> (Serial Data) — Datenleitung</li>
+  <li><b>SCL</b> (Serial Clock) — Taktleitung</li>
+  <li>zusätzlich: <b>GND</b> gemeinsam für alle Geräte</li>
+  <li>eine Versorgungsspannung (meist 3,3 V oder 5 V)</li>
+</ul>
+<p>Alle Geräte hängen parallel an denselben SDA- und SCL-Leitungen.</p>
+<div class="callout">
+  <div class="callout-title">Sensormeter-spezifisch</div>
+  Am RJ45-Modulanschluss (Sensormeter WT32-ETH01 und Sensormeter PoE
+  ESP32-S3-ETH, siehe <code>README.md</code> in diesem Verzeichnis) liegen
+  SDA/SCL auf <b>Pin 4</b> bzw. <b>Pin 3</b>, 3V3 auf Pin 1, GND auf Pin 2 —
+  bei beiden Geräten identisch (nur die geräteinternen GPIO-Nummern
+  dahinter unterscheiden sich). Beide Geräte betreiben intern zusätzlich
+  ein OLED-Display am selben I²C-Bus (0x3C) — der Bus ist also nie
+  wirklich leer, selbst ohne gestecktes Modul.
+</div>
+
+<h2>2. Master und Slave</h2>
+<p>I²C arbeitet mit einem Master-Slave-Prinzip:</p>
+<ul>
+  <li><b>Master</b>: steuert den Bus (bei uns immer der ESP32)</li>
+  <li><b>Slave</b>: reagiert auf Befehle (Sensor, Display, Speicher usw.)</li>
+</ul>
+<p>Beispiel: ESP32 = Master, BME280-Temperatursensor = Slave.</p>
+<div class="callout">
+  <div class="callout-title">Sensormeter-spezifisch</div>
+  Der ESP32 ist bei uns <b>immer</b> Master — es gibt keinen Betriebsmodus,
+  in dem Sensormeter/Sensormeter PoE selbst als I²C-Slave auftreten. Auf dem
+  Bus hängen bis zu drei Teilnehmer gleichzeitig: internes Display (0x3C,
+  immer), optional ein externes SH1107-Anzeigemodul (0x3D) und optional
+  genau ein Sensor-/Aktormodul.
+</div>
+
+<h2>3. Jedes Gerät braucht eine Adresse</h2>
+<p>Damit der Master weiß, welches Gerät gemeint ist, hat jedes I²C-Gerät
+eine Adresse, z. B.:</p>
+<pre style="font-family:Consolas,monospace; font-size:12.5px; background:#f2f0e9; border:1px solid #e4e1d8; border-radius:3px; padding:3mm 4mm; margin:0 0 3mm 0;">ESP32
+ |
+ +--- Sensor 1 (Adresse 0x76)
+ |
+ +--- Sensor 2 (Adresse 0x40)
+ |
+ +--- Display (Adresse 0x3C)</pre>
+<p><b>Wichtig</b>: Zwei gleiche Geräte mit gleicher Adresse funktionieren
+nicht direkt zusammen. Lösung: Adresse ändern (falls das Modul einen
+Adress-Wahlpin hat), Multiplexer verwenden oder zweiten I²C-Bus nutzen.</p>
+
+<h3>In der Sensormeter-Family tatsächlich vorkommende Adressen</h3>
+<table>
+  <tr><th>Adresse</th><th>Gerät/Chip</th><th>Firmware erkennt Name?</th></tr>
+  <tr><td><code>0x3C</code></td><td>Internes OLED-Display (SSD1306)</td><td>—, wird beim Scan bewusst übersprungen</td></tr>
+  <tr><td><code>0x3D</code></td><td>Externes Display-Modul (SH1107)</td><td>—, wird beim Scan bewusst übersprungen</td></tr>
+  <tr><td><code>0x38</code></td><td>AHT20/AHT21 (auch im AHT20+BMP280- und ENS160+AHT21-Kombimodul)</td><td>Ja — <code>KNOWN_CHIPS</code></td></tr>
+  <tr><td><code>0x76</code>/<code>0x77</code></td><td>BMP280 bzw. BME280 (SDO-Pin wählt Adresse)</td><td>Nur als "BME280" — kein Chip-ID-Check, ein reines BMP280 wird fälschlich so benannt</td></tr>
+  <tr><td><code>0x23</code>/<code>0x5C</code></td><td>BH1750</td><td>Ja (Name), Lux-Wert wird aber noch nicht ausgelesen</td></tr>
+  <tr><td><code>0x52</code>/<code>0x53</code></td><td>ENS160</td><td><b>Nein</b> — fehlt noch in <code>KNOWN_CHIPS</code>, erscheint als "unbekannt"</td></tr>
+  <tr><td><code>0x44</code>/<code>0x45</code></td><td>SHT30/31/35 (aktuell kein Familienmodul dafür entworfen)</td><td>Ja</td></tr>
+</table>
+<div class="callout warn">
+  <div class="callout-title">Realer Adresskonflikt in dieser Familie</div>
+  Beim <b>AHT20+BMP280-Kombimodul</b> und beim <b>ENS160+AHT21-Kombimodul</b>
+  sitzen zwei I²C-Chips auf derselben Platine. <code>SensorDetector.cpp</code>
+  scannt aufsteigend ab 0x08 und bricht beim <b>ersten</b> Treffer ab (siehe
+  <code>module-design/README.md</code>, Abschnitt "Kategorie 1"). Da 0x38
+  (AHT20/AHT21) numerisch kleiner ist als 0x52/0x53 (ENS160) und 0x76/0x77
+  (BMP280), gewinnt der AHT-Chip <b>immer</b> — der zweite Chip auf
+  demselben Kombimodul ist für die aktuelle Firmware unsichtbar, auch wenn
+  er physisch korrekt angeschlossen ist. Das ist keine Fehlfunktion,
+  sondern die dokumentierte "genau ein Modul erwartet"-Designentscheidung.
+</div>
+
+<h2>4. Geschwindigkeit</h2>
+<p>Typische I²C-Geschwindigkeiten:</p>
+<ul>
+  <li>100 kHz → Standard, sehr zuverlässig</li>
+  <li>400 kHz → schneller, aber empfindlicher</li>
+  <li>10–50 kHz → sinnvoll bei langen Kabeln</li>
+</ul>
+<p>Beim ESP32 kann die Geschwindigkeit per Software angepasst werden.</p>
+<div class="callout warn">
+  <div class="callout-title">Sensormeter-spezifisch — Stand 2026-07-15 (bitte diese Version beachten)</div>
+  Anders als teils angenommen läuft der Bus bei Sensormeter/Sensormeter PoE
+  <b>nicht</b> fest auf 50 kHz. Die App-Firmware ruft nirgends
+  <code>Wire.setClock()</code> auf — der Takt wird ausschließlich von den
+  Display-Bibliotheken pro Bildschirm-Update gesetzt: das interne SSD1306
+  erzwingt während des Schreibens 400 kHz und lässt danach 100 kHz stehen,
+  das externe SH1107-Modul erzwingt sogar 1 MHz während des Schreibens.
+  Effektiv läuft der Bus also die meiste Zeit bei <b>~100 kHz</b> (dem
+  "Ruhetakt" nach dem letzten Display-Refresh) mit kurzen Ausschlägen auf
+  400 kHz/1 MHz. Eine feste 50-kHz-Begrenzung wurde am 2026-07-15
+  diskutiert, aber zurückgestellt (würde Änderungen an den
+  Display-Bibliothek-Konstruktoren brauchen und jeden Bildschirm-Refresh
+  deutlich verlangsamen) — siehe <code>docs/entscheidungen.md</code> in
+  <code>sensormeter/repo</code> und <code>sensormeter-poe/repo</code>,
+  Eintrag "Periodischer I2C-Rescan (1x/Minute), ohne Taktänderung".
+</div>
+
+<h2>5. Kabellänge</h2>
+<p>I²C ist eigentlich für kurze Verbindungen gedacht:</p>
+<ul>
+  <li>Leiterplatte: problemlos</li>
+  <li>einige 10 cm: problemlos</li>
+  <li>1–2 m: oft machbar</li>
+  <li>mehrere Meter: schwierig</li>
+</ul>
+<p>Bei langen Leitungen helfen: langsamere Geschwindigkeit, bessere
+Verkabelung, Bus-Extender, oder alternativ RS-485/CAN für die größere
+Distanz.</p>
+<div class="callout">
+  <div class="callout-title">Sensormeter-spezifisch</div>
+  Die RJ45-Steckmodule dieser Familie dürfen laut "Durchschleif-Regel"
+  (<code>module-design/README.md</code>) maximal <b>einen</b> zusätzlichen
+  Kategorie-1-Hop verketten (Gerät → Modul, kein zweites I²C-Modul dahinter
+  am selben Strang außer im Bus-Abgriff-Fall). Je länger die RJ45-Kabel
+  zwischen den Hops, desto mehr Leitungskapazität — bei sichtbaren
+  Fehlfunktionen (siehe Abschnitt 8) zuerst die Kabellänge prüfen, bevor an
+  der Firmware gesucht wird.
+</div>
+
+<h2>6. Pull-up-Widerstände</h2>
+<p>I²C benötigt Pull-up-Widerstände an SDA und SCL. Sie sorgen dafür, dass
+die Leitungen im Ruhezustand wieder auf HIGH gehen (I²C-Geräte ziehen die
+Leitung aktiv nur nach LOW, nie aktiv nach HIGH). Typische Werte:</p>
+<ul>
+  <li>4,7 kΩ → häufig verwendet, auch der bei Sensormeter-Family-Modulen verwendete Wert</li>
+  <li>2,2 kΩ → für längere Leitungen oder viele Geräte</li>
+  <li>zu viele Pull-ups parallel (mehrere Module gleichzeitig gesteckt) → sinkender effektiver Widerstand, kann Probleme verursachen</li>
+</ul>
+<p>Viele fertige Sensor-Module haben bereits Pull-ups eingebaut — genau das
+lässt sich mit einem einfachen Multimeter überprüfen, siehe Anleitung
+unten.</p>
+<div class="callout">
+  <div class="callout-title">Sensormeter-spezifisch (Familienregel)</div>
+  Nach der Konvention aus <code>module-design/README.md</code> sitzen
+  Pull-ups grundsätzlich <b>auf dem Modul</b>, nicht auf dem Gerät — und
+  <b>nur, falls der Bus dort noch keinen hat</b> (der gemeinsame Bus mit
+  dem OLED-Display kann bereits einen mitbringen). Vor dem Bestücken eines
+  neuen Moduls immer erst mit dem Multimeter prüfen (siehe unten) — ein
+  doppelter Pull-up senkt den effektiven Widerstand unnötig.
+</div>
+
+<h3>Situation A — Modul bringt bereits einen Pull-up mit</h3>
+<div class="diagrams">
+  <div class="diagram-card">
+    <svg viewBox="0 0 480 320" style="width:100%; height:auto;">
+      <line x1="40" y1="50" x2="440" y2="50" stroke="#c0392b" stroke-width="2.4"/>
+      <text x="20" y="54" font-size="12" fill="#c0392b" text-anchor="end" font-weight="700">3,3V</text>
+      <line x1="40" y1="270" x2="440" y2="270" stroke="#1c2430" stroke-width="2.4"/>
+      <text x="20" y="274" font-size="12" fill="#1c2430" text-anchor="end" font-weight="700">GND</text>
+      <line x1="40" y1="150" x2="440" y2="150" stroke="#5c9e6c" stroke-width="2"/>
+      <text x="20" y="154" font-size="12" fill="#5c9e6c" text-anchor="end" font-weight="700">SDA</text>
+      <line x1="40" y1="190" x2="440" y2="190" stroke="#c8622a" stroke-width="2"/>
+      <text x="20" y="194" font-size="12" fill="#c8622a" text-anchor="end" font-weight="700">SCL</text>
+
+      <rect x="40" y="110" width="120" height="120" rx="4" fill="#f2f0e9" stroke="#c7c2b4"/>
+      <text x="100" y="105" text-anchor="middle" font-size="11.5" font-weight="700">ESP32 (Master)</text>
+      <circle cx="40" cy="150" r="3" fill="#5c9e6c"/>
+      <circle cx="40" cy="190" r="3" fill="#c8622a"/>
+      <line x1="40" y1="50" x2="40" y2="110" stroke="#c0392b" stroke-width="2"/>
+      <line x1="40" y1="230" x2="40" y2="270" stroke="#1c2430" stroke-width="2"/>
+
+      <rect x="320" y="110" width="120" height="120" rx="4" fill="#f2f0e9" stroke="#c7c2b4"/>
+      <text x="380" y="105" text-anchor="middle" font-size="11.5" font-weight="700">Sensor-Modul</text>
+      <rect x="360" y="150" width="40" height="30" rx="2" fill="#fff" stroke="#8a93a3"/>
+      <text x="380" y="169" text-anchor="middle" font-size="9" fill="#6b7280">IC</text>
+      <circle cx="440" cy="150" r="3" fill="#5c9e6c"/>
+      <circle cx="440" cy="190" r="3" fill="#c8622a"/>
+      <line x1="440" y1="50" x2="440" y2="110" stroke="#c0392b" stroke-width="2"/>
+      <line x1="440" y1="230" x2="440" y2="270" stroke="#1c2430" stroke-width="2"/>
+
+      <!-- pull-ups on the module, between 3V3 rail and SDA/SCL -->
+      <rect x="374" y="70" width="14" height="30" rx="2" fill="#fff" stroke="#5c9e6c" stroke-width="1.6"/>
+      <line x1="381" y1="50" x2="381" y2="70" stroke="#5c9e6c" stroke-width="1.6"/>
+      <line x1="381" y1="100" x2="381" y2="150" stroke="#5c9e6c" stroke-width="1.6"/>
+      <rect x="404" y="70" width="14" height="30" rx="2" fill="#fff" stroke="#c8622a" stroke-width="1.6"/>
+      <line x1="411" y1="50" x2="411" y2="70" stroke="#c8622a" stroke-width="1.6"/>
+      <line x1="411" y1="100" x2="411" y2="190" stroke="#c8622a" stroke-width="1.6"/>
+      <text x="381" y="65" text-anchor="middle" font-size="8.5" fill="#5c9e6c">4,7k</text>
+      <text x="411" y="65" text-anchor="middle" font-size="8.5" fill="#c8622a">4,7k</text>
+      <rect x="345" y="45" width="90" height="60" rx="3" fill="none" stroke="#5c9e6c" stroke-width="1" stroke-dasharray="3 2"/>
+      <text x="390" y="292" text-anchor="middle" font-size="10.5" fill="#3f7a4d" font-weight="700">Pull-ups schon auf der Modul-Platine</text>
+    </svg>
+    <p class="diagram-caption">Nichts weiter nötig — Modul direkt anschließen. Kein zusätzlicher Widerstand am Gerät oder in der Leitung.</p>
+  </div>
+
+  <div class="diagram-card">
+    <h3 style="margin-top:0;">Situation B — Modul hat KEINEN Pull-up</h3>
+    <svg viewBox="0 0 480 320" style="width:100%; height:auto;">
+      <line x1="40" y1="50" x2="440" y2="50" stroke="#c0392b" stroke-width="2.4"/>
+      <text x="20" y="54" font-size="12" fill="#c0392b" text-anchor="end" font-weight="700">3,3V</text>
+      <line x1="40" y1="270" x2="440" y2="270" stroke="#1c2430" stroke-width="2.4"/>
+      <text x="20" y="274" font-size="12" fill="#1c2430" text-anchor="end" font-weight="700">GND</text>
+      <line x1="40" y1="150" x2="440" y2="150" stroke="#5c9e6c" stroke-width="2"/>
+      <text x="20" y="154" font-size="12" fill="#5c9e6c" text-anchor="end" font-weight="700">SDA</text>
+      <line x1="40" y1="190" x2="440" y2="190" stroke="#c8622a" stroke-width="2"/>
+      <text x="20" y="194" font-size="12" fill="#c8622a" text-anchor="end" font-weight="700">SCL</text>
+
+      <rect x="40" y="110" width="120" height="120" rx="4" fill="#f2f0e9" stroke="#c7c2b4"/>
+      <text x="100" y="105" text-anchor="middle" font-size="11.5" font-weight="700">ESP32 (Master)</text>
+      <circle cx="40" cy="150" r="3" fill="#5c9e6c"/>
+      <circle cx="40" cy="190" r="3" fill="#c8622a"/>
+      <line x1="40" y1="50" x2="40" y2="110" stroke="#c0392b" stroke-width="2"/>
+      <line x1="40" y1="230" x2="40" y2="270" stroke="#1c2430" stroke-width="2"/>
+
+      <rect x="320" y="110" width="120" height="120" rx="4" fill="#f2f0e9" stroke="#c7c2b4"/>
+      <text x="380" y="105" text-anchor="middle" font-size="11.5" font-weight="700">Sensor-Modul</text>
+      <rect x="360" y="150" width="40" height="30" rx="2" fill="#fff" stroke="#8a93a3"/>
+      <text x="380" y="169" text-anchor="middle" font-size="9" fill="#6b7280">IC</text>
+      <circle cx="440" cy="150" r="3" fill="#5c9e6c"/>
+      <circle cx="440" cy="190" r="3" fill="#c8622a"/>
+      <line x1="440" y1="50" x2="440" y2="110" stroke="#c0392b" stroke-width="2" stroke-dasharray="4 3"/>
+      <line x1="440" y1="230" x2="440" y2="270" stroke="#1c2430" stroke-width="2"/>
+      <text x="380" y="292" text-anchor="middle" font-size="10.5" fill="#a63d2e" font-weight="700">Kein Pull-up auf dem Modul</text>
+
+      <!-- externally added pull-ups, mid-bus, near the socket -->
+      <rect x="204" y="70" width="14" height="30" rx="2" fill="#fff" stroke="#a63d2e" stroke-width="1.8"/>
+      <line x1="211" y1="50" x2="211" y2="70" stroke="#a63d2e" stroke-width="1.8"/>
+      <line x1="211" y1="100" x2="211" y2="150" stroke="#a63d2e" stroke-width="1.8"/>
+      <rect x="234" y="70" width="14" height="30" rx="2" fill="#fff" stroke="#a63d2e" stroke-width="1.8"/>
+      <line x1="241" y1="50" x2="241" y2="70" stroke="#a63d2e" stroke-width="1.8"/>
+      <line x1="241" y1="100" x2="241" y2="190" stroke="#a63d2e" stroke-width="1.8"/>
+      <text x="211" y="65" text-anchor="middle" font-size="8.5" fill="#a63d2e">4,7k</text>
+      <text x="241" y="65" text-anchor="middle" font-size="8.5" fill="#a63d2e">4,7k</text>
+      <rect x="188" y="45" width="80" height="60" rx="3" fill="#fbeeec" stroke="#a63d2e" stroke-width="1"/>
+      <text x="228" y="38" text-anchor="middle" font-size="9.5" fill="#a63d2e" font-weight="700">extern ergänzt</text>
+    </svg>
+    <p class="diagram-caption">4,7 kΩ zwischen 3,3V und SDA sowie zwischen 3,3V und SCL ergänzen — z. B. auf der Steckmodul-Platine selbst (Familienkonvention) oder als kleine Zusatzplatine nahe der Buchse. Ohne diese Widerstände bleibt der Bus auf LOW hängen, keine Kommunikation möglich.</p>
+  </div>
+</div>
+
+<h2>Anleitung: Mit dem Ohmmeter prüfen, ob ein Modul bereits einen Pull-up hat</h2>
+<div class="callout warn">
+  <div class="callout-title">Voraussetzung</div>
+  Das Modul darf während der Messung an <b>keiner</b> Spannungsquelle
+  hängen — weder im Gerät gesteckt noch anderweitig extern versorgt. Eine
+  anliegende Spannung verfälscht die Messung oder lässt das Multimeter
+  Unsinn anzeigen.
+</div>
+<ol>
+  <li><b>Messgerät vorbereiten</b>: Multimeter auf Widerstandsmessung (Ω-Symbol)
+  stellen — <b>nicht</b> auf den Durchgangsprüfer/„Diode"-Modus mit
+  Piepton. Der Diodenmodus schlägt oft nur bei sehr niedrigen Werten
+  (~30–50 Ω) an und liefert bei kΩ-Widerständen ein irreführendes
+  „kein Durchgang" statt eines Messwerts.</li>
+  <li><b>SDA gegen 3V3/VCC messen</b> (präziseste Methode): eine Messspitze
+  an den 3V3/VCC-Pin des Moduls, die andere an SDA.
+    <ul>
+      <li>Anzeige ca. <b>1–10 kΩ</b> (typisch 2,2 / 4,7 / 10 kΩ) → Pull-up vorhanden.</li>
+      <li>Anzeige „OL"/unendlich bzw. mehrere MΩ → kein Pull-up auf dieser Leitung.</li>
+    </ul>
+  </li>
+  <li><b>Dieselbe Messung für SCL gegen 3V3/VCC wiederholen.</b> Beide
+  Leitungen einzeln prüfen — manche Module haben nur auf einer Leitung
+  einen Pull-up oder unterschiedliche Werte je Leitung.</li>
+  <li><b>Schnelltest, falls der VCC-Pin nicht sicher identifizierbar ist</b>
+  (z. B. unbeschriftetes Breakout): SDA direkt gegen SCL messen. Sind beide
+  Pull-ups vorhanden, fließt intern über das VCC-Netz ein Strom
+  SDA → Pull-up 1 → VCC → Pull-up 2 → SCL — das Multimeter zeigt
+  näherungsweise die <b>Summe</b> beider Widerstände (z. B. ~9,4 kΩ bei
+  zwei 4,7-kΩ-Pull-ups). Weniger eindeutig als Schritt 2/3: Ist nur
+  <b>ein</b> Pull-up vorhanden, existiert kein geschlossener Kreis und die
+  Messung zeigt fälschlich „kein Pull-up", obwohl einer da ist — im
+  Zweifel immer Schritt 2 (gegen VCC einzeln) verwenden.</li>
+</ol>
+<div class="callout">
+  <div class="callout-title">Kondensator auf der VCC-Leitung</div>
+  Hat das Modul einen Stützkondensator, lädt sich dieser während der
+  Messung kurz auf — die Anzeige beginnt niedrig und steigt dann auf den
+  tatsächlichen Widerstandswert. 1–2 Sekunden warten, bis sich die Anzeige
+  stabilisiert, bevor der Wert abgelesen wird.
+</div>
+<div class="callout ok">
+  <div class="callout-title">Ergebnis anwenden</div>
+  Pull-up bereits vorhanden → <b>keinen</b> zusätzlichen auf der
+  Sensormeter-Steckmodul-Platine bestücken (siehe Abschnitt 6 oben, "Situation
+  A"). Kein Pull-up gefunden → 4,7-kΩ-Widerstände wie in "Situation B"
+  ergänzen, bevor das Modul zum ersten Mal gesteckt wird.
+</div>
+
+<h2>7. Wie viele Geräte gehen?</h2>
+<p><b>Theoretisch</b>: ca. 112 nutzbare Geräte bei 7-Bit-Adressen (127
+Adressen abzüglich reservierter Bereiche). <b>Praktisch</b>: wenige bis
+einige Dutzend, begrenzt durch gleiche Adressen, Leitungslänge,
+elektrische Kapazität und Stromverbrauch.</p>
+<div class="callout warn">
+  <div class="callout-title">Sensormeter-spezifisch — aktuelle Firmware-Grenze</div>
+  Elektrisch könnten mehrere I²C-Module gleichzeitig am Bus hängen (die
+  Kombimodule zeigen das bereits, siehe Abschnitt 3). <b>Die aktuelle
+  Firmware erwartet aber bewusst genau ein Modul</b> — <code>SensorDetector</code>
+  bricht den Scan beim ersten Treffer ab. Mehrere gleichzeitig erkannte
+  Module gemeinsam auswerten ist als spätere Erweiterung vorgesehen, aktuell
+  aber noch nicht umgesetzt.
+</div>
+
+<h2>8. Typische Fehler</h2>
+<ul>
+  <li>SDA und SCL vertauscht</li>
+  <li>keine gemeinsame Masse</li>
+  <li>falsche Spannung (5 V an einem 3,3-V-ESP32 — <b>Ausnahme bei uns</b>:
+  RJ45 Pin 8 führt bewusst 5V für Module wie das Relais, siehe
+  <code>relais-modul.md</code> — dort korrekt, aber nie mit SDA/SCL/3V3
+  verwechseln)</li>
+  <li>gleiche Adresse mehrfach vorhanden (siehe Kombimodul-Hinweis oben)</li>
+  <li>Kabel zu lang (siehe Abschnitt 5)</li>
+  <li>falsche/doppelte Pull-up-Widerstände (siehe Abschnitt 6 + Anleitung oben)</li>
+</ul>
+
+<h2>9. Nützliche Werkzeuge</h2>
+<ul>
+  <li><b>I²C-Scanner</b> → zeigt alle gefundenen Geräteadressen (die
+  Sensormeter-Firmware macht das automatisch selbst — beim Boot und
+  seit 2026-07-15 zusätzlich alle 60 Sekunden, siehe
+  <code>docs/entscheidungen.md</code> in <code>sensormeter/repo</code> bzw.
+  <code>sensormeter-poe/repo</code>)</li>
+  <li><b>Multimeter</b> → Spannung prüfen, Pull-ups messen (siehe Anleitung oben)</li>
+  <li><b>Logic Analyzer</b> → Signale ansehen (für tiefere Fehlersuche, nicht für den Alltag nötig)</li>
+</ul>
+
+<h2>Kurz gesagt</h2>
+<p>I²C ist ein einfacher 2-Draht-Bus für viele kurze Verbindungen. Jedes
+Gerät hat eine eigene Adresse. Für Sensormeter/Sensormeter PoE gilt: der
+Bus läuft effektiv bei ~100 kHz, die RJ45-Steckmodule bringen ihre
+Pull-ups selbst mit (vorher mit dem Multimeter prüfen!), und die Firmware
+erwartet aktuell genau ein Zusatzmodul gleichzeitig. Bei langen Kabeln oder
+mehreren Geräten müssen Busgeschwindigkeit, Pull-ups und Topologie
+sorgfältig geplant werden.</p>
+
+<footer>
+  Sensormeter-Family — I²C-Grundlagen für Einsteiger &amp; Modulbau · github.com/peterhagelhof7-cmd/sensormeter-family ·
+  Entwickelt mit Unterstützung von Claude (Anthropic) als Coding-Assistent
+</footer>
+
+</body>
+</html>

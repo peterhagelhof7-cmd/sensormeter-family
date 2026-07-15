@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<title>Türkontakt-Modul (Mikroschalter) — Verdrahtungsplan (interaktiv)</title>
+<title>Externes Display-Modul (SH1107) — Verdrahtungsplan (interaktiv)</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
   @page { size: A4; margin: 18mm 16mm 20mm 16mm; }
@@ -69,7 +69,7 @@
 <body>
 
 <header>
-  <div class="eyebrow">Sensormeter-Family · Modul-Hardware · Kategorie 2 (Direkt-Modul, Pin 5)</div>
+  <div class="eyebrow">Sensormeter-Family · Modul-Hardware · Kategorie 1 (Bus-Modul, kein Sensor)</div>
   <div style="display:flex; align-items:center; gap:12px;">
     <svg viewBox="0 0 48 48" fill="none" width="32" height="32" style="flex-shrink:0;">
       <path d="M24,9 L37.6,32.5 L10.4,32.5 Z" stroke="#8E97A3" stroke-width="2.2" stroke-linejoin="round"/>
@@ -79,28 +79,25 @@
       <line x1="24" y1="24.67" x2="31.07" y2="17.6" stroke="#E9E4D8" stroke-width="2.8" stroke-linecap="round"/>
       <circle cx="24" cy="24.67" r="2.6" fill="#E9E4D8"/>
     </svg>
-    <h1>TÜRKONTAKT-MODUL (MIKROSCHALTER) — VERDRAHTUNGSPLAN</h1>
+    <h1>EXTERNES DISPLAY-MODUL (SH1107) — VERDRAHTUNGSPLAN</h1>
   </div>
-  <div class="subtitle">Mechanischer Endschalter mit Rollenhebel (SPDT, COM/NO/NC) für Sensormeter (WT32-ETH01) und Sensormeter PoE (ESP32-S3-ETH)</div>
+  <div class="subtitle">1,5″-OLED 128×128 für Sensormeter (WT32-ETH01) und Sensormeter PoE (ESP32-S3-ETH)</div>
   <div class="badges">
-    <span class="badge badge-orange">Pin 2/5 · GND/DATA (Standard zusätzlich Pin 1)</span>
-    <span class="badge">Kategorie 2 · schließt sich mit DHT11/DHT21 aus</span>
+    <span class="badge badge-orange">Pin 1/2/3/4 · VCC/GND/SCL/SDA</span>
+    <span class="badge">Kategorie 1 · kein Sensor</span>
     <span class="badge">github.com/peterhagelhof7-cmd/sensormeter-family</span>
   </div>
 </header>
 
-<p>Siehe <code>tuerkontakt-modul.md</code> für Zweck, vollständige
+<p>Siehe <code>sh1107-display-modul.md</code> für Zweck, vollständige
 Stückliste und bekannte Einschränkungen — diese Seite ist die interaktive
 Kurzfassung der Verdrahtung. Zwei Bauvarianten, siehe Umschalter unten.
-<b>Kein Reed-/Magnetkontakt</b>: beschafft wurde ein mechanischer
-Mikroschalter mit Rollenhebel — braucht direkten physischen Druck auf den
-Hebel (Türkante/Nocke), <code>ContactManager</code> sieht elektrisch aber
-nur einen simplen potentialfreien Schalter. <b>Polarität</b>: unbedingt
-COM+NO verwenden, nicht COM+NC — sonst invertiert sich die Logik.</p>
+Anders als alle anderen Module dieser Liste bereits in Firmware umgesetzt
+(<code>ExternalDisplayManager</code>).</p>
 
 <div class="variant-toggle">
-  <button data-variant="standard" class="active">Standard (2 Buchsen, ext. Pull-up)</button>
-  <button data-variant="lite">Lite (1 Kabel, int. Pull-up, 2-Draht)</button>
+  <button data-variant="standard" class="active">Standard (2 Buchsen, Bus-Abgriff)</button>
+  <button data-variant="lite">Lite (1 Kabel mit Stecker, kein Durchschleifen)</button>
 </div>
 
 <h2>Schema</h2>
@@ -116,18 +113,18 @@ COM+NO verwenden, nicht COM+NC — sonst invertiert sich die Logik.</p>
     <g font-size="10.5" fill="#fff">
       <text x="180" y="73" text-anchor="end">1 3V3</text>
       <text x="180" y="108" text-anchor="end">2 GND</text>
-      <text x="180" y="143" text-anchor="end" fill="#9aa3b5">3 SCL n.c.</text>
-      <text x="180" y="178" text-anchor="end" fill="#9aa3b5">4 SDA n.c.</text>
-      <text x="180" y="213" text-anchor="end" font-weight="700" fill="#a9c8ec">5 KONTAKT-DATA</text>
+      <text x="180" y="143" text-anchor="end" font-weight="700" fill="#ffd8a8">3 SCL</text>
+      <text x="180" y="178" text-anchor="end" font-weight="700" fill="#c8f0d0">4 SDA</text>
+      <text x="180" y="213" text-anchor="end" fill="#9aa3b5">5 DATA n.c.</text>
       <text x="180" y="248" text-anchor="end" fill="#9aa3b5">6 Relais n.c.</text>
       <text x="180" y="283" text-anchor="end" fill="#9aa3b5">7 Fdbk n.c.</text>
       <text x="180" y="318" text-anchor="end" fill="#9aa3b5">8 5V n.c.</text>
     </g>
     <circle cx="190" cy="70" r="3" fill="#c0392b"/>
     <circle cx="190" cy="105" r="3" fill="#1c2430"/>
-    <circle cx="190" cy="140" r="2.2" fill="#9aa3b5"/>
-    <circle cx="190" cy="175" r="2.2" fill="#9aa3b5"/>
-    <circle cx="190" cy="210" r="3.4" fill="#2e6da4" stroke="#fff" stroke-width="1"/>
+    <circle cx="190" cy="140" r="3.4" fill="#c8622a" stroke="#fff" stroke-width="1"/>
+    <circle cx="190" cy="175" r="3.4" fill="#5c9e6c" stroke="#fff" stroke-width="1"/>
+    <circle cx="190" cy="210" r="2.2" fill="#9aa3b5"/>
     <circle cx="190" cy="245" r="2.2" fill="#9aa3b5"/>
     <circle cx="190" cy="280" r="2.2" fill="#9aa3b5"/>
     <circle cx="190" cy="315" r="2.2" fill="#9aa3b5"/>
@@ -138,59 +135,61 @@ COM+NO verwenden, nicht COM+NC — sonst invertiert sich die Logik.</p>
     <g font-size="10.5" fill="#fff">
       <text x="720" y="73">1 3V3</text>
       <text x="720" y="108">2 GND</text>
-      <text x="720" y="143" fill="#9aa3b5">3 SCL n.c.</text>
-      <text x="720" y="178" fill="#9aa3b5">4 SDA n.c.</text>
-      <text x="720" y="213" fill="#e08a8a" font-style="italic">5 terminiert</text>
+      <text x="720" y="143" font-weight="700" fill="#ffd8a8">3 SCL</text>
+      <text x="720" y="178" font-weight="700" fill="#c8f0d0">4 SDA</text>
+      <text x="720" y="213" fill="#9aa3b5">5 DATA n.c.</text>
       <text x="720" y="248" fill="#9aa3b5">6 Relais n.c.</text>
       <text x="720" y="283" fill="#9aa3b5">7 Fdbk n.c.</text>
       <text x="720" y="318" fill="#9aa3b5">8 5V n.c.</text>
     </g>
     <circle cx="710" cy="70" r="3" fill="#c0392b"/>
     <circle cx="710" cy="105" r="3" fill="#1c2430"/>
-    <circle cx="710" cy="140" r="2.2" fill="#9aa3b5"/>
-    <circle cx="710" cy="175" r="2.2" fill="#9aa3b5"/>
-    <circle cx="710" cy="210" r="3" fill="none" stroke="#a63d2e" stroke-width="1.4"/>
+    <circle cx="710" cy="140" r="3.4" fill="#c8622a" stroke="#fff" stroke-width="1"/>
+    <circle cx="710" cy="175" r="3.4" fill="#5c9e6c" stroke="#fff" stroke-width="1"/>
+    <circle cx="710" cy="210" r="2.2" fill="#9aa3b5"/>
     <circle cx="710" cy="245" r="2.2" fill="#9aa3b5"/>
     <circle cx="710" cy="280" r="2.2" fill="#9aa3b5"/>
     <circle cx="710" cy="315" r="2.2" fill="#9aa3b5"/>
-    <text x="785" y="150" text-anchor="middle" font-size="9" fill="#5c9e6c">Pin 1/2/3/4/6/7/8</text>
-    <text x="785" y="162" text-anchor="middle" font-size="9" fill="#5c9e6c">durchgeschleift</text>
+    <text x="785" y="150" text-anchor="middle" font-size="9" fill="#5c9e6c">Bus bleibt live,</text>
+    <text x="785" y="162" text-anchor="middle" font-size="9" fill="#5c9e6c">nichts terminiert</text>
 
-    <!-- Mikroschalter + Pull-up -->
-    <rect x="380" y="150" width="180" height="140" rx="4" fill="#f2f0e9" stroke="#c7c2b4"/>
-    <text x="470" y="172" text-anchor="middle" font-size="12" font-weight="700">Mikroschalter</text>
-    <text x="470" y="186" text-anchor="middle" font-size="9.5" fill="#6b7280">Rollenhebel, SPDT</text>
-    <circle cx="390" cy="215" r="3" fill="#1c2430"/><text x="400" y="219" font-size="10.5">COM</text>
-    <circle cx="390" cy="245" r="3" fill="#2e6da4"/><text x="400" y="249" font-size="10.5">NO</text>
-    <circle cx="390" cy="275" r="3" fill="#9aa3b5"/><text x="400" y="279" font-size="10.5" fill="#9aa3b5">NC (n.c.)</text>
+    <!-- SH1107-Display -->
+    <rect x="380" y="130" width="180" height="180" rx="4" fill="#f2f0e9" stroke="#c7c2b4"/>
+    <text x="470" y="152" text-anchor="middle" font-size="12" font-weight="700">SH1107-OLED</text>
+    <text x="470" y="166" text-anchor="middle" font-size="9.5" fill="#6b7280">1,5″ 128×128, I2C, 4-Pin</text>
+    <circle cx="390" cy="200" r="3" fill="#5c9e6c"/><text x="400" y="204" font-size="10.5">SDA</text>
+    <circle cx="390" cy="230" r="3" fill="#c8622a"/><text x="400" y="234" font-size="10.5">SCL</text>
+    <circle cx="390" cy="260" r="3" fill="#1c2430"/><text x="400" y="264" font-size="10.5">GND</text>
+    <circle cx="390" cy="285" r="3" fill="#c0392b"/><text x="400" y="289" font-size="10.5">VCC</text>
+    <text x="470" y="185" text-anchor="middle" font-size="8.5" fill="#8a93a3">Adresse 0x3D fest</text>
 
-    <!-- Pull-up resistor symbol between 3V3-line and DATA-line -->
-    <rect x="270" y="130" width="14" height="34" rx="2" fill="#fff" stroke="#8a93a3" stroke-width="1.4"/>
-    <text x="277" y="122" text-anchor="middle" font-size="8.5" fill="#6b7280">4,7 kΩ</text>
-
-    <!-- Pass-through (unused pins) -->
+    <!-- Pass-through -->
     <path class="wire-hit" data-wire="s1" d="M190,70 L710,70"/>
     <path class="wire" data-wire="s1" data-from="IN Pin 1 (3V3)" data-to="OUT Pin 1 (3V3, durchgeschleift)" d="M190,70 L710,70" fill="none" stroke="#c0392b" stroke-width="1.4" stroke-dasharray="5 3"/>
     <path class="wire-hit" data-wire="s2" d="M190,105 L710,105"/>
     <path class="wire" data-wire="s2" data-from="IN Pin 2 (GND)" data-to="OUT Pin 2 (GND, durchgeschleift)" d="M190,105 L710,105" fill="none" stroke="#1c2430" stroke-width="1.4" stroke-dasharray="5 3"/>
     <path class="wire-hit" data-wire="s3" d="M190,140 L710,140"/>
-    <path class="wire" data-wire="s3" data-from="IN Pin 3 (SCL)" data-to="OUT Pin 3 (durchgeschleift, unbenutzt)" d="M190,140 L710,140" fill="none" stroke="#c8622a" stroke-width="1.2" stroke-dasharray="5 3" opacity="0.5"/>
+    <path class="wire" data-wire="s3" data-from="IN Pin 3 (SCL)" data-to="OUT Pin 3 (SCL, bleibt live - echter Bus-Abgriff)" d="M190,140 L710,140" fill="none" stroke="#c8622a" stroke-width="1.8"/>
     <path class="wire-hit" data-wire="s4" d="M190,175 L710,175"/>
-    <path class="wire" data-wire="s4" data-from="IN Pin 4 (SDA)" data-to="OUT Pin 4 (durchgeschleift, unbenutzt)" d="M190,175 L710,175" fill="none" stroke="#5c9e6c" stroke-width="1.2" stroke-dasharray="5 3" opacity="0.5"/>
+    <path class="wire" data-wire="s4" data-from="IN Pin 4 (SDA)" data-to="OUT Pin 4 (SDA, bleibt live - echter Bus-Abgriff)" d="M190,175 L710,175" fill="none" stroke="#5c9e6c" stroke-width="1.8"/>
+    <path class="wire-hit" data-wire="s5" d="M190,210 L710,210"/>
+    <path class="wire" data-wire="s5" data-from="IN Pin 5 (Einzelpin A)" data-to="OUT Pin 5 (durchgeschleift, unbenutzt)" d="M190,210 L710,210" fill="none" stroke="#2e6da4" stroke-width="1.4" stroke-dasharray="5 3"/>
     <path class="wire-hit" data-wire="s6" d="M190,245 L710,245"/>
-    <path class="wire" data-wire="s6" data-from="IN Pin 6 (Relais-Steuerung)" data-to="OUT Pin 6 (durchgeschleift, unbenutzt)" d="M190,245 L710,245" fill="none" stroke="#a63d2e" stroke-width="1.2" stroke-dasharray="5 3" opacity="0.5"/>
+    <path class="wire" data-wire="s6" data-from="IN Pin 6 (Relais-Steuerung)" data-to="OUT Pin 6 (durchgeschleift, unbenutzt)" d="M190,245 L710,245" fill="none" stroke="#a63d2e" stroke-width="1.4" stroke-dasharray="5 3"/>
     <path class="wire-hit" data-wire="s7" d="M190,280 L710,280"/>
-    <path class="wire" data-wire="s7" data-from="IN Pin 7 (Relais-Feedback)" data-to="OUT Pin 7 (durchgeschleift, unbenutzt)" d="M190,280 L710,280" fill="none" stroke="#c9a227" stroke-width="1.2" stroke-dasharray="5 3" opacity="0.5"/>
+    <path class="wire" data-wire="s7" data-from="IN Pin 7 (Relais-Feedback)" data-to="OUT Pin 7 (durchgeschleift, unbenutzt)" d="M190,280 L710,280" fill="none" stroke="#c9a227" stroke-width="1.4" stroke-dasharray="5 3"/>
     <path class="wire-hit" data-wire="s8" d="M190,315 L710,315"/>
-    <path class="wire" data-wire="s8" data-from="IN Pin 8 (5V)" data-to="OUT Pin 8 (durchgeschleift, unbenutzt)" d="M190,315 L710,315" fill="none" stroke="#8a93a3" stroke-width="1.2" stroke-dasharray="5 3" opacity="0.5"/>
+    <path class="wire" data-wire="s8" data-from="IN Pin 8 (5V)" data-to="OUT Pin 8 (durchgeschleift, 5V bleibt anliegen)" d="M190,315 L710,315" fill="none" stroke="#8a93a3" stroke-width="1.4" stroke-dasharray="5 3"/>
 
     <!-- Abgriff-Wires -->
-    <path class="wire-hit" data-wire="s9" d="M190,70 L390,215"/>
-    <path class="wire" data-wire="s9" data-from="IN Pin 1 (3V3)" data-to="Pull-up (oberes Ende) — nicht direkt am Schalter" d="M190,70 L390,215" fill="none" stroke="#c0392b" stroke-width="1.8"/>
-    <path class="wire-hit" data-wire="s10" d="M190,105 L390,215"/>
-    <path class="wire" data-wire="s10" data-from="IN Pin 2 (GND)" data-to="Mikroschalter COM" d="M190,105 L390,215" fill="none" stroke="#1c2430" stroke-width="1.8"/>
-    <path class="wire-hit" data-wire="s11" d="M190,210 L390,245"/>
-    <path class="wire" data-wire="s11" data-from="IN Pin 5 (KONTAKT-DATA, terminiert auf OUT)" data-to="Mikroschalter NO + Pull-up (unteres Ende)" d="M190,210 L390,245" fill="none" stroke="#2e6da4" stroke-width="1.8"/>
+    <path class="wire-hit" data-wire="s9" d="M190,70 C 290,70 290,285 390,285"/>
+    <path class="wire" data-wire="s9" data-from="IN Pin 1 (3V3)" data-to="Display VCC" d="M190,70 C 290,70 290,285 390,285" fill="none" stroke="#c0392b" stroke-width="1.8"/>
+    <path class="wire-hit" data-wire="s10" d="M190,105 C 300,105 300,260 390,260"/>
+    <path class="wire" data-wire="s10" data-from="IN Pin 2 (GND)" data-to="Display GND" d="M190,105 C 300,105 300,260 390,260" fill="none" stroke="#1c2430" stroke-width="1.8"/>
+    <path class="wire-hit" data-wire="s11" d="M190,140 L390,230"/>
+    <path class="wire" data-wire="s11" data-from="IN Pin 3 (SCL, Bus-Abgriff)" data-to="Display SCL" d="M190,140 L390,230" fill="none" stroke="#c8622a" stroke-width="1.8"/>
+    <path class="wire-hit" data-wire="s12" d="M190,175 L390,200"/>
+    <path class="wire" data-wire="s12" data-from="IN Pin 4 (SDA, Bus-Abgriff)" data-to="Display SDA" d="M190,175 L390,200" fill="none" stroke="#5c9e6c" stroke-width="1.8"/>
   </g>
 
   <!-- ================= LITE-VARIANTE ================= -->
@@ -199,45 +198,50 @@ COM+NO verwenden, nicht COM+NC — sonst invertiert sich die Logik.</p>
     <text x="115" y="50" text-anchor="middle" font-size="12" fill="#fff" font-weight="700">RJ45-Stecker</text>
     <text x="115" y="64" text-anchor="middle" font-size="9.5" fill="#9fb3d9">male, fest am Kabel</text>
     <g font-size="10.5" fill="#fff">
-      <text x="180" y="73" text-anchor="end" fill="#9aa3b5">1 3V3 n.c.</text>
+      <text x="180" y="73" text-anchor="end">1 3V3</text>
       <text x="180" y="108" text-anchor="end">2 GND</text>
-      <text x="180" y="143" text-anchor="end" fill="#9aa3b5">3 SCL n.c.</text>
-      <text x="180" y="178" text-anchor="end" fill="#9aa3b5">4 SDA n.c.</text>
-      <text x="180" y="213" text-anchor="end" font-weight="700" fill="#a9c8ec">5 KONTAKT-DATA</text>
+      <text x="180" y="143" text-anchor="end" font-weight="700" fill="#ffd8a8">3 SCL</text>
+      <text x="180" y="178" text-anchor="end" font-weight="700" fill="#c8f0d0">4 SDA</text>
+      <text x="180" y="213" text-anchor="end" fill="#9aa3b5">5 DATA n.c.</text>
       <text x="180" y="248" text-anchor="end" fill="#9aa3b5">6 Relais n.c.</text>
       <text x="180" y="283" text-anchor="end" fill="#9aa3b5">7 Fdbk n.c.</text>
       <text x="180" y="318" text-anchor="end" fill="#9aa3b5">8 5V n.c.</text>
     </g>
-    <circle cx="190" cy="70" r="2.2" fill="#9aa3b5"/>
+    <circle cx="190" cy="70" r="3" fill="#c0392b"/>
     <circle cx="190" cy="105" r="3" fill="#1c2430"/>
-    <circle cx="190" cy="140" r="2.2" fill="#9aa3b5"/>
-    <circle cx="190" cy="175" r="2.2" fill="#9aa3b5"/>
-    <circle cx="190" cy="210" r="3.4" fill="#2e6da4" stroke="#fff" stroke-width="1"/>
+    <circle cx="190" cy="140" r="3.4" fill="#c8622a" stroke="#fff" stroke-width="1"/>
+    <circle cx="190" cy="175" r="3.4" fill="#5c9e6c" stroke="#fff" stroke-width="1"/>
+    <circle cx="190" cy="210" r="2.2" fill="#9aa3b5"/>
     <circle cx="190" cy="245" r="2.2" fill="#9aa3b5"/>
     <circle cx="190" cy="280" r="2.2" fill="#9aa3b5"/>
     <circle cx="190" cy="315" r="2.2" fill="#9aa3b5"/>
 
-    <rect x="420" y="150" width="180" height="140" rx="4" fill="#f2f0e9" stroke="#c7c2b4"/>
-    <text x="510" y="172" text-anchor="middle" font-size="12" font-weight="700">Mikroschalter</text>
-    <text x="510" y="186" text-anchor="middle" font-size="9.5" fill="#6b7280">Rollenhebel, SPDT</text>
-    <circle cx="430" cy="215" r="3" fill="#1c2430"/><text x="440" y="219" font-size="10.5">COM</text>
-    <circle cx="430" cy="245" r="3" fill="#2e6da4"/><text x="440" y="249" font-size="10.5">NO</text>
-    <circle cx="430" cy="275" r="3" fill="#9aa3b5"/><text x="440" y="279" font-size="10.5" fill="#9aa3b5">NC (n.c.)</text>
+    <rect x="420" y="130" width="180" height="180" rx="4" fill="#f2f0e9" stroke="#c7c2b4"/>
+    <text x="510" y="152" text-anchor="middle" font-size="12" font-weight="700">SH1107-OLED</text>
+    <text x="510" y="166" text-anchor="middle" font-size="9.5" fill="#6b7280">1,5″ 128×128, I2C, 4-Pin</text>
+    <circle cx="430" cy="200" r="3" fill="#5c9e6c"/><text x="440" y="204" font-size="10.5">SDA</text>
+    <circle cx="430" cy="230" r="3" fill="#c8622a"/><text x="440" y="234" font-size="10.5">SCL</text>
+    <circle cx="430" cy="260" r="3" fill="#1c2430"/><text x="440" y="264" font-size="10.5">GND</text>
+    <circle cx="430" cy="285" r="3" fill="#c0392b"/><text x="440" y="289" font-size="10.5">VCC</text>
+    <text x="510" y="185" text-anchor="middle" font-size="8.5" fill="#8a93a3">Adresse 0x3D fest</text>
 
-    <path class="wire-hit" data-wire="l1" d="M190,105 L430,215"/>
-    <path class="wire" data-wire="l1" data-from="Stecker Pin 2 (GND)" data-to="Mikroschalter COM" d="M190,105 L430,215" fill="none" stroke="#1c2430" stroke-width="1.8"/>
-    <path class="wire-hit" data-wire="l2" d="M190,210 L430,245"/>
-    <path class="wire" data-wire="l2" data-from="Stecker Pin 5 (KONTAKT-DATA)" data-to="Mikroschalter NO — Pull-up kommt vom Gerät (intern, INPUT_PULLUP)" d="M190,210 L430,245" fill="none" stroke="#2e6da4" stroke-width="1.8"/>
+    <path class="wire-hit" data-wire="l1" d="M190,70 C 300,70 300,285 430,285"/>
+    <path class="wire" data-wire="l1" data-from="Stecker Pin 1 (3V3)" data-to="Display VCC" d="M190,70 C 300,70 300,285 430,285" fill="none" stroke="#c0392b" stroke-width="1.8"/>
+    <path class="wire-hit" data-wire="l2" d="M190,105 C 310,105 310,260 430,260"/>
+    <path class="wire" data-wire="l2" data-from="Stecker Pin 2 (GND)" data-to="Display GND" d="M190,105 C 310,105 310,260 430,260" fill="none" stroke="#1c2430" stroke-width="1.8"/>
+    <path class="wire-hit" data-wire="l3" d="M190,140 L430,230"/>
+    <path class="wire" data-wire="l3" data-from="Stecker Pin 3 (SCL)" data-to="Display SCL" d="M190,140 L430,230" fill="none" stroke="#c8622a" stroke-width="1.8"/>
+    <path class="wire-hit" data-wire="l4" d="M190,175 L430,200"/>
+    <path class="wire" data-wire="l4" data-from="Stecker Pin 4 (SDA)" data-to="Display SDA" d="M190,175 L430,200" fill="none" stroke="#5c9e6c" stroke-width="1.8"/>
 
-    <text x="510" y="325" text-anchor="middle" font-size="10.5" fill="#a63d2e" font-weight="700">Kein Pull-up auf dem Modul</text>
-    <text x="510" y="339" text-anchor="middle" font-size="9.5" fill="#6b7280">ContactManager::begin() setzt</text>
-    <text x="510" y="352" text-anchor="middle" font-size="9.5" fill="#6b7280">INPUT_PULLUP auf dem Gerät —</text>
-    <text x="510" y="365" text-anchor="middle" font-size="9.5" fill="#6b7280">Pin 1 (3V3) bleibt unbenutzt.</text>
-    <text x="510" y="385" text-anchor="middle" font-size="9.5" fill="#a63d2e">Richtwert max. 3 m, geschirmtes Kabel.</text>
+    <text x="510" y="325" text-anchor="middle" font-size="10.5" fill="#a63d2e" font-weight="700">Keine zweite Buchse</text>
+    <text x="510" y="339" text-anchor="middle" font-size="9.5" fill="#6b7280">Kette endet hier komplett -</text>
+    <text x="510" y="352" text-anchor="middle" font-size="9.5" fill="#6b7280">kein weiteres I2C- oder</text>
+    <text x="510" y="365" text-anchor="middle" font-size="9.5" fill="#6b7280">Kategorie-2-Modul danach.</text>
   </g>
 </svg>
 <div id="wireInfo" class="wire-info">Klicke auf einen Draht, um Start- und Zielpin anzuzeigen.</div>
-<p style="font-size:11px;color:#6b7280;">Gestrichelte Linien = reines Durchschleifen (unbenutzte Pins). Pin 5 wird auf der OUT-Buchse terminiert (offener Kreis, nicht verbunden) — dadurch kann kein zweites Pin-5-Modul (DHT11/DHT21) in derselben Kette dahinterhängen. NC bleibt bei beiden Varianten unbeschaltet — nur COM+NO verwenden.</p>
+<p style="font-size:11px;color:#6b7280;">Gestrichelte Linien = reines Durchschleifen (unbenutzte Pins). Pin 3/4 sind bei Standard durchgezogen, da sie gleichzeitig genutzt UND weitergereicht werden (echter Bus-Abgriff, kein Terminieren).</p>
 
 <script>
 (function () {
@@ -288,38 +292,33 @@ COM+NO verwenden, nicht COM+NC — sonst invertiert sich die Logik.</p>
 <h3>Standard-Variante (2 Buchsen)</h3>
 <table>
   <tr><th>Bauteil</th><th>Menge</th><th>Hinweis</th></tr>
-  <tr><td>Mikroschalter mit Rollenhebel (SPDT, COM/NO/NC, z. B. „5A 125V~")</td><td>1</td><td>nur COM + NO verwenden, NC bleibt unbeschaltet</td></tr>
-  <tr><td>Pull-up-Widerstand 4,7 kΩ</td><td>1</td><td>auf dem Modul, nicht am Gerät</td></tr>
+  <tr><td>SH1107-OLED-Breakout, 1,5″ 128×128 (I2C, 4-Pin)</td><td>1</td><td>Adresse 0x3D fest, kein Adress-Wahlpin</td></tr>
+  <tr><td>Pull-up-Widerstände 4,7 kΩ (SCL + SDA)</td><td>0–2</td><td>nur falls der Bus noch keinen Pull-up hat</td></tr>
   <tr><td>RJ45-Buchse, 8P8C (female), IN</td><td>1</td><td>zum Gerät bzw. Vormodul</td></tr>
-  <tr><td>RJ45-Buchse, 8P8C (female), OUT</td><td>1</td><td>zum nächsten Modul, Pin 5 hier terminiert</td></tr>
-  <tr><td>Platinenverdrahtung IN↔OUT (Pin 1/2/3/4/6/7/8)</td><td>1 Satz</td><td>Durchschleifung</td></tr>
-  <tr><td>Kabel zum Mikroschalter (2-adrig)</td><td>nach Bedarf</td><td>Türrahmen ↔ Modul</td></tr>
-  <tr><td>Montagewinkel/-halterung für den Rollenhebel</td><td>1</td><td>mechanische Betätigung durch Türkante/Nocke sicherstellen</td></tr>
-  <tr><td>Gehäuse</td><td>1</td><td>optional</td></tr>
+  <tr><td>RJ45-Buchse, 8P8C (female), OUT</td><td>1</td><td>zum nächsten Modul — Pin 3/4 bleiben live</td></tr>
+  <tr><td>Platinenverdrahtung IN↔OUT</td><td>1 Satz</td><td>Pin 1/2/5/6/7/8 durchschleifen, Pin 3/4 als Bus-Abgriff</td></tr>
+  <tr><td>Litze zum Display</td><td>4-adrig</td><td>Länge je nach Einbausituation</td></tr>
+  <tr><td>Gehäuse</td><td>1</td><td>empfohlen, mechanischer Schutz/Sichtfenster</td></tr>
 </table>
-<h3>Lite-Variante (2-Draht)</h3>
+<h3>Lite-Variante (1 Kabel mit Stecker)</h3>
 <table>
   <tr><th>Bauteil</th><th>Menge</th><th>Hinweis</th></tr>
-  <tr><td>Mikroschalter mit Rollenhebel</td><td>1</td><td>wie Standard, nur COM + NO</td></tr>
+  <tr><td>SH1107-OLED-Breakout</td><td>1</td><td>wie Standard</td></tr>
+  <tr><td>Pull-up-Widerstände 4,7 kΩ (SCL + SDA)</td><td>0–2</td><td>wie Standard, nur falls nötig</td></tr>
   <tr><td>RJ45-Stecker, 8P8C (male)</td><td>1</td><td>fest am Kabelende</td></tr>
-  <tr><td>Kabel, 2-adrig, geschirmt, max. 3 m, mit Stecker vergossen/gecrimpt</td><td>1</td><td>Schirm auf GND (Pin 2) auflegen</td></tr>
-  <tr><td>Montagewinkel/-halterung</td><td>1</td><td>wie Standard</td></tr>
-  <tr><td>Gehäuse</td><td>1</td><td>optional</td></tr>
+  <tr><td>Kabel, 4-adrig, mit Stecker vergossen/gecrimpt</td><td>1</td><td>kein Zwischenstecker</td></tr>
+  <tr><td>Gehäuse</td><td>1</td><td>empfohlen</td></tr>
 </table>
-<p style="font-size:12px;color:#6b7280;">Kein Pull-up-Widerstand bei Lite nötig (Gerät liefert ihn intern über <code>INPUT_PULLUP</code>) — spart neben der zweiten Buchse auch das einzige Bauteil dieser Variante, kostet dafür die Kettenfähigkeit vollständig.</p>
 
-<div class="callout warn">
-  <div class="callout-title">COM+NO zwingend, nicht COM+NC</div>
-  Eine Verwechslung invertiert die Kontaktlogik — <code>ContactManager</code>
-  erwartet „Tür/Fenster zu" = Kontakt geschlossen = Pin 5 auf LOW. Vor der
-  Montage mit Multimeter durchmessen, welcher Anschluss NO ist. Auto-Erkennung
-  ist für dieses Modul grundsätzlich nicht möglich (ein offener Kontakt ist
-  elektrisch identisch zu „kein Modul gesteckt") — Modultyp wird bewusst
-  manuell auf „Kontakt" gestellt.
+<div class="callout">
+  <div class="callout-title">Kein Boot-Countdown, keine Fallback-Sonderseite</div>
+  Bleibt Aufgabe des internen Displays — das externe Modul zeigt nur die
+  rotierenden Infoseiten im Normalbetrieb (Slide-Auswahl/-Dauer über
+  Weboberfläche konfigurierbar).
 </div>
 
 <footer>
-  Sensormeter-Family — Türkontakt-Modul (Mikroschalter), Verdrahtungsplan (interaktiv) · github.com/peterhagelhof7-cmd/sensormeter-family ·
+  Sensormeter-Family — Externes Display-Modul (SH1107), Verdrahtungsplan (interaktiv) · github.com/peterhagelhof7-cmd/sensormeter-family ·
   Entwickelt mit Unterstützung von Claude (Anthropic) als Coding-Assistent
 </footer>
 

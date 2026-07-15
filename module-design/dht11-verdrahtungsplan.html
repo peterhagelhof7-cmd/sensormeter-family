@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<title>Türkontakt-Modul (Mikroschalter) — Verdrahtungsplan (interaktiv)</title>
+<title>DHT11-Sensormodul — Verdrahtungsplan (interaktiv)</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
   @page { size: A4; margin: 18mm 16mm 20mm 16mm; }
@@ -79,28 +79,26 @@
       <line x1="24" y1="24.67" x2="31.07" y2="17.6" stroke="#E9E4D8" stroke-width="2.8" stroke-linecap="round"/>
       <circle cx="24" cy="24.67" r="2.6" fill="#E9E4D8"/>
     </svg>
-    <h1>TÜRKONTAKT-MODUL (MIKROSCHALTER) — VERDRAHTUNGSPLAN</h1>
+    <h1>DHT11-SENSORMODUL — VERDRAHTUNGSPLAN</h1>
   </div>
-  <div class="subtitle">Mechanischer Endschalter mit Rollenhebel (SPDT, COM/NO/NC) für Sensormeter (WT32-ETH01) und Sensormeter PoE (ESP32-S3-ETH)</div>
+  <div class="subtitle">Externer Temperatur-/Feuchte-Sensor („Sensor 2") für Sensormeter (WT32-ETH01) und Sensormeter PoE (ESP32-S3-ETH)</div>
   <div class="badges">
-    <span class="badge badge-orange">Pin 2/5 · GND/DATA (Standard zusätzlich Pin 1)</span>
-    <span class="badge">Kategorie 2 · schließt sich mit DHT11/DHT21 aus</span>
+    <span class="badge badge-orange">Pin 1/2/5 · VCC/GND/DATA</span>
+    <span class="badge">Kategorie 2 · schließt sich mit DHT21/Türkontakt aus</span>
     <span class="badge">github.com/peterhagelhof7-cmd/sensormeter-family</span>
   </div>
 </header>
 
-<p>Siehe <code>tuerkontakt-modul.md</code> für Zweck, vollständige
-Stückliste und bekannte Einschränkungen — diese Seite ist die interaktive
-Kurzfassung der Verdrahtung. Zwei Bauvarianten, siehe Umschalter unten.
-<b>Kein Reed-/Magnetkontakt</b>: beschafft wurde ein mechanischer
-Mikroschalter mit Rollenhebel — braucht direkten physischen Druck auf den
-Hebel (Türkante/Nocke), <code>ContactManager</code> sieht elektrisch aber
-nur einen simplen potentialfreien Schalter. <b>Polarität</b>: unbedingt
-COM+NO verwenden, nicht COM+NC — sonst invertiert sich die Logik.</p>
+<p>Siehe <code>dht11-modul.md</code> für Zweck, vollständige Stückliste und
+bekannte Einschränkungen — diese Seite ist die interaktive Kurzfassung der
+Verdrahtung. Zwei Bauvarianten, siehe Umschalter unten.
+<b>Firmware-Hinweis</b>: der externe Lesepfad ist aktuell fest auf den
+Bibliothekstyp <code>DHT22</code> codiert — ein echtes DHT11 wird bis zur
+Typ-Anpassung mit falschen Timing-/Skalierungsannahmen gelesen.</p>
 
 <div class="variant-toggle">
-  <button data-variant="standard" class="active">Standard (2 Buchsen, ext. Pull-up)</button>
-  <button data-variant="lite">Lite (1 Kabel, int. Pull-up, 2-Draht)</button>
+  <button data-variant="standard" class="active">Standard (2 Buchsen, durchschleifbar)</button>
+  <button data-variant="lite">Lite (1 Kabel mit Stecker)</button>
 </div>
 
 <h2>Schema</h2>
@@ -118,7 +116,7 @@ COM+NO verwenden, nicht COM+NC — sonst invertiert sich die Logik.</p>
       <text x="180" y="108" text-anchor="end">2 GND</text>
       <text x="180" y="143" text-anchor="end" fill="#9aa3b5">3 SCL n.c.</text>
       <text x="180" y="178" text-anchor="end" fill="#9aa3b5">4 SDA n.c.</text>
-      <text x="180" y="213" text-anchor="end" font-weight="700" fill="#a9c8ec">5 KONTAKT-DATA</text>
+      <text x="180" y="213" text-anchor="end" font-weight="700" fill="#a9c8ec">5 DHT-DATA</text>
       <text x="180" y="248" text-anchor="end" fill="#9aa3b5">6 Relais n.c.</text>
       <text x="180" y="283" text-anchor="end" fill="#9aa3b5">7 Fdbk n.c.</text>
       <text x="180" y="318" text-anchor="end" fill="#9aa3b5">8 5V n.c.</text>
@@ -156,13 +154,13 @@ COM+NO verwenden, nicht COM+NC — sonst invertiert sich die Logik.</p>
     <text x="785" y="150" text-anchor="middle" font-size="9" fill="#5c9e6c">Pin 1/2/3/4/6/7/8</text>
     <text x="785" y="162" text-anchor="middle" font-size="9" fill="#5c9e6c">durchgeschleift</text>
 
-    <!-- Mikroschalter + Pull-up -->
+    <!-- DHT11 + Pull-up -->
     <rect x="380" y="150" width="180" height="140" rx="4" fill="#f2f0e9" stroke="#c7c2b4"/>
-    <text x="470" y="172" text-anchor="middle" font-size="12" font-weight="700">Mikroschalter</text>
-    <text x="470" y="186" text-anchor="middle" font-size="9.5" fill="#6b7280">Rollenhebel, SPDT</text>
-    <circle cx="390" cy="215" r="3" fill="#1c2430"/><text x="400" y="219" font-size="10.5">COM</text>
-    <circle cx="390" cy="245" r="3" fill="#2e6da4"/><text x="400" y="249" font-size="10.5">NO</text>
-    <circle cx="390" cy="275" r="3" fill="#9aa3b5"/><text x="400" y="279" font-size="10.5" fill="#9aa3b5">NC (n.c.)</text>
+    <text x="470" y="172" text-anchor="middle" font-size="12" font-weight="700">DHT11</text>
+    <text x="470" y="186" text-anchor="middle" font-size="9.5" fill="#6b7280">3-Pin: VCC/DATA/GND</text>
+    <circle cx="390" cy="215" r="3" fill="#c0392b"/><text x="400" y="219" font-size="10.5">VCC</text>
+    <circle cx="390" cy="245" r="3" fill="#2e6da4"/><text x="400" y="249" font-size="10.5">DATA</text>
+    <circle cx="390" cy="275" r="3" fill="#1c2430"/><text x="400" y="279" font-size="10.5">GND</text>
 
     <!-- Pull-up resistor symbol between 3V3-line and DATA-line -->
     <rect x="270" y="130" width="14" height="34" rx="2" fill="#fff" stroke="#8a93a3" stroke-width="1.4"/>
@@ -184,13 +182,13 @@ COM+NO verwenden, nicht COM+NC — sonst invertiert sich die Logik.</p>
     <path class="wire-hit" data-wire="s8" d="M190,315 L710,315"/>
     <path class="wire" data-wire="s8" data-from="IN Pin 8 (5V)" data-to="OUT Pin 8 (durchgeschleift, unbenutzt)" d="M190,315 L710,315" fill="none" stroke="#8a93a3" stroke-width="1.2" stroke-dasharray="5 3" opacity="0.5"/>
 
-    <!-- Abgriff-Wires -->
+    <!-- Abgriff-Wires (DHT11 + Pull-up) -->
     <path class="wire-hit" data-wire="s9" d="M190,70 L390,215"/>
-    <path class="wire" data-wire="s9" data-from="IN Pin 1 (3V3)" data-to="Pull-up (oberes Ende) — nicht direkt am Schalter" d="M190,70 L390,215" fill="none" stroke="#c0392b" stroke-width="1.8"/>
-    <path class="wire-hit" data-wire="s10" d="M190,105 L390,215"/>
-    <path class="wire" data-wire="s10" data-from="IN Pin 2 (GND)" data-to="Mikroschalter COM" d="M190,105 L390,215" fill="none" stroke="#1c2430" stroke-width="1.8"/>
+    <path class="wire" data-wire="s9" data-from="IN Pin 1 (3V3)" data-to="DHT11 VCC + Pull-up (oberes Ende)" d="M190,70 L390,215" fill="none" stroke="#c0392b" stroke-width="1.8"/>
+    <path class="wire-hit" data-wire="s10" d="M190,105 L390,275"/>
+    <path class="wire" data-wire="s10" data-from="IN Pin 2 (GND)" data-to="DHT11 GND" d="M190,105 L390,275" fill="none" stroke="#1c2430" stroke-width="1.8"/>
     <path class="wire-hit" data-wire="s11" d="M190,210 L390,245"/>
-    <path class="wire" data-wire="s11" data-from="IN Pin 5 (KONTAKT-DATA, terminiert auf OUT)" data-to="Mikroschalter NO + Pull-up (unteres Ende)" d="M190,210 L390,245" fill="none" stroke="#2e6da4" stroke-width="1.8"/>
+    <path class="wire" data-wire="s11" data-from="IN Pin 5 (DHT-DATA, terminiert auf OUT)" data-to="DHT11 DATA + Pull-up (unteres Ende)" d="M190,210 L390,245" fill="none" stroke="#2e6da4" stroke-width="1.8"/>
   </g>
 
   <!-- ================= LITE-VARIANTE ================= -->
@@ -199,16 +197,16 @@ COM+NO verwenden, nicht COM+NC — sonst invertiert sich die Logik.</p>
     <text x="115" y="50" text-anchor="middle" font-size="12" fill="#fff" font-weight="700">RJ45-Stecker</text>
     <text x="115" y="64" text-anchor="middle" font-size="9.5" fill="#9fb3d9">male, fest am Kabel</text>
     <g font-size="10.5" fill="#fff">
-      <text x="180" y="73" text-anchor="end" fill="#9aa3b5">1 3V3 n.c.</text>
+      <text x="180" y="73" text-anchor="end">1 3V3</text>
       <text x="180" y="108" text-anchor="end">2 GND</text>
       <text x="180" y="143" text-anchor="end" fill="#9aa3b5">3 SCL n.c.</text>
       <text x="180" y="178" text-anchor="end" fill="#9aa3b5">4 SDA n.c.</text>
-      <text x="180" y="213" text-anchor="end" font-weight="700" fill="#a9c8ec">5 KONTAKT-DATA</text>
+      <text x="180" y="213" text-anchor="end" font-weight="700" fill="#a9c8ec">5 DHT-DATA</text>
       <text x="180" y="248" text-anchor="end" fill="#9aa3b5">6 Relais n.c.</text>
       <text x="180" y="283" text-anchor="end" fill="#9aa3b5">7 Fdbk n.c.</text>
       <text x="180" y="318" text-anchor="end" fill="#9aa3b5">8 5V n.c.</text>
     </g>
-    <circle cx="190" cy="70" r="2.2" fill="#9aa3b5"/>
+    <circle cx="190" cy="70" r="3" fill="#c0392b"/>
     <circle cx="190" cy="105" r="3" fill="#1c2430"/>
     <circle cx="190" cy="140" r="2.2" fill="#9aa3b5"/>
     <circle cx="190" cy="175" r="2.2" fill="#9aa3b5"/>
@@ -218,26 +216,31 @@ COM+NO verwenden, nicht COM+NC — sonst invertiert sich die Logik.</p>
     <circle cx="190" cy="315" r="2.2" fill="#9aa3b5"/>
 
     <rect x="420" y="150" width="180" height="140" rx="4" fill="#f2f0e9" stroke="#c7c2b4"/>
-    <text x="510" y="172" text-anchor="middle" font-size="12" font-weight="700">Mikroschalter</text>
-    <text x="510" y="186" text-anchor="middle" font-size="9.5" fill="#6b7280">Rollenhebel, SPDT</text>
-    <circle cx="430" cy="215" r="3" fill="#1c2430"/><text x="440" y="219" font-size="10.5">COM</text>
-    <circle cx="430" cy="245" r="3" fill="#2e6da4"/><text x="440" y="249" font-size="10.5">NO</text>
-    <circle cx="430" cy="275" r="3" fill="#9aa3b5"/><text x="440" y="279" font-size="10.5" fill="#9aa3b5">NC (n.c.)</text>
+    <text x="510" y="172" text-anchor="middle" font-size="12" font-weight="700">DHT11</text>
+    <text x="510" y="186" text-anchor="middle" font-size="9.5" fill="#6b7280">3-Pin: VCC/DATA/GND</text>
+    <circle cx="430" cy="215" r="3" fill="#c0392b"/><text x="440" y="219" font-size="10.5">VCC</text>
+    <circle cx="430" cy="245" r="3" fill="#2e6da4"/><text x="440" y="249" font-size="10.5">DATA</text>
+    <circle cx="430" cy="275" r="3" fill="#1c2430"/><text x="440" y="279" font-size="10.5">GND</text>
 
-    <path class="wire-hit" data-wire="l1" d="M190,105 L430,215"/>
-    <path class="wire" data-wire="l1" data-from="Stecker Pin 2 (GND)" data-to="Mikroschalter COM" d="M190,105 L430,215" fill="none" stroke="#1c2430" stroke-width="1.8"/>
-    <path class="wire-hit" data-wire="l2" d="M190,210 L430,245"/>
-    <path class="wire" data-wire="l2" data-from="Stecker Pin 5 (KONTAKT-DATA)" data-to="Mikroschalter NO — Pull-up kommt vom Gerät (intern, INPUT_PULLUP)" d="M190,210 L430,245" fill="none" stroke="#2e6da4" stroke-width="1.8"/>
+    <rect x="310" y="130" width="14" height="34" rx="2" fill="#fff" stroke="#8a93a3" stroke-width="1.4"/>
+    <text x="317" y="122" text-anchor="middle" font-size="8.5" fill="#6b7280">4,7 kΩ</text>
+    <text x="317" y="180" text-anchor="middle" font-size="8" fill="#6b7280">auf dem Modul</text>
 
-    <text x="510" y="325" text-anchor="middle" font-size="10.5" fill="#a63d2e" font-weight="700">Kein Pull-up auf dem Modul</text>
-    <text x="510" y="339" text-anchor="middle" font-size="9.5" fill="#6b7280">ContactManager::begin() setzt</text>
-    <text x="510" y="352" text-anchor="middle" font-size="9.5" fill="#6b7280">INPUT_PULLUP auf dem Gerät —</text>
-    <text x="510" y="365" text-anchor="middle" font-size="9.5" fill="#6b7280">Pin 1 (3V3) bleibt unbenutzt.</text>
-    <text x="510" y="385" text-anchor="middle" font-size="9.5" fill="#a63d2e">Richtwert max. 3 m, geschirmtes Kabel.</text>
+    <path class="wire-hit" data-wire="l1" d="M190,70 L430,215"/>
+    <path class="wire" data-wire="l1" data-from="Stecker Pin 1 (3V3)" data-to="DHT11 VCC + Pull-up (oberes Ende)" d="M190,70 L430,215" fill="none" stroke="#c0392b" stroke-width="1.8"/>
+    <path class="wire-hit" data-wire="l2" d="M190,105 L430,275"/>
+    <path class="wire" data-wire="l2" data-from="Stecker Pin 2 (GND)" data-to="DHT11 GND" d="M190,105 L430,275" fill="none" stroke="#1c2430" stroke-width="1.8"/>
+    <path class="wire-hit" data-wire="l3" d="M190,210 L430,245"/>
+    <path class="wire" data-wire="l3" data-from="Stecker Pin 5 (DHT-DATA)" data-to="DHT11 DATA + Pull-up (unteres Ende)" d="M190,210 L430,245" fill="none" stroke="#2e6da4" stroke-width="1.8"/>
+
+    <text x="510" y="325" text-anchor="middle" font-size="10.5" fill="#a63d2e" font-weight="700">Keine zweite Buchse</text>
+    <text x="510" y="339" text-anchor="middle" font-size="9.5" fill="#6b7280">Kette endet hier komplett -</text>
+    <text x="510" y="352" text-anchor="middle" font-size="9.5" fill="#6b7280">kein weiteres I2C- oder</text>
+    <text x="510" y="365" text-anchor="middle" font-size="9.5" fill="#6b7280">Kategorie-2-Modul danach.</text>
   </g>
 </svg>
 <div id="wireInfo" class="wire-info">Klicke auf einen Draht, um Start- und Zielpin anzuzeigen.</div>
-<p style="font-size:11px;color:#6b7280;">Gestrichelte Linien = reines Durchschleifen (unbenutzte Pins). Pin 5 wird auf der OUT-Buchse terminiert (offener Kreis, nicht verbunden) — dadurch kann kein zweites Pin-5-Modul (DHT11/DHT21) in derselben Kette dahinterhängen. NC bleibt bei beiden Varianten unbeschaltet — nur COM+NO verwenden.</p>
+<p style="font-size:11px;color:#6b7280;">Gestrichelte Linien = reines Durchschleifen (unbenutzte Pins). Pin 5 wird auf der OUT-Buchse terminiert (offener Kreis, nicht verbunden) — dadurch kann kein zweites Pin-5-Modul (DHT21, Türkontakt) in derselben Kette dahinterhängen.</p>
 
 <script>
 (function () {
@@ -288,38 +291,35 @@ COM+NO verwenden, nicht COM+NC — sonst invertiert sich die Logik.</p>
 <h3>Standard-Variante (2 Buchsen)</h3>
 <table>
   <tr><th>Bauteil</th><th>Menge</th><th>Hinweis</th></tr>
-  <tr><td>Mikroschalter mit Rollenhebel (SPDT, COM/NO/NC, z. B. „5A 125V~")</td><td>1</td><td>nur COM + NO verwenden, NC bleibt unbeschaltet</td></tr>
-  <tr><td>Pull-up-Widerstand 4,7 kΩ</td><td>1</td><td>auf dem Modul, nicht am Gerät</td></tr>
+  <tr><td>DHT11-Sensor (3-Pin: VCC/DATA/GND)</td><td>1</td><td></td></tr>
+  <tr><td>Pull-up-Widerstand 4,7 kΩ</td><td>1</td><td>auf dem Modul, Pin 1 → Pin 5</td></tr>
   <tr><td>RJ45-Buchse, 8P8C (female), IN</td><td>1</td><td>zum Gerät bzw. Vormodul</td></tr>
   <tr><td>RJ45-Buchse, 8P8C (female), OUT</td><td>1</td><td>zum nächsten Modul, Pin 5 hier terminiert</td></tr>
   <tr><td>Platinenverdrahtung IN↔OUT (Pin 1/2/3/4/6/7/8)</td><td>1 Satz</td><td>Durchschleifung</td></tr>
-  <tr><td>Kabel zum Mikroschalter (2-adrig)</td><td>nach Bedarf</td><td>Türrahmen ↔ Modul</td></tr>
-  <tr><td>Montagewinkel/-halterung für den Rollenhebel</td><td>1</td><td>mechanische Betätigung durch Türkante/Nocke sicherstellen</td></tr>
+  <tr><td>Kabel zum DHT11 (3-adrig)</td><td>nach Bedarf</td><td>Länge je nach Einbausituation</td></tr>
   <tr><td>Gehäuse</td><td>1</td><td>optional</td></tr>
 </table>
-<h3>Lite-Variante (2-Draht)</h3>
+<h3>Lite-Variante (1 Kabel mit Stecker)</h3>
 <table>
   <tr><th>Bauteil</th><th>Menge</th><th>Hinweis</th></tr>
-  <tr><td>Mikroschalter mit Rollenhebel</td><td>1</td><td>wie Standard, nur COM + NO</td></tr>
+  <tr><td>DHT11-Sensor</td><td>1</td><td>wie Standard</td></tr>
+  <tr><td>Pull-up-Widerstand 4,7 kΩ</td><td>1</td><td>auf dem Modul (nicht am Gerät)</td></tr>
   <tr><td>RJ45-Stecker, 8P8C (male)</td><td>1</td><td>fest am Kabelende</td></tr>
-  <tr><td>Kabel, 2-adrig, geschirmt, max. 3 m, mit Stecker vergossen/gecrimpt</td><td>1</td><td>Schirm auf GND (Pin 2) auflegen</td></tr>
-  <tr><td>Montagewinkel/-halterung</td><td>1</td><td>wie Standard</td></tr>
+  <tr><td>Kabel, 3-adrig, mit Stecker vergossen/gecrimpt</td><td>1</td><td>kein Zwischenstecker</td></tr>
   <tr><td>Gehäuse</td><td>1</td><td>optional</td></tr>
 </table>
-<p style="font-size:12px;color:#6b7280;">Kein Pull-up-Widerstand bei Lite nötig (Gerät liefert ihn intern über <code>INPUT_PULLUP</code>) — spart neben der zweiten Buchse auch das einzige Bauteil dieser Variante, kostet dafür die Kettenfähigkeit vollständig.</p>
 
 <div class="callout warn">
-  <div class="callout-title">COM+NO zwingend, nicht COM+NC</div>
-  Eine Verwechslung invertiert die Kontaktlogik — <code>ContactManager</code>
-  erwartet „Tür/Fenster zu" = Kontakt geschlossen = Pin 5 auf LOW. Vor der
-  Montage mit Multimeter durchmessen, welcher Anschluss NO ist. Auto-Erkennung
-  ist für dieses Modul grundsätzlich nicht möglich (ein offener Kontakt ist
-  elektrisch identisch zu „kein Modul gesteckt") — Modultyp wird bewusst
-  manuell auf „Kontakt" gestellt.
+  <div class="callout-title">Firmware liest aktuell mit falscher Typ-Annahme</div>
+  <code>dhtProbe</code> (Erkennung) und <code>dhtExternal</code> (Betrieb)
+  sind fest als <code>DHT22</code> instanziiert — braucht eine
+  Typ-Auswahl (DHT11/DHT21/DHT22), bevor dieses Modul korrekte Werte
+  liefert. Geringere Genauigkeit/Auflösung als DHT21/DHT22 (nur
+  Ganzzahlwerte, ±2°C/±5%RH typisch).
 </div>
 
 <footer>
-  Sensormeter-Family — Türkontakt-Modul (Mikroschalter), Verdrahtungsplan (interaktiv) · github.com/peterhagelhof7-cmd/sensormeter-family ·
+  Sensormeter-Family — DHT11-Sensormodul, Verdrahtungsplan (interaktiv) · github.com/peterhagelhof7-cmd/sensormeter-family ·
   Entwickelt mit Unterstützung von Claude (Anthropic) als Coding-Assistent
 </footer>
 

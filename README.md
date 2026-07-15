@@ -93,20 +93,34 @@ Kopie liegt in allen vier Projekt-Repos.
 [module-design/](module-design/) — Stücklisten, Verdrahtungstabellen und
 interaktive Verdrahtungspläne für die über den RJ45-Modularanschluss
 steckbaren Erweiterungsmodule (nur Sensormeter/Sensormeter PoE, siehe
-dortiges `README.md`). Zwei Kategorien, jeweils in einer Standard-Variante
-mit 2 Buchsen und einer kabelgebundenen Lite-Variante ohne Kettenfähigkeit:
-**Bus-Module** (I2C, mehrere gleichzeitig steckbar —
-[BME280](module-design/bme280-modul.md), [BH1750](module-design/bh1750-modul.md),
-[AHT20/21](module-design/aht20-modul.md) sowie das
-[BME280+CCS811-Kombimodul](module-design/bme280-ccs811-modul.md)) und
-**Direkt-Module** (dedizierter Einzelpin, genau eines gleichzeitig — alle
-drei vorgesehenen Module fertig entworfen:
-[DHT22-Sensormodul](module-design/dht22-modul.md),
+dortiges `README.md`). Modulliste bildet die tatsächlich beschaffte
+Hardware ab (Stand 2026-07-15). Zwei Kategorien, jeweils in einer
+Standard-Variante mit 2 Buchsen und einer kabelgebundenen Lite-Variante
+ohne Kettenfähigkeit:
+**Bus-Module** (I2C, mehrere gleichzeitig steckbar, aber die Firmware
+erkennt aktuell nur eines —
+[AHT20+BMP280-Kombimodul](module-design/aht20-bmp280-modul.md),
+[BH1750](module-design/bh1750-modul.md),
+[BMP280](module-design/bmp280-modul.md),
+[ENS160+AHT21-Kombimodul](module-design/ens160-aht21-modul.md)) und
+**Direkt-Module** (dedizierter Einzelpin, genau eines gleichzeitig —
+[DHT11-](module-design/dht11-modul.md) und
+[DHT21-Sensormodul](module-design/dht21-modul.md) (schließen sich mit dem
+Türkontakt-Modul gegenseitig aus, alle auf Pin 5),
 [Türkontakt-Modul](module-design/tuerkontakt-modul.md),
-[Relais/Aktor-Modul](module-design/relais-modul.md)). Die I2C-Module sind
-aktuell reine Hardware-Vorarbeit — der Firmware fehlt noch ein
-allgemeiner I2C-Lesepfad für „Sensor 2" (siehe `module-design/README.md`,
-Abschnitt „Firmware-Lücke").
+[Relais/Aktor-Modul](module-design/relais-modul.md) (Pin 6+7, Versorgung
+über Pin 8/5V)). Dazu ein
+[externes Display-Modul](module-design/sh1107-display-modul.md) (SH1107,
+1,5″ 128×128, I2C 0x3D) — familienweite Entscheidung: alle Geräte außer
+Sensormeter Display nutzen intern dasselbe kleine SSD1306, das größere
+SH1107-Display steht stattdessen optional als Steckmodul zur Verfügung.
+Allgemeine I2C-Grundlagen plus eine Anleitung, wie man mit dem Multimeter
+prüft, ob ein Modul schon einen Pull-up mitbringt:
+[module-design/i2c-grundlagen.html](module-design/i2c-grundlagen.html) /
+`.pdf`. Die I2C-**Sensor**-Module sind aktuell reine Hardware-Vorarbeit —
+der Firmware fehlt noch der Lesepfad für BMP280-Druck, BH1750-Lux und
+ENS160-Luftgüte sowie eine Typ-Auswahl für DHT11/DHT21 (siehe
+`module-design/README.md`, Abschnitt „Firmware-Lücke").
 
 ## Werkzeuge
 

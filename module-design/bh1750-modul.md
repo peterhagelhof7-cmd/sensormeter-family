@@ -1,19 +1,7 @@
 # BH1750-Sensormodul (Kategorie 1 — Bus-Modul)
 
-Externer I2C-Lichtsensor (Umgebungshelligkeit in Lux) — steckt in die
-RJ45-Buchse von Sensormeter oder Sensormeter PoE und wird von
-`SensorDetector::runDetection()` beim Boot bzw. auf Anfrage automatisch am
-I2C-Bus erkannt (Adresse 0x23/0x5C, bereits in `KNOWN_CHIPS` in
-`SensorDetector.cpp` in beiden Firmware-Repos hinterlegt) — setzt „Sensor 2
-aktiv" automatisch, genau wie das DHT22- und BME280-Modul. **Wie bei
-BME280 liest die Firmware die Messwerte aktuell aber noch nicht aus**
-(siehe „Bekannte Einschränkungen") — dieser Entwurf ist bewusst reine
-Hardware-Vorarbeit.
-
-Anders als DHT22/BME280/AHT20/21 misst dieses Modul **keine**
-Temperatur/Feuchte, sondern Helligkeit — eine echte Ergänzung statt einer
-Dopplung bereits vorhandener Messgrößen (siehe Kandidaten-Vergleich in der
-Konversation).
+Umgebungslicht-/Lux-Sensor (GY-302-Breakout) — steckt in die RJ45-Buchse
+von Sensormeter oder Sensormeter PoE.
 
 **Kompatible Geräte:** Sensormeter (WT32-ETH01), Sensormeter PoE
 (ESP32-S3-ETH). Nicht relevant für Sensormeter WLAN/Display (kein
@@ -22,55 +10,57 @@ RJ45-Modularanschluss).
 **Interaktiver Verdrahtungsplan:** [bh1750-verdrahtungsplan.html](bh1750-verdrahtungsplan.html)
 (Standard- und Lite-Variante, anklickbare Drähte).
 
+## Zweck
+
+Reine Hardware-Vorarbeit: der Chip steht in `SensorDetector.cpp`s
+KNOWN_CHIPS-Tabelle und wird beim I2C-Scan zuverlässig als „BH1750"
+erkannt — `SensorManager` liest den Messwert (Lux) aber **nicht** aus, da
+Helligkeit nicht ins bestehende Temperatur/Feuchte-Datenmodell von
+„Sensor 2" passt. Siehe `README.md`, Abschnitt „Firmware-Lücke".
+
 ## Varianten
 
 | | Standard | Lite |
 |---|---|---|
 | Buchsen | 2 (IN + OUT) | 0 — fest angeschlagenes Kabel mit RJ45-**Stecker** (male) |
-| Durchschleifen | Ja — echter Bus-Abgriff, Pin 1/2/3/4 bleiben auf der OUT-Buchse ebenfalls live (kein Terminieren, siehe `README.md`) | Nein — Kette endet hier vollständig |
-| Weitere I2C-/Kategorie-2-Module danach | Möglich (Multi-Drop-Bus), solange sich I2C-Adressen nicht überschneiden | Nicht möglich |
-| Preis/Aufwand | Höher (2. Buchse + Durchschleif-Verdrahtung) | Niedriger (nur Kabel + Stecker) |
-| Einsatzzweck | Modul soll in einer Kette mit weiteren I2C- und/oder Kategorie-2-Modulen stehen | Modul ist das letzte/einzige am Gerät, keine Kette geplant |
-
-Für die Firmware sind beide Varianten identisch (`SensorDetector` liest in
-beiden Fällen denselben I2C-Bus) — der Unterschied ist rein mechanisch.
-Wie beim BME280-Modul wird bei Standard **nichts terminiert**: Pin 3/4
-sind gleichzeitig „genutzt" und „durchgeschleift" (echter Bus, kein
-Schalter) — siehe `README.md`, Abschnitt „Durchschleif-Regel".
+| Durchschleifen | Ja, siehe `README.md` „Durchschleif-Regel" | Nein — Kette endet hier vollständig |
+| Einsatzzweck | Modul soll in einer Kette mit weiteren Modulen stehen | Modul ist das letzte/einzige am Gerät |
 
 ## Pinbelegung des Modul-Steckers
 
 ### Standard (2 Buchsen)
 
-Kategorie-1-Modul: Pin 1/2/5/6/7/8 werden 1:1 von IN nach OUT
-durchgeschleift (unverändert, dieses Modul nutzt sie nicht). Pin 3/4
-(SCL/SDA) werden auf dem Modul-PCB **abgegriffen und gleichzeitig
-weitergereicht** — kein Terminieren, ein weiteres I2C-Modul (oder ein
-Kategorie-2-Modul auf Pin 5/6/7) kann dahinterstecken.
+Kategorie-1-Modul: Pin 1/2/3/4 als echter Bus-Abgriff, gleichzeitig zur
+OUT-Buchse durchgereicht (kein Terminieren). Pin 5/6/7/8 irrelevant,
+1:1 durchgeschleift.
 
 | RJ45-Pin | Signal | IN-Buchse | OUT-Buchse |
 |---|---|---|---|
-| 1 | 3V3 | BH1750 VCC | durchgeschleift (= IN Pin 1) |
-| 2 | GND | BH1750 GND + ADDR (siehe Hinweis) | durchgeschleift (= IN Pin 2) |
-| 3 | SCL | BH1750 SCL (Bus-Abgriff) | **ebenfalls live** (= IN Pin 3, kein Terminieren) |
-| 4 | SDA | BH1750 SDA (Bus-Abgriff) | **ebenfalls live** (= IN Pin 4, kein Terminieren) |
-| 5 | Einzelpin A (DHT/Kontakt) | — (unbenutzt) | durchgeschleift (= IN Pin 5) |
-| 6 | Relais-Steuerung | — (unbenutzt) | durchgeschleift (= IN Pin 6) |
-| 7 | Relais-Feedback | — (unbenutzt) | durchgeschleift (= IN Pin 7) |
-| 8 | Reserve | — (unbenutzt) | durchgeschleift (= IN Pin 8) |
+| 1 | 3V3 | Board VCC | durchgeschleift (= IN Pin 1) |
+| 2 | GND | Board GND | durchgeschleift (= IN Pin 2) |
+| 3 | SCL | Board SCL (Bus-Abgriff) | bleibt live (= IN Pin 3) |
+| 4 | SDA | Board SDA (Bus-Abgriff) | bleibt live (= IN Pin 4) |
+| 5 | Einzelpin A (DHT/Kontakt) | unbenutzt | durchgeschleift (= IN Pin 5) |
+| 6 | Relais-Steuerung | unbenutzt | durchgeschleift (= IN Pin 6) |
+| 7 | Relais-Feedback | unbenutzt | durchgeschleift (= IN Pin 7) |
+| 8 | 5V | unbenutzt | durchgeschleift (= IN Pin 8) |
+
+Board-Pin ADDR (5. Pin des GY-302) legt die I2C-Adresse fest: auf GND
+(oder offen, interner Pull-down auf vielen Breakouts) → 0x23; auf VCC →
+0x5C. Auf dem Modul fest verdrahtet, nicht am Gerät wählbar.
 
 ### Lite (1 Kabel mit Stecker)
 
-Kein IN/OUT mehr — ein einzelner RJ45-**Stecker** (male) am Ende eines
-fest angeschlagenen Kabels, direkt zum BH1750 verdrahtet. Nur Pin 1/2/3/4
-werden angeschlossen.
+Kein IN/OUT mehr — ein einzelner RJ45-**Stecker** (male), direkt zum
+Board verdrahtet. Nur 4 Adern (Pin 1/2/3/4), ADDR fest auf dem Board
+verdrahtet.
 
 | RJ45-Pin | Signal | Verbunden mit |
 |---|---|---|
-| 1 | 3V3 | BH1750 VCC |
-| 2 | GND | BH1750 GND + ADDR |
-| 3 | SCL | BH1750 SCL |
-| 4 | SDA | BH1750 SDA |
+| 1 | 3V3 | Board VCC |
+| 2 | GND | Board GND |
+| 3 | SCL | Board SCL |
+| 4 | SDA | Board SDA |
 | 5, 6, 7, 8 | — | nicht angeschlossen (n.c.) |
 
 ## Stückliste
@@ -79,82 +69,40 @@ werden angeschlossen.
 
 | Bauteil | Menge | Hinweis |
 |---|---|---|
-| BH1750-Breakout (I2C, 5-Pin: VCC/GND/SCL/SDA/ADDR) | 1 | ADDR fest auf GND verdrahtet → Adresse 0x23 (Default, siehe Hinweis unten) |
-| Pull-up-Widerstände 4,7 kΩ (SCL + SDA) | 0–2 | nur falls der Bus noch keinen Pull-up hat — vor dem Bestücken prüfen |
-| RJ45-Buchse, 8P8C (female), IN | 1 | zum Gerät bzw. vorherigen Modul in der Kette |
-| RJ45-Buchse, 8P8C (female), OUT | 1 | zum nächsten Modul in der Kette — Pin 3/4 bleiben live, nichts terminiert |
-| Platinenverdrahtung IN↔OUT (Pin 1/2/5/6/7/8 durchschleifen, Pin 3/4 als Bus-Abgriff) | 1 Satz | siehe Pinbelegungstabelle oben |
-| Litze zum BH1750-Breakout (4-adrig + ADDR-Brücke auf GND) | nach Bedarf | Länge je nach Einbausituation |
-| Gehäuse (optional) | 1 | z. B. kleines 3D-gedrucktes Gehäuse mit 2 RJ45-Durchbrüchen |
+| BH1750-Breakout, GY-302 (I2C, 5-Pin inkl. ADDR) | 1 | ADDR auf GND oder VCC legen für 0x23/0x5C |
+| Pull-up-Widerstände 4,7 kΩ (SCL + SDA) | 0–2 | nur falls der Bus noch keinen Pull-up hat |
+| RJ45-Buchse, 8P8C (female), IN | 1 | zum Gerät bzw. Vormodul |
+| RJ45-Buchse, 8P8C (female), OUT | 1 | zum nächsten Modul — Pin 3/4 bleiben live |
+| Platinenverdrahtung IN↔OUT | 1 Satz | Pin 1/2/5/6/7/8 durchschleifen, Pin 3/4 als Bus-Abgriff |
+| Litze zum Breakout | 4-adrig | Länge je nach Einbausituation |
+| Gehäuse | 1 | optional |
 
 ### Lite-Variante
 
 | Bauteil | Menge | Hinweis |
 |---|---|---|
-| BH1750-Breakout (I2C, 5-Pin) | 1 | wie Standard |
+| BH1750-Breakout, GY-302 | 1 | wie Standard |
 | Pull-up-Widerstände 4,7 kΩ (SCL + SDA) | 0–2 | wie Standard, nur falls nötig |
-| RJ45-Stecker, 8P8C (male) | 1 | fest am Kabelende, kein Gegenstück am Modul |
-| Kabel, 4-adrig, mit Stecker vergossen/gecrimpt | 1 | Länge je nach Einbausituation, kein Zwischenstecker |
-| Gehäuse (optional) | 1 | kein RJ45-Durchbruch nötig, transparent/lichtdurchlässig über dem Sensor empfohlen |
-
-Spart eine Buchse und die Durchschleif-Verdrahtung, kostet aber die
-Kettenfähigkeit vollständig — kein weiteres I2C- oder Kategorie-2-Modul
-kann dahinterstecken (siehe „Bekannte Einschränkungen").
+| RJ45-Stecker, 8P8C (male) | 1 | fest am Kabelende |
+| Kabel, 4-adrig, mit Stecker vergossen/gecrimpt | 1 | kein Zwischenstecker |
+| Gehäuse | 1 | optional |
 
 ## Verdrahtungstabelle
 
-| BH1750-Pin | RJ45-Pin (abgegriffen) | Signal |
+| Board-Pin | RJ45-Pin (abgegriffen) | Signal |
 |---|---|---|
 | VCC | 1 | 3V3 |
 | GND | 2 | GND |
 | SCL | 3 | I2C-Takt |
 | SDA | 4 | I2C-Daten |
-| ADDR | 2 | fest auf GND (= Adresse 0x23) |
-
-Bei der Standard-Variante werden zusätzlich Pin 1/2/5/6/7/8 1:1 auf die
-OUT-Buchse durchverdrahtet, und Pin 3/4 bleiben als echter Bus-Abgriff
-**ebenfalls** auf der OUT-Buchse live (kein Terminieren) — siehe
-Pinbelegungstabelle oben.
-
-## Hinweis zu Pull-up und I2C-Adresse
-
-**Pull-up**: wie beim BME280-Modul — vor dem Bestücken prüfen, ob der
-gemeinsame I2C-Bus (führt zum OLED-Display des Geräts) bereits einen
-Pull-up hat, um einen doppelten Pull-up zu vermeiden.
-
-**I2C-Adresse**: der ADDR-Pin des BH1750-Breakouts legt die Adresse fest —
-auf GND (bzw. unbeschaltet auf den meisten Breakouts, die einen internen
-Pull-down haben) ergibt `0x23`, auf 3V3 gelegt ergibt `0x5C`. Dieses Modul
-ist standardmäßig fest auf `0x23` verdrahtet (ADDR → GND). Für ein
-**zweites** BH1750-Modul in derselben Kette eine Variante mit ADDR → 3V3
-bauen (Adresse `0x5C`), sonst kollidieren beide auf dem Bus. Beide Adressen
-sind bereits in `SensorDetector.cpp`s `KNOWN_CHIPS`-Tabelle hinterlegt.
+| ADDR | — | auf dem Board fest auf GND oder VCC gelegt, nicht zur RJ45-Buchse geführt |
 
 ## Bekannte Einschränkungen
 
-- **Erkennt nur den ersten Treffer**: `SensorDetector::runDetection()`
-  bricht den I2C-Scan beim ersten gefundenen Gerät ab und setzt „Sensor 2
-  aktiv" dafür — ein zweites I2C-Modul in derselben Kette wird nicht
-  zusätzlich als eigener Datenpunkt erkannt/ausgelesen (gleiche
-  Einschränkung wie beim BME280-Modul).
-- **Kein Terminieren auf Pin 3/4 (nur Standard)**: der Bus bleibt auf der
-  OUT-Buchse live — ein Fehlstecken (z. B. zwei Module mit derselben
-  Adresse) führt zu einer echten Buskollision statt einer offenen
-  Leitung. ADDR-Verdrahtung vor dem Verkabeln prüfen.
-- **Lite hat keine Kettenfähigkeit**: die Lite-Variante besitzt keine
-  OUT-Buchse — dahinter kann weder ein zweites Kategorie-1- noch ein
-  Kategorie-2-Modul stecken.
-- **Genauigkeit**: ±20 % (typisch, laut Datenblatt) — für eine grobe
-  Hell/Dunkel-Unterscheidung bzw. Trendanzeige ausreichend, nicht für
-  photometrisch präzise Messungen gedacht.
-- **Werte werden aktuell NICHT ausgelesen — nur erkannt**: `SensorManager::
-  readExternalSensorIfEnabled()` liest „Sensor 2" ausschließlich per
-  DHT-Protokoll auf Pin 5, unabhängig davon, was `SensorDetector` am
-  I2C-Bus gefunden hat. Ein erkanntes BH1750 schaltet den Systemtyp zwar
-  automatisch auf „PRO" um, der anschließende Leseversuch schlägt aber
-  immer fehl, da auf Pin 5 kein DHT-Sensor hängt. Zusätzlich behandelt die
-  Firmware „Sensor 2" ohnehin als Temperatur/Feuchte-Paar (SNMP-Zweig
-  `.4.x`, MQTT-`sensor`-Discovery mit °C/%) — selbst mit I2C-Lesepfad
-  bräuchte ein Lux-Wert vermutlich einen eigenen Datentyp, kein
-  Temperatur/Feuchte-Ersatz. Dieses Modul ist damit reine
-  Hardware-Vorarbeit — siehe `README.md`, Abschnitt „Firmware-Lücke".
+- **Wird erkannt, aber nicht ausgelesen** (Stand `README.md`
+  „Firmware-Lücke") — Lux passt nicht ins bestehende
+  Temperatur/Feuchte-Datenmodell, braucht einen eigenen Datentyp quer
+  durch DataManager/SNMP/MQTT/Web-UI/CSV.
+- **Adresskollision möglich**, falls gleichzeitig ein weiteres Modul mit
+  0x23/0x5C am Bus hängt (aktuell kein anderes entworfenes Modul in
+  diesem Adressbereich).
