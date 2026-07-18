@@ -80,6 +80,20 @@ anderen übertragen).
 
 **Legende:** ✅ vorhanden · ❌ nicht vorhanden/nicht umgesetzt · – nicht zutreffend für diese Geräterolle
 
+## Schnellstart
+
+[docs/schnellstart.pdf](docs/schnellstart.pdf) /
+[docs/schnellstart.html](docs/schnellstart.html) — kurze
+End-Nutzer-Anleitung "vom fertig geflashten Gerät zum erreichbaren
+Sensormeter im Netzwerk in unter 10 Minuten": Strom anschließen,
+OLED-Boot-Countdown, Fallback-Access-Point `installer`/`installer`,
+Gerät wiederfinden (OLED/mDNS), Erstanmeldung. Deckt die drei
+Sensor-Projekte ab (Sensormeter, Sensormeter WLAN, Sensormeter PoE) —
+Sensormeter Display bewusst nicht, da es keinen Fallback-AP hat und eine
+andere Geräteklasse ist. Anders als die One-Pager unten liegt dieses
+Dokument **nur** hier im Familien-Repo, nicht zusätzlich in den drei
+Einzelprojekten.
+
 ## One-Pager
 
 Kompakte Ein-Seiten-Übersicht je Projekt (Architektur, Kennzahlen,

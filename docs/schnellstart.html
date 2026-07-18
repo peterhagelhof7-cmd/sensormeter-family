@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>Sensormeter-Familie — Schnellstart</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root {
+    --paper: #ffffff;
+    --paper-raised: #FBFAF6;
+    --paper-sunken: #f2f0e9;
+    --ink: #1c2430;
+    --ink-muted: #5B6472;
+    --line: #e4e1d8;
+    --copper: #c8622a;
+    --copper-strong: #8f4a1e;
+    --copper-wash: #fbf3ee;
+    --patina: #3F6E63;
+    --patina-strong: #2b5148;
+    --patina-wash: rgba(63, 110, 99, 0.10);
+    --indigo: #3B5B8C;
+    --indigo-strong: #2B4368;
+    --indigo-wash: rgba(59, 91, 140, 0.09);
+    --rust: #a63d2e;
+    --rust-wash: #fbeeec;
+    --navy: #0f1f3d;
+    --navy-line: #24365c;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #141A22;
+      --paper-raised: #1B222C;
+      --paper-sunken: #0F141A;
+      --ink: #E9E4D8;
+      --ink-muted: #9aa3af;
+      --line: #313A46;
+      --copper: #E08A4C;
+      --copper-strong: #F2A268;
+      --copper-wash: rgba(224, 138, 76, 0.14);
+      --patina: #74B7A6;
+      --patina-strong: #9fd4c5;
+      --patina-wash: rgba(116, 183, 166, 0.13);
+      --indigo: #7FA0D9;
+      --indigo-strong: #A0BBE6;
+      --indigo-wash: rgba(127, 160, 217, 0.14);
+      --rust: #E38A78;
+      --rust-wash: rgba(227, 138, 120, 0.14);
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #141A22; --paper-raised: #1B222C; --paper-sunken: #0F141A;
+    --ink: #E9E4D8; --ink-muted: #9aa3af; --line: #313A46;
+    --copper: #E08A4C; --copper-strong: #F2A268; --copper-wash: rgba(224, 138, 76, 0.14);
+    --patina: #74B7A6; --patina-strong: #9fd4c5; --patina-wash: rgba(116, 183, 166, 0.13);
+    --indigo: #7FA0D9; --indigo-strong: #A0BBE6; --indigo-wash: rgba(127, 160, 217, 0.14);
+    --rust: #E38A78; --rust-wash: rgba(227, 138, 120, 0.14);
+  }
+  :root[data-theme="light"] {
+    --paper: #ffffff; --paper-raised: #FBFAF6; --paper-sunken: #f2f0e9;
+    --ink: #1c2430; --ink-muted: #5B6472; --line: #e4e1d8;
+    --copper: #c8622a; --copper-strong: #8f4a1e; --copper-wash: #fbf3ee;
+    --patina: #3F6E63; --patina-strong: #2b5148; --patina-wash: rgba(63, 110, 99, 0.10);
+    --indigo: #3B5B8C; --indigo-strong: #2B4368; --indigo-wash: rgba(59, 91, 140, 0.09);
+    --rust: #a63d2e; --rust-wash: #fbeeec;
+  }
+
+  @page { size: A4; margin: 18mm 16mm 20mm 16mm; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    color: var(--ink);
+    background: var(--paper);
+    font-size: 12px;
+    line-height: 1.48;
+  }
+  .cover {
+    background: var(--navy);
+    color: #fff;
+    margin: -18mm -16mm 12mm -16mm;
+    padding: 26mm 16mm 14mm 16mm;
+  }
+  .cover .eyebrow { font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: #9fb3d9; margin-bottom: 6mm; }
+  .cover h1 { margin: 0 0 4mm 0; font-size: 29px; }
+  .cover .subtitle { color: #cdd8ec; font-size: 13px; max-width: 140mm; }
+  .cover .badges { margin-top: 7mm; display: flex; gap: 6px; flex-wrap: wrap; }
+  .badge { display: inline-block; padding: 3px 9px; border-radius: 3px; font-size: 10px; font-weight: 600; background: var(--navy-line); color: #cdd8ec; }
+  .badge-orange { background: var(--copper); color: #fff; }
+  .badge-sm { background: var(--indigo); color: #fff; }
+  .badge-wlan { background: var(--patina); color: #0f1f3d; }
+  .badge-poe { background: var(--copper); color: #fff; }
+  .cover .toc { margin-top: 8mm; font-size: 10.5px; color: #b9c6e3; line-height: 1.9; }
+  .cover .toc b { color: #fff; }
+  .cover .out-of-scope { margin-top: 6mm; font-size: 10px; color: #8fa0c2; border-top: 1px solid #24365c; padding-top: 3mm; }
+
+  h1.section { font-size: 17px; color: var(--navy); border-bottom: 2px solid var(--copper); padding-bottom: 2mm; margin: 10mm 0 4mm 0; page-break-after: avoid; break-after: avoid; }
+  h1.section .num { color: var(--copper); margin-right: 2mm; }
+  h2 { font-size: 12.5px; color: var(--copper-strong); margin: 5mm 0 2mm 0; page-break-after: avoid; break-after: avoid; }
+  p { margin: 0 0 2.6mm 0; }
+  ul, ol { margin: 0 0 2.6mm 0; padding-left: 4.6mm; }
+  li { margin-bottom: 1mm; }
+  code {
+    font-family: Consolas, "Cascadia Mono", "Courier New", monospace;
+    background: var(--paper-sunken);
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    padding: 1px 5px;
+    font-size: 10.5px;
+    word-break: break-all;
+  }
+
+  /* --- Per-project color coding: identical structure, three accents --- */
+  .proj-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 4.5mm; margin: 3mm 0 5mm 0; }
+  .proj-card {
+    border: 1px solid var(--line);
+    border-top: 3px solid var(--accent);
+    border-radius: 0 0 2mm 2mm;
+    background: var(--paper-raised);
+    padding: 3mm 3.2mm;
+    page-break-inside: avoid; break-inside: avoid;
+  }
+  .proj-card.sm { --accent: var(--indigo); }
+  .proj-card.wlan { --accent: var(--patina); }
+  .proj-card.poe { --accent: var(--copper); }
+  .proj-label {
+    font-size: 9px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 1.6mm;
+  }
+  .proj-card p, .proj-card ul { font-size: 10.6px; }
+  .proj-card ul { padding-left: 3.6mm; }
+
+  .callout {
+    border-left: 3px solid var(--copper);
+    background: var(--copper-wash);
+    padding: 3mm 4mm;
+    margin: 3mm 0;
+    border-radius: 0 3px 3px 0;
+    page-break-inside: avoid; break-inside: avoid;
+  }
+  .callout.warn { border-left-color: var(--rust); background: var(--rust-wash); }
+  .callout.warn .callout-title { color: var(--rust); }
+  .callout.note { border-left-color: var(--indigo); background: var(--indigo-wash); }
+  .callout.note .callout-title { color: var(--indigo-strong); }
+  .callout-title { font-weight: 700; font-size: 10.5px; text-transform: uppercase; letter-spacing: .04em; color: var(--copper-strong); margin-bottom: 1mm; }
+
+  table { border-collapse: collapse; width: 100%; margin: 2mm 0 4mm 0; page-break-inside: avoid; break-inside: avoid; }
+  table th, table td { border: 1px solid var(--line); padding: 1.4mm 2.3mm; font-size: 10.3px; text-align: left; vertical-align: top; }
+  table th { background: var(--paper-sunken); color: var(--ink); }
+  table td.hd, table th.rowhd { background: var(--paper-sunken); font-weight: 600; white-space: nowrap; }
+  th.col-sm { color: var(--indigo-strong); }
+  th.col-wlan { color: var(--patina-strong); }
+  th.col-poe { color: var(--copper-strong); }
+  .keep { page-break-inside: avoid; break-inside: avoid; }
+  .small { font-size: 9.8px; color: var(--ink-muted); }
+  .foot { margin-top: 10mm; padding-top: 3mm; border-top: 1px solid var(--line); font-size: 9.3px; color: var(--ink-muted); text-align: center; }
+
+  .steps { counter-reset: step; list-style: none; padding-left: 0; margin: 2mm 0 4mm 0; }
+  .steps li {
+    counter-increment: step;
+    position: relative;
+    padding: 1mm 0 1mm 8mm;
+    margin-bottom: 2mm;
+  }
+  .steps li::before {
+    content: counter(step);
+    position: absolute; left: 0; top: 0.5mm;
+    width: 5.5mm; height: 5.5mm; border-radius: 50%;
+    background: var(--copper); color: #fff;
+    font-size: 9.5px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+  }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <div class="eyebrow">Sensormeter-Familie — Schnellstart</div>
+  <div style="display:flex; align-items:center; gap:12px;">
+    <svg viewBox="0 0 48 48" fill="none" width="30" height="30" style="flex-shrink:0;">
+      <path d="M24,9 L37.6,32.5 L10.4,32.5 Z" stroke="#8E97A3" stroke-width="2.2" stroke-linejoin="round"/>
+      <circle cx="24" cy="9" r="5" fill="#E08A4C"/>
+      <circle cx="37.6" cy="32.5" r="5" fill="#7FA0D9"/>
+      <circle cx="10.4" cy="32.5" r="5" fill="#74B7A6"/>
+      <line x1="24" y1="24.67" x2="31.07" y2="17.6" stroke="#E9E4D8" stroke-width="2.8" stroke-linecap="round"/>
+      <circle cx="24" cy="24.67" r="2.6" fill="#E9E4D8"/>
+    </svg>
+    <h1>Schnellstart</h1>
+  </div>
+  <div class="subtitle">Vom fertig geflashten Gerät zum erreichbaren Sensormeter im Netzwerk — in unter 10 Minuten. Gilt für die drei Sensor-Projekte der Familie.</div>
+  <div class="badges">
+    <span class="badge badge-sm">Sensormeter</span>
+    <span class="badge badge-wlan">Sensormeter WLAN</span>
+    <span class="badge badge-poe">Sensormeter PoE</span>
+    <span class="badge">v0.9.0-rc4 · Beta</span>
+  </div>
+  <div class="toc">
+    <b>1</b>&nbsp; Strom anschließen &nbsp;·&nbsp;
+    <b>2</b>&nbsp; Erster Boot: OLED-Countdown &nbsp;·&nbsp;
+    <b>3</b>&nbsp; Netzwerk — LAN oder WLAN &nbsp;·&nbsp;
+    <b>4</b>&nbsp; Gerät wiederfinden &nbsp;·&nbsp;
+    <b>5</b>&nbsp; Erste Anmeldung &nbsp;·&nbsp;
+    <b>6</b>&nbsp; Wie geht's weiter
+  </div>
+  <div class="out-of-scope">
+    Nicht Thema dieses Dokuments: Bauen/Flashen der Firmware (Entwickler-Thema,
+    siehe Abschnitt 1 im jeweiligen <code>docs/admin-guide.pdf</code> bzw.
+    <code>scripts/flash.ps1</code>/<code>flash.sh</code>) und
+    <b>Sensormeter Display</b> (kein Fallback-AP, andere Geräteklasse —
+    Betrachter statt Sensor-Knoten).
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<h1 class="section"><span class="num">1</span>Strom anschließen</h1>
+<p>Firmware ist laut Annahme bereits geflasht — hier geht es nur noch darum,
+das Gerät zum ersten Mal in Betrieb zu nehmen.</p>
+
+<div class="proj-grid">
+  <div class="proj-card sm">
+    <div class="proj-label">Sensormeter (WT32-ETH01)</div>
+    <p><b>Kein Onboard-USB.</b> Stabile 5V über den 20-Pin-Hauptheader
+    anschließen — <b>nicht</b> über einen USB-Seriell-Adapter, der liefert
+    zu wenig Strom.</p>
+    <ul>
+      <li>Minimum lt. Modul-Datenblatt: 500&nbsp;mA</li>
+      <li>Empfohlen: 5V/1A-Netzteil (Reserve für dünne Kabel + künftige
+      RJ45-Module)</li>
+    </ul>
+  </div>
+  <div class="proj-card wlan">
+    <div class="proj-label">Sensormeter WLAN (ESP32-DevKit)</div>
+    <p>Generisches ESP32-WROOM-32-DevKit, <b>USB-C</b>.</p>
+    <ul>
+      <li>Handelsübliches 5V-USB-Netzteil/-Ladegerät genügt, wie bei jedem
+      ESP32-DevKit</li>
+      <li>Kein eigenes Strombudget-Dokument im Repo (anders als die beiden
+      Geschwisterprojekte) — kein Sonderfall bekannt</li>
+    </ul>
+  </div>
+  <div class="proj-card poe">
+    <div class="proj-label">Sensormeter PoE (Waveshare ESP32-S3-ETH)</div>
+    <p><b>Zwei Wege</b>, nicht gleichzeitig nutzen:</p>
+    <ul>
+      <li><b>USB-C</b>, 5V/min. 1A empfohlen</li>
+      <li><b>PoE 802.3af</b> über Switch-Port oder Injektor (aufsteckbares
+      Waveshare-Modul) — liefert komfortabel genug (~9–10W nutzbar vs.
+      ~4,1W Spitzenbedarf)</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<h1 class="section"><span class="num">2</span>Erster Boot: OLED-Countdown</h1>
+<p>Nach dem Einschalten zeigt das OLED bei allen drei Geräten zunächst
+Systemname und einen <b>Countdown von 100 auf 0</b>, gefolgt von „warte".
+Der Countdown läuft schneller als die tatsächliche Wartezeit ab und bleibt
+danach bei 0 stehen — er zeigt nur „wir warten noch", keine exakte
+Restzeit.</p>
+
+<table class="keep">
+  <tr><th style="width:20%"></th><th class="col-sm">Sensormeter</th><th class="col-wlan">Sensormeter WLAN</th><th class="col-poe">Sensormeter PoE</th></tr>
+  <tr><td class="hd">Boot-Seite zeigt</td><td>Systemname + Systemtyp</td><td>Systemname + „WLAN"</td><td>Systemname + Systemtyp</td></tr>
+  <tr><td class="hd">Wartezustand</td><td><code>NETWORK_CHECK</code> — LAN und optionales WLAN parallel, bis zu 5 Minuten</td><td><code>WLAN_CHECK</code> — nur WLAN, bis zu 5 Minuten</td><td><code>NETWORK_CHECK</code> — LAN und optionales WLAN parallel, bis zu 5 Minuten</td></tr>
+  <tr><td class="hd">Danach bei Erfolg</td><td colspan="3">Normalbetrieb — OLED wechselt zu den rotierenden Infoseiten (Abschnitt 4)</td></tr>
+  <tr><td class="hd">Danach ohne Erfolg</td><td colspan="3">Fallback-Modus — eigener Access Point „installer" (Abschnitt 3.2)</td></tr>
+</table>
+
+<!-- ============================================================ -->
+<h1 class="section"><span class="num">3</span>Netzwerk — LAN oder WLAN</h1>
+
+<h2>3.1 LAN vorhanden (nur Sensormeter, Sensormeter PoE)</h2>
+<div class="proj-grid" style="grid-template-columns: 1fr 1fr;">
+  <div class="proj-card sm">
+    <div class="proj-label">Sensormeter · Sensormeter PoE</div>
+    <p>Netzwerkkabel einstecken — das war's. Das Gerät bezieht automatisch
+    eine IP per DHCP, kein weiterer Schritt nötig.</p>
+  </div>
+  <div class="proj-card wlan">
+    <div class="proj-label">Sensormeter WLAN</div>
+    <p>Hat <b>kein</b> Ethernet-Interface — dieser Weg entfällt, immer
+    weiter mit Abschnitt 3.2.</p>
+  </div>
+</div>
+
+<h2>3.2 Kein LAN / nur WLAN (alle drei Geräte — bei Sensormeter WLAN Pflicht)</h2>
+<div class="callout warn">
+  <div class="callout-title">Eigener Access Point „installer" — identisch bei allen drei Projekten</div>
+  Finden LAN <b>und</b> WLAN nach <b>5 Minuten</b> keine Verbindung, spannt
+  das Gerät selbst ein Netzwerk auf: SSID <code>installer</code>, Passwort
+  <code>installer</code>, feste IP <code>192.168.4.1</code>
+  (Subnetzmaske <code>255.255.255.0</code>), DHCP-Server aktiv, kein
+  Internetzugang darüber. Das OLED zeigt währenddessen nur „Fallback
+  aktiv" + die eigene IP, keine Seitenrotation.
+</div>
+
+<ol class="steps">
+  <li>Mit Smartphone, Tablet oder Laptop im WLAN nach <code>installer</code>
+  suchen und mit Passwort <code>installer</code> verbinden</li>
+  <li>Im Browser <code>http://192.168.4.1/</code> aufrufen</li>
+  <li>Auf der Einstellungsseite (Login erforderlich, Abschnitt 5) im Bereich
+  „WLAN" die eigenen Zugangsdaten eintragen und „Verbinden &amp; testen
+  (Neustart)" klicken — die Verbindung wird zügig getestet (~30s), nicht
+  erst nach weiteren 5 Minuten</li>
+  <li>Klappt es, verlässt das Gerät den Fallback-Modus und ist im echten
+  Netzwerk erreichbar. Klappt es nicht (und liegt auch kein LAN-Kabel an),
+  spannt es automatisch wieder den Access Point auf</li>
+</ol>
+
+<div class="callout note">
+  <div class="callout-title">Bei Sensormeter genügt oft einfach ein Kabel</div>
+  Sensormeter und Sensormeter PoE haben Ethernet — steckt man dort ein
+  LAN-Kabel, kommt es in der Praxis selten überhaupt zum Fallback-Fall. Bei
+  Sensormeter WLAN ist der Weg über den Access Point dagegen der
+  <b>einzige</b> Weg zur Ersteinrichtung, da es kein Ethernet gibt.
+</div>
+
+<!-- ============================================================ -->
+<h1 class="section"><span class="num">4</span>Gerät wiederfinden</h1>
+<p>Zwei Wege, beide bei allen drei Geräten identisch nutzbar:</p>
+<ul>
+  <li><b>OLED, Seite 2</b> der rotierenden Infoseiten (10-Sekunden-Takt) —
+  bei allen drei Projekten dieselbe Seitennummer, aber unterschiedlicher
+  Inhalt (siehe Tabelle unten)</li>
+  <li><b>mDNS</b>: <code>http://&lt;systemname&gt;.local/</code> im Browser
+  — <code>systemname</code> ist der frei einstellbare Anzeigename des
+  Geräts (Default z. B. „Sensormeter", „Sensormeter WLAN", „Sensormeter
+  PoE")</li>
+</ul>
+
+<table class="keep">
+  <tr><th style="width:20%"></th><th class="col-sm">Sensormeter</th><th class="col-wlan">Sensormeter WLAN</th><th class="col-poe">Sensormeter PoE</th></tr>
+  <tr><td class="hd">OLED-Seite 2 zeigt</td><td>Zeile 1 LAN-IP, Zeile 2 WLAN-IP (je „---" falls nicht verbunden)</td><td>Zeile 1 verbundene SSID, Zeile 2 WLAN-IP</td><td>Zeile 1 LAN-IP, Zeile 2 WLAN-IP (je „---" falls nicht verbunden)</td></tr>
+  <tr><td class="hd">Seiten manuell weiterschalten</td><td>nicht möglich — GPIO0 ist fest am Ethernet-Takt des WT32-ETH01 gebunden, kein freier Taster</td><td>✅ BOOT-Taster: kurzer Tipp = nächste Seite</td><td>✅ BOOT-Taster (GPIO0 hier frei, da Ethernet per SPI/W5500 läuft): kurzer Tipp = nächste Seite</td></tr>
+</table>
+
+<div class="callout note">
+  <div class="callout-title">Taster nur bei zwei der drei Projekte</div>
+  Sensormeter WLAN <b>und</b> Sensormeter PoE erlauben Seitenwechsel per
+  kurzem Tastendruck sowie einen Werksreset über 3s Halten + 20s-Countdown
+  (dann loslassen). Bei Sensormeter (WT32-ETH01) ist das Hardware-bedingt
+  nicht möglich — GPIO0 wird dort für den Ethernet-Takt gebraucht.
+</div>
+
+<!-- ============================================================ -->
+<h1 class="section"><span class="num">5</span>Erste Anmeldung</h1>
+<div class="callout warn">
+  <div class="callout-title">Standard-Zugangsdaten — bei allen drei Projekten identisch</div>
+  Benutzername immer <code>admin</code>, Passwort <code>installer</code>.
+  <b>Bitte sofort nach der ersten Anmeldung ändern</b> — im jeweiligen
+  <code>admin-guide.pdf</code>, Abschnitt „4.2 Alle Einstellungen im
+  Detail" unter „System" beschrieben.
+</div>
+
+<!-- ============================================================ -->
+<h1 class="section"><span class="num">6</span>Wie geht's weiter</h1>
+<p>Dieses Dokument deckt nur die Erstinbetriebnahme ab. Für alles
+Weitere — jedes Einstellungsfeld im Detail, SNMP/Syslog/MQTT, Firmware-
+Updates, Serial-Kommandozeile, Troubleshooting:</p>
+<ul>
+  <li><b>Sensormeter</b>: <code>sensormeter/docs/admin-guide.pdf</code></li>
+  <li><b>Sensormeter WLAN</b>: <code>sensormeter-wlan/docs/admin-guide.pdf</code></li>
+  <li><b>Sensormeter PoE</b>: <code>sensormeter-poe/docs/admin-guide.pdf</code></li>
+</ul>
+<p>Weicht das tatsächliche Verhalten des Geräts von diesem Dokument ab,
+zählt immer der jeweilige <code>docs/entscheidungen.md</code> des
+Projekt-Repos als Quelle der Wahrheit — eine echte Design-Entscheidung
+kann das hier Beschriebene zwischenzeitlich überholt haben.</p>
+
+<div class="foot">Sensormeter-Familie — Schnellstart · gilt für Sensormeter, Sensormeter WLAN, Sensormeter PoE (Sensormeter Display: siehe eigenes Onepager) · nur in diesem Familien-Repo gepflegt, nicht in den Einzelprojekten dupliziert</div>
+
+</body>
+</html>
