@@ -27,12 +27,20 @@ Vergleich, One-Pager, gemeinsame Werkzeuge.
 
 ## Aktueller Stand
 
+Alle vier Projekte haben inzwischen einen erfolgreichen Board-Bringup
+auf echter Hardware hinter sich — der Schwerpunkt liegt jetzt auf
+**Qualitätskontrolle**: laufende Verifikation auf echten Geräten deckt
+gelegentlich noch reale Bugs auf, die dann familienweit auf ihre
+Geschwisterprojekte abgeglichen werden (siehe die beiden Beispiele
+unten, beide zuerst bei Sensormeter gefunden und dann auf alle drei
+anderen übertragen).
+
 | Projekt | Version | Firmware-Umfang | Hardware-Status |
 |---|---|---|---|
-| Sensormeter | `0.9.0-rc4` (Beta) | P0–P7 + MQTT/Home Assistant + Anbieter-Branding + Werksreset-Umfangsauswahl + Serial-Kommandozeile | **Board-Bringup abgeschlossen** (2026-07-16) — erstmals auf echtem WT32-ETH01 geflasht (manueller Boot-Modus, CP2102/COM7, siehe `sensormeter/docs/flash-bereitschaft.html`) und live verifiziert: Web-UI, interner Sensor, `/log.txt`, LAN+WLAN gleichzeitig, I2C-Auto-Erkennung, WLAN-Scan, OTA-Herkunfts-/Versionsprüfung. Testgerät hatte nur den internen Sensor bestückt — MQTT gegen echten Broker, Relais-Schalten, externes RJ45-Modul, Branding-Upload, statische IP/DNS, Werksreset und XML-Import mangels Modul/Broker noch nicht live getestet. Zwei nicht-blockierende Befunde im Backlog (Uhrzeit-Desync nach WLAN-Reconnect, einmaliger Seriell-Log-Ausbruch) |
-| Sensormeter WLAN | `0.9.0-rc4` (Beta) | P0–P7 + MQTT/Home Assistant + Anbieter-Branding + Werksreset-Umfangsauswahl + Serial-Kommandozeile | **Board-Bringup abgeschlossen** — DHT22, OLED, WLAN inkl. Fallback-AP, Taster, Webserver, SNMP, Syslog auf echtem Gerät verifiziert. MQTT geflasht, aber noch nicht gegen einen echten Broker getestet; Branding geflasht (sauberer Boot-Log verifiziert), Upload/Anzeige mangels Netzroute zum Board noch nicht per HTTP getestet. Werksreset-Umfangsauswahl und Serial-Kommandozeile sind hier zuerst entstanden und **auf echter Hardware geflasht/verifiziert** |
-| Sensormeter Display | `0.9.0-rc4` (Beta) | P0–P8 + Live-Dashboard + Anbieter-Branding + Werksreset-Umfangsauswahl + Serial-Kommandozeile | **Auf echter Hardware verifiziert** — wiederholt geflasht und getestet. DHCP-Lease-Test und der neu ausgeweitete Mutex-Schutz (Sensor/Ping/Sensormeter/GraphManager) noch nicht auf echter Hardware ausgelöst. Branding sowie die beiden neuen Features (hier komplett neu entworfen, da dieses Projekt zuvor gar keinen Werksreset und keine XML-Konfiguration hatte) nur gebaut (`pio run`), noch nicht geflasht/live getestet — insbesondere der TFT-Farbkanal-Vorbehalt (siehe Feature-Vergleich) |
-| Sensormeter PoE | `0.9.0-rc4` (Beta) | Lastenheft/Pflichtenheft vollständig umgesetzt + Anbieter-Branding + Werksreset-Umfangsauswahl + Serial-Kommandozeile | **Noch nicht geflasht** — kein Board zum Erstellungszeitpunkt vorhanden, nur per `pio run` gebaut/verifiziert. Versionsschema in dieser Runde von phasenbasiert (`0.1.0-p0`) auf SemVer umgestellt, analog zu den drei Geschwisterprojekten |
+| Sensormeter | `0.9.0-rc4` (Beta) | P0–P7 + MQTT/Home Assistant + Anbieter-Branding + Werksreset-Umfangsauswahl + Serial-Kommandozeile | **Board-Bringup abgeschlossen** (2026-07-16), **Qualitätskontrolle läuft**. Web-UI, interner Sensor, `/log.txt`, LAN+WLAN gleichzeitig, I2C-Auto-Erkennung, WLAN-Scan, OTA-Herkunfts-/Versionsprüfung live verifiziert. Zuletzt (2026-07-18) beim ersten echten Netzwerk-OTA-Test einen Chunkgrößen-Bug im Marker-Scan gefunden und live behoben, sowie einen Zeitzonen-Bug root-verursacht und gefixt (Uhrzeit zeigte nach Software-Reset UTC statt Ortszeit) — beide Funde jetzt in allen vier Projekten behoben. Weiterhin nicht live getestet: MQTT gegen echten Broker, Relais-Schalten, externes RJ45-Modul, Branding-Upload, statische IP/DNS, Werksreset, XML-Import (mangels Modul/Broker) |
+| Sensormeter WLAN | `0.9.0-rc4` (Beta) | P0–P7 + MQTT/Home Assistant + Anbieter-Branding + Werksreset-Umfangsauswahl + Serial-Kommandozeile | **Board-Bringup abgeschlossen**, **Qualitätskontrolle läuft**. DHT22, OLED, WLAN inkl. Fallback-AP, Taster, Webserver, SNMP, Syslog auf echtem Gerät verifiziert. Zuletzt (2026-07-18) den OTA-Chunkgrößen-Fix übernommen (geflasht, verifiziert) und den `loopTask`-Stack vorsorglich verdoppelt (gebaut, noch nicht geflasht). MQTT geflasht, aber noch nicht gegen einen echten Broker getestet |
+| Sensormeter Display | `0.9.0-rc4` (Beta) | P0–P8 + Live-Dashboard + Anbieter-Branding + Werksreset-Umfangsauswahl + Serial-Kommandozeile | **Board-Bringup abgeschlossen**, **Qualitätskontrolle läuft**. Zuletzt (2026-07-18) den OTA-Chunkgrößen-Fix übernommen, gebaut und geflasht (sauberer Boot verifiziert). DHCP-Lease-Test und der ausgeweitete Mutex-Schutz noch nicht auf echter Hardware ausgelöst; TFT-Farbkanal-Vorbehalt beim Branding weiterhin nicht verifiziert (siehe Feature-Vergleich) |
+| Sensormeter PoE | `0.9.0-rc4` (Beta) | Lastenheft/Pflichtenheft vollständig umgesetzt + Anbieter-Branding + Werksreset-Umfangsauswahl + Serial-Kommandozeile | **Board-Bringup abgeschlossen** (2026-07-18, erstes echtes Gerät), **Qualitätskontrolle läuft**. Nur interner DHT bestückt, kein Display gesteckt — Ethernet+PoE, Webserver, SNMP, Sensor, NTP, OTA live verifiziert. Dabei drei reale Bugs gefunden und live behoben (SNMP-Konstruktor-Absturz vor `app_main()` — Bug in der `SNMP_Agent`-Bibliothek selbst, `loopTask`-Stack-Overflow, Endlos-Fehlerschleife bei fehlendem Display) sowie derselbe Zeitzonen-Bug wie bei Sensormeter. PSRAM (Octal, ESP32-S3R8) nach anfänglicher Fehldiagnose als funktionsfähig bestätigt. Noch nicht live getestet: Relais, externes RJ45-Modul, MQTT, Branding-Upload, Werksreset, XML-Import |
 
 *(Stand wird bei größeren Änderungen aktualisiert, verbindlich ist immer das
 `README.md`/`docs/entscheidungen.md` des jeweiligen Projekt-Repos.)*
@@ -348,6 +356,16 @@ ein Netzwerkproblem jenseits eines simplen Timeouts.
   (Sensor-Rolle, Transport per einfachem `WiFiClient` funktioniert dort
   interface-unabhängig für LAN **und** WLAN) und bei Sensormeter PoE um
   eine Aktor-Rolle (Relais) erweitert.
+- Zwei bei laufender Qualitätskontrolle gefundene Bugs, familienweit
+  behoben (2026-07-18): ein Chunkgrößen-Bug im OTA-Marker-Scan (kopierte
+  eingehende Upload-Chunks in einen zu klein gedeckelten Zwischenpuffer,
+  fiel erst beim ersten echten Netzwerk-OTA-Test auf) und ein
+  Zeitzonen-Bug (POSIX-TZ-Variable fällt nach einem Software-Reset auf
+  UTC zurück, wenn die überlebende Hardware-RTC den erneuten
+  `configTzTime()`-Aufruf überspringt) — beide zuerst bei Sensormeter
+  gefunden, dann auf die drei Geschwisterprojekte übertragen (bei
+  Sensormeter WLAN und Sensormeter Display strukturell nicht vom
+  Zeitzonen-Bug betroffen, siehe jeweiliges `entscheidungen.md`).
 
 ## Über dieses Repository
 
