@@ -339,10 +339,14 @@ ein Netzwerkproblem jenseits eines simplen Timeouts.
   — seit dem Fix bleiben dort nur die Zweige unbeantwortet, für die keine
   passende Hardware existiert (`.2.1.0` LAN-IP, `.4.x` Sensor 2), siehe
   Feature-Vergleich oben und die jeweilige `PRTG.md`/`ZABBIX.md`.
-- Fallback-WLAN-Konvention `installer`/`installer` bei Verbindungsverlust
-  (echter, selbst aufgespannter Access Point bei WLAN/PoE; Sensormeter
-  selbst tritt stattdessen noch einem bestehenden Netz mit diesem Namen
-  bei, siehe dessen `entscheidungen.md`).
+- Fallback-WLAN-Konvention `installer`/`installer` bei Verbindungsverlust —
+  identisch bei allen drei Agent-Projekten ein echter, selbst
+  aufgespannter Access Point (`WiFi.softAP(...)`, feste IP `192.168.4.1`,
+  kein Gateway/DNS). Bei Sensormeter ursprünglich ein Bug, der
+  stattdessen einem bestehenden Netz mit diesem Namen beitreten wollte —
+  seit dem Fix identisch zu den Geschwistern, siehe dessen
+  `entscheidungen.md`, Abschnitt „Fallback-Access-Point ist jetzt ein
+  echter SoftAP".
 - Gleiches Architekturmuster: Manager-Klassen mit `begin()`/`loop()`,
   mutex-geschützte zentrale Datenhaltung, LittleFS/NVS-Persistenz mit
   sicherem Schreib-Umschreib-Mechanismus.
