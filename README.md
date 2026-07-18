@@ -1,5 +1,10 @@
 # Sensormeter-Familie
 
+![Firmware-Version](https://img.shields.io/badge/Firmware-0.9.0--rc4%20(Beta)-c8622a)
+![Plattform](https://img.shields.io/badge/Plattform-ESP32%20%2F%20ESP32--S3-0f1f3d)
+![Lizenz](https://img.shields.io/badge/Lizenz-MIT-3f6e63)
+![Projekte](https://img.shields.io/badge/Firmware--Projekte-4-6b6559)
+
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/projektfamilie-dark.png">
   <source media="(prefers-color-scheme: light)" srcset="docs/projektfamilie-light.png">
@@ -56,14 +61,15 @@ anderen übertragen).
 | RJ45-Modularanschluss | ✅ (Sensor 2 / Relais) | ❌ | ❌ | ✅ (Sensor 2 / Relais) |
 | Automatische Modul-Erkennung | ✅ I2C-Scan + DHT-Probe beim Boot | – (kein Anschluss) | – | ✅ I2C-Scan + DHT-Probe beim Boot |
 | Relais/Aktor | ✅ Web/REST/MQTT | – (kein Anschluss) | – | ✅ Web/REST/MQTT |
-| Display | OLED SSD1306 128×64 | OLED SSD1306 128×64 | 2,8" TFT ST7789P3, **Touch** | OLED SH1107 1,5" 128×128 |
+| Display (intern) | OLED SSD1306 128×64 | OLED SSD1306 128×64 | 2,8" TFT ST7789P3, **Touch** | OLED SSD1306 128×64 |
+| Display (extern, RJ45-Steckmodul) | ✅ optional SH1107 1,5" 128×128 (I2C 0x3D) | – (kein Anschluss) | – | ✅ optional SH1107 1,5" 128×128 (I2C 0x3D) |
 | BOOT-Taster als Bedienelement | ❌ (GPIO0 fest am Ethernet-Takt) | ✅ Seitenwechsel/Werksreset | – (Touch-Bedienung) | ✅ Seitenwechsel/Werksreset |
 | Webserver (Status + Einstellungen) | ✅ | ✅ | ✅ (+ öffentliches Live-Dashboard) | ✅ |
 | SNMP-Agent (read-only, v1/v2c) | ✅ | ✅ | ❌ (ist SNMP-**Client**) | ✅ |
 | SNMP-Client (fragt andere Geräte ab) | ❌ | ❌ | ✅ bis zu 5 Sensormeter-Ziele | ❌ |
 | Syslog-Versand | ✅ | ✅ | ❌ | ✅ |
 | MQTT / Home Assistant | ✅ Sensor- **und** Aktor-Rolle | ✅ Sensor-Rolle | ❌ | ✅ Sensor- **und** Aktor-Rolle |
-| Anbieter-Branding (Weisslabel) | ✅ Name + Logo (128×64, 1bpp) | ✅ Name + Logo (128×64, 1bpp) | ✅ Name + Logo (128×64, RGB565) — TFT-Farbkanal-Vorbehalt nicht auf echter Hardware verifiziert | ✅ Name + Logo (128×128, 1bpp) |
+| Anbieter-Branding (Weisslabel) | ✅ Name + Logo (128×64, 1bpp) | ✅ Name + Logo (128×64, 1bpp) | ✅ Name + Logo (128×64, RGB565) — TFT-Farbkanal-Vorbehalt nicht auf echter Hardware verifiziert | ✅ Name + Logo (128×64, 1bpp) |
 | Werksreset mit wählbarem Umfang (Alles/Konfiguration/Messwerte/Branding) | ✅ | ✅ | ✅ | ✅ |
 | Serial-Kommandozeile (USB): status/dhcp/ip/wifi/reset | ✅ (dhcp/ip mit Interface-Argument `lan\|wlan`) | ✅ | ✅ (kein LAN, daher ohne Interface-Argument) | ✅ (dhcp/ip mit Interface-Argument `lan\|wlan`) |
 | Serial-Kommandozeile: dump/upload (Config-Backup per USB) | ✅ | ✅ | ❌ (kein XML-Konfigurationsdokument, Settings liegen einzeln in NVS) | ✅ |
@@ -199,8 +205,7 @@ statt nur die Pixelmaße anzupassen:
 
 | Display | Zielformat |
 |---|---|
-| Sensormeter / Sensormeter WLAN (OLED SSD1306, 128×64) | 1-Bit-Monochrom, 1024 Byte |
-| Sensormeter PoE (OLED SH1107, 128×128) | 1-Bit-Monochrom, 2048 Byte |
+| Sensormeter / Sensormeter WLAN / Sensormeter PoE (OLED SSD1306, 128×64) | 1-Bit-Monochrom, 1024 Byte |
 | Sensormeter Display (TFT ST7789P3, Farbe) | RGB565, 128×64, 16.384 Byte — bewusst dieselbe Zielgröße wie die OLED-Projekte, nur Farbtiefe abweichend |
 
 Das Quellbild wird seitenverhältnistreu eingepasst (nicht verzerrt) und
@@ -255,7 +260,7 @@ gerade angesprochen wird:
 | Sensormeter WLAN | Nein (kein LAN-Interface vorhanden) | Nein (kein Sensor 2 möglich) |
 
 WLAN-IP (`.2.2.0`) und WLAN-RSSI (`.2.3.0`) liegen bei allen drei
-Varianten auf denselben Offsets - das war vor dem 2026-07-12-Fix bei
+Varianten auf denselben Offsets — das war vor dem 2026-07-12-Fix bei
 Sensormeter WLAN noch anders (dort auf `.2.1.0`/`.2.2.0` verschoben),
 siehe dessen `entscheidungen.md`.
 
@@ -317,7 +322,7 @@ ein Netzwerkproblem jenseits eines simplen Timeouts.
   Produktlinien mit identischen OID-Offsets ohne Codeänderung abfragen.
   Sensormeter WLAN hatte bis 2026-07-11 noch ein verschobenes Sub-Schema
   unter `.2.x` (WLAN-IP/RSSI auf `.2.1.0`/`.2.2.0` statt `.2.2.0`/`.2.3.0`)
-  - seit dem Fix bleiben dort nur die Zweige unbeantwortet, für die keine
+  — seit dem Fix bleiben dort nur die Zweige unbeantwortet, für die keine
   passende Hardware existiert (`.2.1.0` LAN-IP, `.4.x` Sensor 2), siehe
   Feature-Vergleich oben und die jeweilige `PRTG.md`/`ZABBIX.md`.
 - Fallback-WLAN-Konvention `installer`/`installer` bei Verbindungsverlust
