@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>Sensormeter-Familie — Systemübersicht</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root {
+    --paper: #ffffff;
+    --paper-raised: #FBFAF6;
+    --paper-sunken: #f2f0e9;
+    --ink: #1c2430;
+    --ink-muted: #5B6472;
+    --line: #e4e1d8;
+    --copper: #c8622a;
+    --copper-strong: #8f4a1e;
+    --copper-wash: #fbf3ee;
+    --patina: #3F6E63;
+    --patina-wash: rgba(63, 110, 99, 0.10);
+    --indigo: #3B5B8C;
+    --indigo-strong: #2B4368;
+    --rust: #a63d2e;
+    --rust-wash: #fbeeec;
+    --navy: #0f1f3d;
+    --navy-line: #24365c;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #141A22;
+      --paper-raised: #1B222C;
+      --paper-sunken: #0F141A;
+      --ink: #E9E4D8;
+      --ink-muted: #9aa3af;
+      --line: #313A46;
+      --copper: #E08A4C;
+      --copper-strong: #F2A268;
+      --copper-wash: rgba(224, 138, 76, 0.14);
+      --patina: #74B7A6;
+      --patina-wash: rgba(116, 183, 166, 0.13);
+      --indigo: #7FA0D9;
+      --indigo-strong: #A0BBE6;
+      --rust: #E38A78;
+      --rust-wash: rgba(227, 138, 120, 0.14);
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #141A22; --paper-raised: #1B222C; --paper-sunken: #0F141A;
+    --ink: #E9E4D8; --ink-muted: #9aa3af; --line: #313A46;
+    --copper: #E08A4C; --copper-strong: #F2A268; --copper-wash: rgba(224, 138, 76, 0.14);
+    --patina: #74B7A6; --patina-wash: rgba(116, 183, 166, 0.13);
+    --indigo: #7FA0D9; --indigo-strong: #A0BBE6;
+    --rust: #E38A78; --rust-wash: rgba(227, 138, 120, 0.14);
+  }
+  :root[data-theme="light"] {
+    --paper: #ffffff; --paper-raised: #FBFAF6; --paper-sunken: #f2f0e9;
+    --ink: #1c2430; --ink-muted: #5B6472; --line: #e4e1d8;
+    --copper: #c8622a; --copper-strong: #8f4a1e; --copper-wash: #fbf3ee;
+    --patina: #3F6E63; --patina-wash: rgba(63, 110, 99, 0.10);
+    --indigo: #3B5B8C; --indigo-strong: #2B4368;
+    --rust: #a63d2e; --rust-wash: #fbeeec;
+  }
+
+  @page { size: A4; margin: 18mm 16mm 20mm 16mm; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    color: var(--ink);
+    background: var(--paper);
+    font-size: 12.3px;
+    line-height: 1.5;
+  }
+  .cover {
+    background: var(--navy);
+    color: #fff;
+    margin: -18mm -16mm 12mm -16mm;
+    padding: 30mm 16mm 16mm 16mm;
+  }
+  .cover .eyebrow { font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: #9fb3d9; margin-bottom: 6mm; }
+  .cover h1 { margin: 0 0 4mm 0; font-size: 29px; }
+  .cover .subtitle { color: #cdd8ec; font-size: 13px; max-width: 132mm; }
+  .cover .badges { margin-top: 8mm; display: flex; gap: 6px; flex-wrap: wrap; }
+  .badge { display: inline-block; padding: 3px 9px; border-radius: 3px; font-size: 10px; font-weight: 600; background: var(--navy-line); color: #cdd8ec; }
+  .badge-orange { background: var(--copper); color: #fff; }
+  .cover .toc { margin-top: 10mm; font-size: 10.5px; color: #b9c6e3; line-height: 1.9; }
+  .cover .toc b { color: #fff; }
+
+  h1.section { font-size: 17.5px; color: var(--navy); border-bottom: 2px solid var(--copper); padding-bottom: 2mm; margin: 13mm 0 5mm 0; page-break-after: avoid; break-after: avoid; }
+  h1.section .num { color: var(--copper); margin-right: 2mm; }
+  h2 { font-size: 13.5px; color: var(--copper-strong); margin: 6mm 0 2mm 0; page-break-after: avoid; break-after: avoid; }
+  h3 { font-size: 12px; color: var(--ink); margin: 4mm 0 1.5mm 0; page-break-after: avoid; break-after: avoid; }
+  p { margin: 0 0 3mm 0; }
+  ul, ol { margin: 0 0 3mm 0; padding-left: 5mm; }
+  li { margin-bottom: 1.2mm; }
+  code {
+    font-family: Consolas, "Cascadia Mono", "Courier New", monospace;
+    background: var(--paper-sunken);
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    padding: 1px 5px;
+    font-size: 10.7px;
+    word-break: break-all;
+  }
+  .callout {
+    border-left: 3px solid var(--copper);
+    background: var(--copper-wash);
+    padding: 3mm 4mm;
+    margin: 3mm 0;
+    border-radius: 0 3px 3px 0;
+    page-break-inside: avoid; break-inside: avoid;
+  }
+  .callout.warn { border-left-color: var(--rust); background: var(--rust-wash); }
+  .callout.warn .callout-title { color: var(--rust); }
+  .callout.note { border-left-color: var(--indigo); background: var(--patina-wash); }
+  .callout.note .callout-title { color: var(--indigo-strong); }
+  .callout-title { font-weight: 700; font-size: 10.5px; text-transform: uppercase; letter-spacing: .04em; color: var(--copper-strong); margin-bottom: 1mm; }
+
+  table { border-collapse: collapse; width: 100%; margin: 2mm 0 4mm 0; page-break-inside: avoid; break-inside: avoid; }
+  table th, table td { border: 1px solid var(--line); padding: 1.4mm 2.3mm; font-size: 10.3px; text-align: left; vertical-align: top; }
+  table th { background: var(--paper-sunken); color: var(--ink); }
+  table td.hd, table th.rowhd { background: var(--paper-sunken); font-weight: 600; white-space: nowrap; }
+  .keep { page-break-inside: avoid; break-inside: avoid; }
+  .small { font-size: 10px; color: var(--ink-muted); }
+  .foot { margin-top: 14mm; padding-top: 3mm; border-top: 1px solid var(--line); font-size: 9.5px; color: var(--ink-muted); text-align: center; }
+
+  /* --- Architektur-Diagramm --- */
+  .diagram { margin: 4mm 0 5mm 0; padding: 6mm 4mm; background: var(--paper-raised); border: 1px solid var(--line); border-radius: 3mm; page-break-inside: avoid; break-inside: avoid; }
+  .diagram .peers { display: flex; justify-content: space-between; gap: 4mm; }
+  .diagram .box { flex: 1; border: 1.2px solid var(--indigo); border-radius: 2mm; padding: 3mm 2.5mm; text-align: center; background: var(--paper); }
+  .diagram .box .t { font-weight: 700; font-size: 10.5px; color: var(--indigo-strong); }
+  .diagram .box .s { font-size: 8.7px; color: var(--ink-muted); margin-top: 0.8mm; }
+  .diagram .links { position: relative; height: 12mm; }
+  .diagram .links::before {
+    content: ""; position: absolute; top: 0; left: 16.6%; right: 16.6%; height: 5mm;
+    border-top: 1.2px dashed var(--patina); border-left: 1.2px dashed var(--patina); border-right: 1.2px dashed var(--patina);
+  }
+  .diagram .links::after {
+    content: ""; position: absolute; top: 5mm; left: 50%; width: 0; height: 7mm; border-left: 1.2px dashed var(--patina);
+  }
+  .diagram .center { display: flex; justify-content: center; }
+  .diagram .center .box { flex: 0 0 46%; border-color: var(--copper); }
+  .diagram .center .box .t { color: var(--copper-strong); }
+  .diagram .caption { text-align: center; font-size: 8.7px; color: var(--patina); margin-top: 1mm; letter-spacing: .02em; }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <div class="eyebrow">Firmware-Projektfamilie — Hobby / Privat</div>
+  <h1>Sensormeter-Familie</h1>
+  <div class="subtitle">Systemübersicht — Funktionsumfang, Zusammenspiel, Zabbix-Anbindung und Betrieb der vier Firmware-Projekte</div>
+  <div class="badges">
+    <span class="badge badge-orange">v0.9.0-rc4</span>
+    <span class="badge">Beta</span>
+    <span class="badge">4 ESP32-Firmwares, ein Ursprung</span>
+    <span class="badge">SNMP</span>
+    <span class="badge">Zabbix</span>
+    <span class="badge">lokales OTA</span>
+    <span class="badge">github.com/peterhagelhof7-cmd</span>
+  </div>
+  <div class="toc">
+    <b>1</b>&nbsp; Die vier Projekte im Überblick &nbsp;·&nbsp;
+    <b>2</b>&nbsp; Zusammenspiel &amp; Architektur &nbsp;·&nbsp;
+    <b>3</b>&nbsp; Zabbix-Integration &nbsp;·&nbsp;
+    <b>4</b>&nbsp; Flashen &amp; Updates &nbsp;·&nbsp;
+    <b>5</b>&nbsp; Gemeinsame Design-Entscheidungen &nbsp;·&nbsp;
+    <b>6</b>&nbsp; Repositories &amp; Dokumentation
+  </div>
+</div>
+
+<h1 class="section"><span class="num">1</span>Die vier Projekte im Überblick</h1>
+
+<p>Sensormeter ist der Ursprung der Familie: ein Ethernet-first-Messgerät auf WT32-ETH01 mit bis zu zwei DHT-Sensoren und einem RJ45-Modularanschluss für steckbare Erweiterungen (Sensor, Relais, externes Display). Sensormeter WLAN ist die kabellose, günstigere Abwandlung auf einem generischen ESP32-DevKit mit genau einem Sensor und ohne Modularanschluss — gleiche Architektur, reduzierter Funktionsumfang. Sensormeter Display steht als Drittes daneben: ein Touchscreen-Gerät, das keine eigenen Messstationen ersetzt, sondern die Werte seiner Geschwister per SNMP zusammenführt, zusätzlich einen eigenen internen Sensor sowie Netzwerk-Ping-Ziele überwacht und alles auf einem Blick darstellt.</p>
+
+<p>Sensormeter PoE ist der vierte, jüngste Zweig: es überträgt den vollen Funktionsumfang von Sensormeter — RJ45-Modularanschluss, Relais/Aktor, MQTT/Home-Assistant-Anbindung — auf ein PoE-fähiges ESP32-S3-Ethernet-Board (Waveshare ESP32-S3-ETH) mit paralleler LAN(W5500)+WLAN-Anbindung statt des nativen EMAC von Sensormeter. Es ist damit kein abgespecktes Geschwister wie Sensormeter WLAN, sondern eher „Sensormeter auf anderer Hardware, plus Aktor-Rolle": gleiches Lastenheft/Pflichtenheft-Fundament, eigene Platine.</p>
+
+<div class="keep">
+<table>
+<tr><th style="width:16%"></th><th>Sensormeter</th><th>Sensormeter WLAN</th><th>Sensormeter Display</th><th>Sensormeter PoE</th></tr>
+<tr><td class="hd">Board</td><td>WT32-ETH01</td><td>ESP32-WROOM-32 DevKit</td><td>HW-458B (ESP32 + 2,8″ Touch-TFT)</td><td>Waveshare ESP32-S3-ETH</td></tr>
+<tr><td class="hd">Netzwerk</td><td>LAN (+ optional WLAN), Fallback-WLAN „installer"</td><td>WLAN-only, Fallback-WLAN „installer"</td><td>WLAN</td><td>LAN (W5500) + WLAN parallel, PoE optional (Huckepack-Modul), Fallback-AP „installer"</td></tr>
+<tr><td class="hd">Sensoren</td><td>1–2× DHT (intern/extern), ganzzahlige Kalibrierkorrektur</td><td>1× DHT22, ganzzahlige Kalibrierkorrektur</td><td>1× DHT11 (intern) + SNMP-Abfrage der Geschwister + Ping-Ziele</td><td>1–2× DHT-22 (Sensor 2 optional, „PRO"), ganzzahlige Kalibrierkorrektur</td></tr>
+<tr><td class="hd">RJ45-Modularanschluss</td><td>✅ Sensor 2 / Relais / externes Display</td><td>–</td><td>–</td><td>✅ Sensor 2 / Relais / externes Display (identisches Pin-Rollen-Schema wie Sensormeter)</td></tr>
+<tr><td class="hd">Rolle &amp; Schnittstellen</td><td>SNMP-Agent (read-only), Webserver (öffentliches Dashboard + Admin-Bereich), Syslog, MQTT/Home Assistant, Anbieter-Branding</td><td>SNMP-Agent (read-only), Webserver, OLED-Statusanzeige, Syslog, MQTT/Home Assistant, Anbieter-Branding</td><td>SNMP-/Ping-Client (kein eigener Agent), Touch-UI, eigener Webserver (öffentliches Dashboard + Admin), konfigurierbare Warnschwellwerte, Anbieter-Branding</td><td>SNMP-Agent (read-only), Webserver, OLED-Statusanzeige, Syslog, MQTT/Home Assistant (Sensor- <b>und</b> Aktor-Rolle), Relais/Aktor, Anbieter-Branding</td></tr>
+</table>
+</div>
+
+<div class="callout">
+  <div class="callout-title">Gemeinsames Prinzip</div>
+  Messwerte sind immer read-only per SNMP abrufbar, jede Konfiguration läuft ausschließlich über das eigene, lokale Webinterface des jeweiligen Geräts — keine Cloud-Anbindung, kein externer Dienst ist für den Betrieb notwendig.
+</div>
+
+<p class="small">Stand 2026-07-18: alle vier Projekte haben einen erfolgreichen Board-Bringup auf echter Hardware hinter sich, die laufende Qualitätskontrolle deckt gelegentlich noch reale Bugs auf (Details je Projekt-Repo unter <code>docs/entscheidungen.md</code>). Bei Sensormeter PoE waren zum ersten Bringup Ethernet+PoE-Stromversorgung, Webserver, SNMP-Agent, interner Sensor, NTP und lokales OTA live verifiziert — Relais-Schalten, externes RJ45-Modul, MQTT gegen einen echten Broker, Branding-Upload, statische IP/DNS und Werksreset standen zu diesem Zeitpunkt noch aus (mangels gestecktem Modul bzw. Broker).</p>
+
+<h1 class="section"><span class="num">2</span>Zusammenspiel &amp; Architektur</h1>
+
+<p>Sensormeter, Sensormeter WLAN und Sensormeter PoE arbeiten unabhängig voneinander: jedes Gerät misst an seinem Standort und beantwortet SNMP-v1/v2c-GET-Anfragen unter derselben Basis-OID <code>.1.3.6.1.4.1.99999.x</code> — Sensormeter und Sensormeter PoE mit identischer Struktur-Systematik, Sensormeter WLAN mit einem engeren, abweichenden Sub-Schema (kein LAN-Interface, kein zweiter Sensor). Sensormeter Display tritt dazu als reiner Betrachter auf: es fragt bis zu fünf konfigurierte Sensormeter-Ziele per SNMP ab — die Zielliste ist generisch nach IP-Adresse aufgebaut, nicht nach Produktlinie fest verdrahtet, jedes Ziel mit demselben OID-Schema wie Sensormeter funktioniert also grundsätzlich, damit auch Sensormeter-PoE-Geräte. Ergänzt werden die Ziele um den eigenen internen DHT11-Sensor sowie beliebige Ping-Ziele; für alle zusammen wertet das Display konfigurierbare Warnschwellwerte aus (Temperatur/Feuchte in vollen °C/%, Ping-Latenz in ms) — bei Überschreitung färbt sich der gesamte Bildschirm rot, mit Angabe, welche Quelle den Alarm ausgelöst hat.</p>
+
+<div class="diagram">
+  <div class="peers">
+    <div class="box"><div class="t">Sensormeter</div><div class="s">WT32-ETH01 · SNMP-Agent</div></div>
+    <div class="box"><div class="t">Sensormeter WLAN</div><div class="s">ESP32 DevKit · SNMP-Agent</div></div>
+    <div class="box"><div class="t">Sensormeter PoE</div><div class="s">ESP32-S3-ETH · SNMP-Agent</div></div>
+  </div>
+  <div class="links"></div>
+  <div class="center">
+    <div class="box"><div class="t">Sensormeter Display</div><div class="s">Touchscreen · SNMP-Client, bis zu 5 Ziele</div></div>
+  </div>
+  <div class="caption">— · — SNMP read-only, vom Display initiiert (Ziele generisch per IP, unabhängig von der Produktlinie)</div>
+</div>
+
+<div class="callout note">
+  <div class="callout-title">Architektonisch möglich, noch nicht end-to-end verifiziert</div>
+  Sensormeter Display kann jedes SNMP-Ziel mit dem gemeinsamen OID-Schema abfragen, unabhängig davon, ob es sich um Sensormeter oder Sensormeter PoE handelt (siehe Feature-Vergleich im Familien-Repo) — im Firmware-Code des Displays gibt es keine Fallunterscheidung nach Produktlinie. Bislang wurde diese Kombination aber noch nicht konkret als Ziel eingetragen und gegen ein echtes Sensormeter-PoE-Gerät getestet; alle bisherigen Display-Tests liefen gegen Sensormeter/Sensormeter-WLAN-Ziele.
+</div>
+
+<h2>2.1 Was die vier Firmwares technisch verbindet</h2>
+<table>
+<tr><th style="width:24%">Konvention</th><th>Ausprägung</th></tr>
+<tr><td class="hd">Architektur</td><td>Manager-Klassen mit <code>begin()</code>/<code>loop()</code>, mutex-geschützte zentrale Datenhaltung (DataManager/SettingsManager) für parallelen Zugriff aus Sensor-Loop und asynchronem Webserver-Task — bei allen vier Projekten gleich, unabhängig von internen Klassennamen-Unterschieden je Repo</td></tr>
+<tr><td class="hd">SNMP-Basis-OID</td><td><code>.1.3.6.1.4.1.99999.x</code>, SNMP v1/v2c, read-only, Community konfigurierbar. Sensormeter PoE verwendet dasselbe Schema wie Sensormeter (siehe Abschnitt 3); Sensormeter WLAN weicht ab (kein LAN-/Sensor-2-Zweig)</td></tr>
+<tr><td class="hd">Fallback-Netz</td><td>Nach Verbindungsverlust automatischer Wechsel auf Recovery-WLAN <code>installer</code>/<code>installer</code> — bei Sensormeter WLAN und Sensormeter PoE ein echter, selbst aufgespannter Access Point; Sensormeter selbst tritt stattdessen einem bestehenden Netz mit diesem Namen bei</td></tr>
+<tr><td class="hd">RJ45-Modularanschluss</td><td>Nur Sensormeter und Sensormeter PoE: identisches Pin-<b>Rollen</b>-Schema (I2C, externer DHT, Relais-Steuerung/-Feedback, 5V-Versorgung), konkrete GPIO-Nummern chipbedingt unterschiedlich, Steckmodule zwischen beiden Projekten austauschbar. Sensormeter WLAN und Sensormeter Display haben keinen Anschluss</td></tr>
+<tr><td class="hd">Konfigurations-Persistenz</td><td>Sensormeter/WLAN/PoE: <code>config.xml</code> auf LittleFS (tinyxml2); Display: NVS (Preferences) — jeweils mit sicherem Schreib-Umschreib-Mechanismus</td></tr>
+<tr><td class="hd">Kalibrierkorrektur</td><td>Ganzzahliger °C-/%-Versatz je Sensor, an einer einzigen Stelle im Messpfad angewendet — wirkt automatisch gleichermaßen auf Anzeige, SNMP-Werte und Verlauf; letzter Kalibrierzeitpunkt wird persistent gespeichert</td></tr>
+<tr><td class="hd">Verlaufsspeicherung</td><td>Sensormeter/WLAN/PoE: 7-Tage-Stundenwerte persistent auf LittleFS; Display: 12-Stunden-Verlauf ebenso persistent auf LittleFS</td></tr>
+<tr><td class="hd">Relais/Aktor &amp; MQTT</td><td>Sensormeter und Sensormeter PoE: Sensor- <b>und</b> Aktor-Rolle (Relais über Web/REST/MQTT, RJ45-Modul); Sensormeter WLAN: nur Sensor-Rolle (kein Anschluss für ein Relais); Sensormeter Display: kein MQTT</td></tr>
+<tr><td class="hd">mDNS</td><td>Alle vier erreichbar unter <code>&lt;geraetename&gt;.local</code> im lokalen Netz</td></tr>
+<tr><td class="hd">Web-Login &amp; Design</td><td>Benutzer <code>admin</code>, projektspezifisches Passwort; einheitliche Weboberfläche (Navy/Orange/Cream) über alle vier Projekte hinweg, jeweils mit öffentlichem, nicht passwortgeschütztem Live-Dashboard vor dem Admin-Bereich</td></tr>
+</table>
+
+<h1 class="section"><span class="num">3</span>Zabbix-Integration</h1>
+
+<p>Weder das Lastenheft noch das Pflichtenheft fordern Zabbix — reine SNMP-Erreichbarkeit hätte genügt. Da ein früherer Prototyp aber bereits ein funktionierendes Zabbix-Template mitbrachte, wurde die Anbindung bewusst als zusätzliches, optionales Monitoring-Feature weitergeführt, an die finale OID-Struktur angepasst und inzwischen auf alle drei SNMP-Agent-Projekte ausgeweitet.</p>
+
+<table>
+<tr><th style="width:16%">Projekt</th><th>Zabbix-Methode</th><th>Template</th><th>Wichtige Trigger</th></tr>
+<tr><td class="hd">Sensormeter</td><td>SNMP v1/v2c, Port 161, read-only</td><td><code>zabbix-template-sensormeter.yaml</code></td><td>Temperatur/Feuchte zu hoch (Sensor 1/2), freier Heap niedrig, keine Daten seit 10 Minuten</td></tr>
+<tr><td class="hd">Sensormeter WLAN</td><td>SNMP v1/v2c, eigenes engeres OID-Schema (ein Sensor statt zwei, kein LAN)</td><td><code>zabbix-template-sensormeter-wlan.yaml</code></td><td>analog zu Sensormeter, an das engere Schema angepasst</td></tr>
+<tr><td class="hd">Sensormeter PoE</td><td>SNMP v1/v2c, Port 161, read-only — identisches OID-Schema wie Sensormeter</td><td><code>zabbix-template-sensormeter-poe.yaml</code></td><td>Temperatur/Feuchte zu hoch (Sensor 1/2), freier Heap niedrig, keine Daten seit 10 Minuten; Relais bewusst nicht im Template (SNMP bleibt read-only, Steuerung nur über Web/REST/MQTT)</td></tr>
+<tr><td class="hd">Sensormeter Display</td><td>kein SNMP-Agent (reiner Client) — agentenlose ICMP-Erreichbarkeitsprüfung</td><td><code>zabbix-template-sensormeter-display.yaml</code></td><td>Display nicht erreichbar, hoher Paketverlust, hohe Antwortzeit</td></tr>
+</table>
+
+<div class="callout note">
+  <div class="callout-title">Warum das Display anders überwacht wird</div>
+  Das Display selbst stellt keine Messwerte über das Netzwerk bereit — es ist Konsument, nicht Quelle. Statt eines SNMP-Agenten genügt ein einfacher ICMP-Simple-Check, um seine Erreichbarkeit zu prüfen.
+</div>
+
+<p>SNMP ist bei allen Agent-Geräten strikt read-only. Community-String pro Gerät konfigurierbar (Default <code>public</code>); <code>{$SNMP_COMMUNITY}</code> Host-Makro. Alle drei Agent-Projekte bringen inzwischen zusätzlich gleichwertige PRTG-Templates mit (<code>PRTG.md</code> je Repo) — dasselbe OID-Schema, unabhängiges Werkzeug.</p>
+
+<h1 class="section"><span class="num">4</span>Flashen &amp; Updates</h1>
+
+<h2>4.1 Ersteinrichtung: ein Skript für alle vier Projekte</h2>
+<p><code>scripts/flash.ps1</code> (Windows) liegt identisch in allen vier Repositories und fragt/erhält per Parameter, welches Projekt geflasht wird — übernimmt Installation von Python/Git/PlatformIO falls nötig, Klonen/Pull des Repos (Geschwister-Repos werden bei Bedarf mitgeklont), Anlegen von <code>firmware/include/config.h</code> aus Vorlage, Bauen+Flashen. Seit Sensormeter PoE ist das Skript versioniert (aktuell <code>1.1.0</code>) und um einen Hinweis zur PlatformIO-Paket-Pool-Isolation ergänzt: Sensormeter PoE braucht für W5500-Ethernet-Support die Community-Platform „pioarduino" statt des offiziellen „espressif32", beide teilen sich sonst denselben globalen <code>~/.platformio</code>-Paket-Pool — ein eigener <code>core_dir</code> in Sensormeter PoEs <code>platformio.ini</code> verhindert, dass ein Build die Pakete der anderen drei Projekte überschreibt. Ein Bash-Pendant <code>scripts/flash.sh</code> (nur Apple-Silicon/arm64-Mac und Linux, Version <code>1.0.0</code>) deckt denselben Ablauf plattformgerecht ab, liegt ebenfalls identisch in allen vier Repos, ist aber noch nicht auf echter Mac-/Linux-Hardware verifiziert.</p>
+<p>Beispiele: <code>.\flash.ps1 -Project sensormeter</code> / <code>-Project wlan</code> / <code>-Project display</code> / <code>-Project poe</code></p>
+<table>
+<tr><th style="width:20%">Parameter</th><th>Wirkung</th></tr>
+<tr><td class="hd"><code>-Project</code></td><td><code>sensormeter</code> | <code>wlan</code> | <code>display</code> | <code>poe</code> — bestimmt, welches der vier Projekte eingerichtet wird, unabhängig davon, welches Repo gerade lokal ausgecheckt ist</td></tr>
+<tr><td class="hd"><code>-Port</code></td><td>Serieller Port für den Flash-Vorgang (z. B. <code>COM7</code>) — bei fehlender Angabe interaktive Auswahl</td></tr>
+<tr><td class="hd"><code>-RepoPath</code></td><td>Zielverzeichnis für Klonen/Pull, falls abweichend vom Standardpfad</td></tr>
+<tr><td class="hd"><code>-SkipUpload</code></td><td>Nur bauen, nicht flashen (z. B. wenn kein Board angeschlossen ist)</td></tr>
+</table>
+
+<div class="callout">
+  <div class="callout-title">Hinweis zum ersten Sensormeter-PoE-Bringup</div>
+  Das allererste Flashen des ersten echten Sensormeter-PoE-Geräts (2026-07-18) lief nicht über <code>flash.ps1</code>, sondern direkt per <code>pio run --target upload</code> über natives USB (COM8) — <code>flash.ps1</code>s PoE-Unterstützung war zu diesem Zeitpunkt bereits vorbereitet, aber der erste Bringup selbst nutzte den direkteren PlatformIO-Weg.
+</div>
+
+<h2>4.2 Laufende Updates: lokales OTA, ganz ohne PC</h2>
+<p>Browser-Upload-Button im Admin-Bereich, <code>.bin</code>-Datei, automatischer Neustart, mit Herkunfts- und Versionsprüfung (kein Downgrade, keine fremde Firmware).</p>
+<div class="callout warn">
+  <div class="callout-title">Die Entscheidungen dahinter</div>
+  Standard-Partitionstabelle unverändert übernommen (<code>ota_0</code>/<code>ota_1</code> bereits vorhanden). Cloud-Update-Weg bewusst wieder entfernt (HTTPS-Client kostete 168 KB Flash, zu riskant für spätere Ausbaustufen) — lokaler <code>.bin</code>-Upload blieb übrig: schlanker Code, funktioniert ohne Internet. Ein bei laufender Qualitätskontrolle gefundener Chunkgrößen-Bug im OTA-Marker-Scan (kopierte eingehende Upload-Chunks in einen zu klein gedeckelten Zwischenpuffer, fiel erst beim ersten echten Netzwerk-OTA-Test auf) wurde 2026-07-18 familienweit in allen vier Projekten behoben.
+</div>
+
+<h1 class="section"><span class="num">5</span>Gemeinsame Design-Entscheidungen</h1>
+<p class="small">Identisch/sinngemäß in allen vier Projekten, Details in <code>docs/entscheidungen.md</code> je Repo:</p>
+<ul>
+  <li>Öffentliches Live-Dashboard vor dem Admin-Bereich</li>
+  <li>Kein Wildcard-Update auf Kosten der Robustheit (temp. Datei + Umbenennen)</li>
+  <li>Kalibrierung mit Nachweis (eine Stelle im Messpfad, Zeitpunkt persistent)</li>
+  <li>Verlauf übersteht einen Neustart (LittleFS-Persistenz)</li>
+  <li>Erreichbarkeit ohne IP-Adresse (mDNS)</li>
+  <li>Byte-sichere Prüfung bei Datei-Uploads statt string-basiertem Scan — ein OTA-Upload mit eingebetteten Null-Bytes wurde vor der familienweiten Korrektur (2026-07-16) fälschlich abgelehnt, betrifft jede echte <code>.bin</code>-Datei und ist damit kein Rand-, sondern ein Regelfall</li>
+</ul>
+
+<h1 class="section"><span class="num">6</span>Repositories &amp; Dokumentation</h1>
+<table>
+<tr><th style="width:16%">Projekt</th><th>Repository</th><th>Weiterführende Dokumentation</th></tr>
+<tr><td class="hd">Sensormeter</td><td><code>github.com/peterhagelhof7-cmd/sensormeter</code></td><td>README, <code>docs/admin-guide.pdf</code>, <code>docs/sensormeter-onepager.pdf</code>, <code>docs/entscheidungen.md</code>, <code>docs/ZABBIX.md</code>, <code>docs/PRTG.md</code></td></tr>
+<tr><td class="hd">Sensormeter WLAN</td><td><code>github.com/peterhagelhof7-cmd/sensormeter-wlan</code></td><td>README, <code>docs/sensormeter-wlan-onepager.pdf</code>, <code>docs/entscheidungen.md</code>, <code>docs/ZABBIX.md</code>, <code>docs/PRTG.md</code></td></tr>
+<tr><td class="hd">Sensormeter Display</td><td><code>github.com/peterhagelhof7-cmd/sensormeter-display</code></td><td>README, <code>docs/sensormeter-display-onepager.pdf</code>, <code>docs/entscheidungen.md</code>, <code>docs/ZABBIX.md</code></td></tr>
+<tr><td class="hd">Sensormeter PoE</td><td><code>github.com/peterhagelhof7-cmd/sensormeter-poe</code></td><td>README, <code>docs/admin-guide.pdf</code>, <code>docs/sensormeter-poe-onepager.pdf</code>, <code>docs/implementierungsplan.html</code>, <code>docs/stueckliste.md</code>, <code>docs/systemlast.md</code>, <code>docs/stromversorgung.md</code>, <code>docs/entscheidungen.md</code>, <code>docs/ZABBIX.md</code></td></tr>
+</table>
+<p>Jedes Repository enthält außerdem <code>docs/projektfamilie.html</code> mit einer kompakten Architekturgrafik der ganzen Familie (alle vier Karten) sowie ein eigenes <code>docs/entscheidungen.md</code>.</p>
+
+<div class="foot">Sensormeter-Familie — Systemübersicht · Stand v0.9.0-rc4 (Beta) · identisch abgelegt in allen vier Repositories unter <code>docs/systemuebersicht.pdf</code></div>
+
+</body>
+</html>
